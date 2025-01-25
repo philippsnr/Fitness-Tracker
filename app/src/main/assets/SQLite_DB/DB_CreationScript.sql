@@ -1,11 +1,11 @@
-CREATE TABLE Exercise (
+CREATE TABLE IF NOT EXISTS Exercise (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     difficulty TEXT NOT NULL,
     info TEXT NOT NULL
 ) STRICT;
 
-CREATE TABLE ExerciseSet (
+CREATE TABLE IF NOT EXISTS ExerciseSet (
     id INTEGER PRIMARY KEY,
     TrainingdayExerciseAssignment_id INTEGER NOT NULL,
     set_number INTEGER NOT NULL,
@@ -14,12 +14,12 @@ CREATE TABLE ExerciseSet (
     FOREIGN KEY (TrainingdayExerciseAssignment_id) REFERENCES TrainingdayExerciseAssignment (id)
 ) STRICT;
 
-CREATE TABLE MuscleGroup (
+CREATE TABLE IF NOT EXISTS MuscleGroup (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL
 ) STRICT;
 
-CREATE TABLE ExerciseMuscleGroupAssignment (
+CREATE TABLE IF NOT EXISTS ExerciseMuscleGroupAssignment (
     id INTEGER PRIMARY KEY,
     targetSpecies TEXT NOT NULL CHECK (targetSpecies IN ("Hauptmuskel", "Hilfsmuskel")),
     Exercise_id INTEGER NOT NULL,
@@ -28,20 +28,20 @@ CREATE TABLE ExerciseMuscleGroupAssignment (
     FOREIGN KEY (MuscleGroup_id) REFERENCES MuscleGroup (id)
 ) STRICT;
 
-CREATE TABLE Trainingplan (
+CREATE TABLE IF NOT EXISTS Trainingplan (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
-    isActive BOOLEAN NOT NULL DEFAULT FALSE
+    isActive INTEGER  NOT NULL DEFAULT FALSE
 ) STRICT;
 
-CREATE Table Trainingday (
+CREATE Table IF NOT EXISTS Trainingday (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     Trainingplan_id INTEGER NOT NULL,
     FOREIGN KEY (Trainingplan_id) REFERENCES Trainingplan (id)
 ) STRICT;
 
-CREATE TABLE TrainingdayExerciseAssignment (
+CREATE TABLE IF NOT EXISTS TrainingdayExerciseAssignment (
     id INTEGER PRIMARY KEY,
     Trainingday_id INTEGER NOT NULL,
     Exercise_id INTEGER NOT NULL,
@@ -49,13 +49,38 @@ CREATE TABLE TrainingdayExerciseAssignment (
     FOREIGN KEY (Exercise_id) REFERENCES Exercise (id)
 ) STRICT;
 
-CREATE TABLE User (
+CREATE TABLE IF NOT EXISTS User (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
-    age INTEGER NOT NULL,
+    birth_date TEXT, -- "DD-MM-YYYY"
+    goal TEXT NOT NULL CHECK (goal IN ("Abnehmen", "Gewicht halten", "Zunehmen")),
+    trainingdaysPerWeek INTEGER NOT NULL CHECK (trainingdaysPerWeek BETWEEN 0 AND 7)
+) STRICT;
+
+CREATE TABLE IF NOT EXISTS UserInformation (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER,
+    date TEXT, -- "DD-MM-YYYY"
     height INTEGER NOT NULL,
     weight INTEGER NOT NULL,
     KFA INTEGER NOT NULL, -- Körperfettanteil in Prozent -> Bild zur Schätzung
-    goal TEXT NOT NULL CHECK (goal IN ("Abnehmen", "Gewicht halten", "Zunehmen")),
-    trainingdaysPerWeek INTEGER NOT NULL CHECK (trainingdaysPerWeek BETWEEN 0 AND 7)
+    FOREIGN KEY (user_id) REFERENCES User (id)
+) STRICT;
+
+CREATE TABLE IF NOT EXISTS Nutritionday (
+    id INTEGER PRIMARY KEY,
+    date TEXT -- "DD-MM-YYYY"
+) STRICT;
+
+CREATE TABLE IF NOT EXISTS NutritiondayNutritionAssignment (
+    id INTEGER PRIMARY KEY,
+    nutritionday_id INTEGER NOT NULL,
+    time TEXT, --"HH-MM"
+    nutrition_name TEXT NOT NULL,
+    nutrition_mass INTEGER NOT NULL, -- in g
+    nutrition_cals INTEGER NOT NULL,
+    nutrition_carbs INTEGER NOT NULL, -- in g
+    nutrition_fats INTEGER NOT NULL,
+    nutrition_proteins INTEGER NOT NULL,
+    FOREIGN KEY (nutritionday_id) REFERENCES Nutritionday (id)
 ) STRICT;
