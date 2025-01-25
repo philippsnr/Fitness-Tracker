@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS User (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     birth_date TEXT, -- "DD-MM-YYYY"
-    goal TEXT NOT NULL CHECK (goal IN ("Abnehmen", "Gewicht halten", "Zunehmen")),
+    goal TEXT NOT NULL CHECK (goal IN ("Abnehmen", "Gewicht halten (=Recomposition)", "Zunehmen")), --alle Ziele beinhalten den Wunsch Muskeln aufzubauen
     trainingdaysPerWeek INTEGER NOT NULL CHECK (trainingdaysPerWeek BETWEEN 0 AND 7)
 ) STRICT;
 
