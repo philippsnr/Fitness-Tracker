@@ -2,7 +2,8 @@ CREATE TABLE IF NOT EXISTS Exercise (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     difficulty TEXT NOT NULL,
-    info TEXT NOT NULL
+    info TEXT NOT NULL,
+    picture_path TEXT NOT NULL -- Bilder laut ChatGPT in app/res/drawable
 ) STRICT;
 
 CREATE TABLE IF NOT EXISTS ExerciseSet (
@@ -16,7 +17,8 @@ CREATE TABLE IF NOT EXISTS ExerciseSet (
 
 CREATE TABLE IF NOT EXISTS MuscleGroup (
     id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL
+    name TEXT NOT NULL,
+    picture_path TEXT NOT NULL -- Bilder laut ChatGPT in app/res/drawable
 ) STRICT;
 
 CREATE TABLE IF NOT EXISTS ExerciseMuscleGroupAssignment (
@@ -31,7 +33,7 @@ CREATE TABLE IF NOT EXISTS ExerciseMuscleGroupAssignment (
 CREATE TABLE IF NOT EXISTS Trainingplan (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
-    isActive INTEGER  NOT NULL DEFAULT FALSE
+    isActive INTEGER  NOT NULL DEFAULT 0
 ) STRICT;
 
 CREATE Table IF NOT EXISTS Trainingday (
