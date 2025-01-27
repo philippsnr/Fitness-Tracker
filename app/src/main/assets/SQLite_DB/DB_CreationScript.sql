@@ -23,7 +23,6 @@ CREATE TABLE IF NOT EXISTS MuscleGroup (
 
 CREATE TABLE IF NOT EXISTS ExerciseMuscleGroupAssignment (
     id INTEGER PRIMARY KEY,
-    targetSpecies TEXT NOT NULL CHECK (targetSpecies IN ("Hauptmuskel", "Hilfsmuskel")),
     Exercise_id INTEGER NOT NULL,
     MuscleGroup_id INTEGER NOT NULL,
     FOREIGN KEY (Exercise_id) REFERENCES Exercise (id),
