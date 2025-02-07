@@ -1,5 +1,6 @@
 ## Coding Policy: 
 Maximale Zeilenlänge: 100 Zeichen  
+Maximale Methodenlänge: 12 Zeilen  
 Variablen und Funktionen Benennung: Camel-Case mit Kleinbuchstabe am Anfang  
 Klassen-Benennung: Camel-Case mit Großbuchstabe am Anfang  
 Kommentare: nur Doc-Strings  
