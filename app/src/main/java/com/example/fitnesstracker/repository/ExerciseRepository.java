@@ -17,12 +17,16 @@ public class ExerciseRepository {
         dbHelper = new DatabaseHelper(context);
     }
 
-    // Holt alle Übungen aus der DB
-    public List<Exercise> getAllExercises() {
+    public List<Exercise> getExercisesForMuscleGroup(int muscleGroupId) {
         List<Exercise> exercises = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM Exercise", null);
+        String query = "SELECT e.* FROM Exercise e " +
+                "JOIN ExerciseMuscleGroupAssignment emg ON e.id = emg.Exercise_id " +
+                "WHERE emg.MuscleGroup_id = ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(muscleGroupId)});
+
         if (cursor.moveToFirst()) {
             do {
                 int id = cursor.getInt(0);
