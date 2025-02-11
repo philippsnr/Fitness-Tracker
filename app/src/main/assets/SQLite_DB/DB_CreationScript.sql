@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS Exercise (
+CREATE TABLE IF NOT EXISTS Exercise (   -- fertig
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     difficulty TEXT NOT NULL,
@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS Exercise (
     picture_path TEXT NOT NULL -- Bilder laut ChatGPT in app/res/drawable
 ) STRICT;
 
-CREATE TABLE IF NOT EXISTS ExerciseSet (
+CREATE TABLE IF NOT EXISTS ExerciseSet (    -- Nils
     id INTEGER PRIMARY KEY,
     TrainingdayExerciseAssignment_id INTEGER NOT NULL,
     set_number INTEGER NOT NULL,
@@ -15,13 +15,13 @@ CREATE TABLE IF NOT EXISTS ExerciseSet (
     FOREIGN KEY (TrainingdayExerciseAssignment_id) REFERENCES TrainingdayExerciseAssignment (id)
 ) STRICT;
 
-CREATE TABLE IF NOT EXISTS MuscleGroup (
+CREATE TABLE IF NOT EXISTS MuscleGroup (    -- fertig
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     picture_path TEXT NOT NULL -- Bilder laut ChatGPT in app/res/drawable
 ) STRICT;
 
-CREATE TABLE IF NOT EXISTS ExerciseMuscleGroupAssignment (
+CREATE TABLE IF NOT EXISTS ExerciseMuscleGroupAssignment (  -- fertig
     id INTEGER PRIMARY KEY,
     Exercise_id INTEGER NOT NULL,
     MuscleGroup_id INTEGER NOT NULL,
@@ -29,20 +29,20 @@ CREATE TABLE IF NOT EXISTS ExerciseMuscleGroupAssignment (
     FOREIGN KEY (MuscleGroup_id) REFERENCES MuscleGroup (id)
 ) STRICT;
 
-CREATE TABLE IF NOT EXISTS Trainingplan (
+CREATE TABLE IF NOT EXISTS Trainingplan (   -- Nils
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     isActive INTEGER  NOT NULL DEFAULT 0
 ) STRICT;
 
-CREATE Table IF NOT EXISTS Trainingday (
+CREATE Table IF NOT EXISTS Trainingday (    -- Janne
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     Trainingplan_id INTEGER NOT NULL,
     FOREIGN KEY (Trainingplan_id) REFERENCES Trainingplan (id)
 ) STRICT;
 
-CREATE TABLE IF NOT EXISTS TrainingdayExerciseAssignment (
+CREATE TABLE IF NOT EXISTS TrainingdayExerciseAssignment (  -- Linus
     id INTEGER PRIMARY KEY,
     Trainingday_id INTEGER NOT NULL,
     Exercise_id INTEGER NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS TrainingdayExerciseAssignment (
     FOREIGN KEY (Exercise_id) REFERENCES Exercise (id)
 ) STRICT;
 
-CREATE TABLE IF NOT EXISTS User (
+CREATE TABLE IF NOT EXISTS User (   -- Janne
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     birth_date TEXT, -- "DD-MM-YYYY"
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS User (
     trainingdaysPerWeek INTEGER NOT NULL CHECK (trainingdaysPerWeek BETWEEN 0 AND 7)
 ) STRICT;
 
-CREATE TABLE IF NOT EXISTS UserInformation (
+CREATE TABLE IF NOT EXISTS UserInformation (    -- Janne
     id INTEGER PRIMARY KEY,
     user_id INTEGER,
     date TEXT, -- "DD-MM-YYYY"
@@ -68,12 +68,12 @@ CREATE TABLE IF NOT EXISTS UserInformation (
     FOREIGN KEY (user_id) REFERENCES User (id)
 ) STRICT;
 
-CREATE TABLE IF NOT EXISTS Nutritionday (
+CREATE TABLE IF NOT EXISTS Nutritionday (   -- Linus
     id INTEGER PRIMARY KEY,
     date TEXT -- "DD-MM-YYYY"
 ) STRICT;
 
-CREATE TABLE IF NOT EXISTS NutritiondayNutritionAssignment (
+CREATE TABLE IF NOT EXISTS NutritiondayNutritionAssignment (    -- Linus
     id INTEGER PRIMARY KEY,
     nutritionday_id INTEGER NOT NULL,
     time TEXT, --"HH-MM"
