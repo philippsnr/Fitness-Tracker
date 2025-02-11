@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS Exercise (   -- fertig
     name TEXT NOT NULL,
     difficulty TEXT NOT NULL,
     info TEXT NOT NULL,
-    picture_path TEXT NOT NULL -- Bilder laut ChatGPT in app/res/drawable
+    picture_path TEXT NOT NULL
 ) STRICT;
 
 CREATE TABLE IF NOT EXISTS ExerciseSet (    -- Nils
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS ExerciseSet (    -- Nils
 CREATE TABLE IF NOT EXISTS MuscleGroup (    -- fertig
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
-    picture_path TEXT NOT NULL -- Bilder laut ChatGPT in app/res/drawable
+    picture_path TEXT NOT NULL
 ) STRICT;
 
 CREATE TABLE IF NOT EXISTS ExerciseMuscleGroupAssignment (  -- fertig
