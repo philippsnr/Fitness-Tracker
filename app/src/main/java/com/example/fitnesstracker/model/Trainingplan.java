@@ -4,7 +4,7 @@ public class Trainingplan {
     private final int id;
     private String name;
     private boolean isActive;
-    public Trainingplan(int id, String name, int isActive) {
+    public Trainingplan(int id, String name, int isActive) { // Konstruktorüberladung since SQLite doesnt support booleans
         this.id = id;
         this.name = name;
         this.isActive = (isActive == 1);
@@ -15,7 +15,7 @@ public class Trainingplan {
         this.name = name;
         this.isActive = isActive;
     }
-    
+
     //Getter
     public int getId() { return id; }
     public String getName() { return name; }
