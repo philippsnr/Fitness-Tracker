@@ -32,4 +32,8 @@ public class ExerciseSetRepository
         db.close();
         return lastSets;
     }
+    public void saveNewSet(ExerciseSet newSet)
+    {
+
+    }
 }
