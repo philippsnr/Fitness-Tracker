@@ -10,6 +10,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.fitnesstracker.model.Exercise;
 import com.example.fitnesstracker.model.ExerciseSet;
 import com.example.fitnesstracker.repository.ExerciseSetRepository;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,22 +19,33 @@ import java.util.concurrent.Executors;
 public class ExerciseSetViewModel extends AndroidViewModel
 {
     private final ExerciseSetRepository repository;
-    private final MutableLiveData<List<ExerciseSet>> exerciseSets = new MutableLiveData<>();
+    private ArrayList<ExerciseSet> exerciseSets = new ArrayList<ExerciseSet>();
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     public ExerciseSetViewModel(@NonNull Application application)
     {
         super(application);
         repository = new ExerciseSetRepository(application);
     }
-    public void loadLastSets(int trainingdayExerciseAssignmentId)
+    public void loadLastSets(int trainingdayExerciseAssignmentId, OnDataLoadedListener listener)
     {
         executorService.execute(() ->
         {
             List<ExerciseSet> sets = repository.getLastSets(trainingdayExerciseAssignmentId);
-            exerciseSets.postValue(sets); // LiveData im UI-Thread aktualisieren
+            // Callback aufrufen, wenn die Daten geladen sind
+            listener.onDataLoaded(sets);
         });
     }
-    public LiveData<List<ExerciseSet>> getLastSets() {
+    // Method for saving the data of a new set
+    public void saveNewSet(ExerciseSet newSet) {
+        executorService.execute(() -> {
+            repository.saveNewSet(newSet);
+        });
+    }
+    public ArrayList<ExerciseSet> getLastSets() {
         return exerciseSets;
+    }
+    // Interface for the Callback
+    public interface OnDataLoadedListener {
+        void onDataLoaded(List<ExerciseSet> sets);
     }
 }
