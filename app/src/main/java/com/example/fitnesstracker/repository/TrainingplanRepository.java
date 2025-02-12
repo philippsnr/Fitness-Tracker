@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.provider.ContactsContract;
 
 import com.example.fitnesstracker.database.DatabaseHelper;
-import com.example.fitnesstracker.model.ExerciseSet;
 import com.example.fitnesstracker.model.Trainingplan;
 
 import java.util.ArrayList;
