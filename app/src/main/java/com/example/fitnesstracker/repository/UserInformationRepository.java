@@ -41,19 +41,6 @@ public class UserInformationRepository {
         return null; // Falls keine Daten vorhanden sind
     }
 
-    public void updateWeight(int userId, int newWeight) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("weight", newWeight);
-
-        db.update("UserInformation", values,
-                "user_id = ? AND date = (SELECT MAX(date) FROM UserInformation WHERE user_id = ?)",
-                new String[]{String.valueOf(userId), String.valueOf(userId)}
-        );
-
-        db.close();
-    }
-
     // **Neue User-Information speichern oder aktualisieren**
     public void setUserInformation(UserInformation userInfo) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();

@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS Exercise (   -- fertig
     picture_path TEXT NOT NULL
 ) STRICT;
 
-CREATE TABLE IF NOT EXISTS ExerciseSet (    -- Nils
+CREATE TABLE IF NOT EXISTS ExerciseSet (    -- Nils -- sollte fertig sein
     id INTEGER PRIMARY KEY,
     TrainingdayExerciseAssignment_id INTEGER NOT NULL,
     set_number INTEGER NOT NULL,

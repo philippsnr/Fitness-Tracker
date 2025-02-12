@@ -20,7 +20,6 @@ public class MuscleGroupRepository {
         List<MuscleGroup> muscleGroups = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM MuscleGroup", null);
-
         if (cursor.moveToFirst()) {
             do {
                 int muscleGroupId = cursor.getInt(0);
