@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 public class ExerciseSetViewModel extends AndroidViewModel
 {
     private final ExerciseSetRepository repository;
-    private ArrayList<ExerciseSet> exerciseSets = new ArrayList<ExerciseSet>();
+    private final ArrayList<ExerciseSet> exerciseSets = new ArrayList<ExerciseSet>();
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     public ExerciseSetViewModel(@NonNull Application application)
     {
@@ -31,8 +31,7 @@ public class ExerciseSetViewModel extends AndroidViewModel
         executorService.execute(() ->
         {
             List<ExerciseSet> sets = repository.getLastSets(trainingdayExerciseAssignmentId);
-            // Callback aufrufen, wenn die Daten geladen sind
-            listener.onDataLoaded(sets);
+            listener.onDataLoaded(sets); // if the data is fully loaded -> Callback
         });
     }
     // Method for saving the data of a new set
