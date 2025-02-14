@@ -31,7 +31,7 @@ public class ExerciseRepository {
             do {
                 int id = cursor.getInt(0);
                 String name = cursor.getString(1);
-                String difficulty = cursor.getString(2);
+                int difficulty = cursor.getInt(2);
                 String info = cursor.getString(3);
                 String picturePath = cursor.getString(4);
 
