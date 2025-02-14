@@ -77,7 +77,8 @@ CREATE TABLE IF NOT EXISTS NutritiondayNutritionAssignment (    -- Linus
     id INTEGER PRIMARY KEY,
     nutritionday_id INTEGER NOT NULL,
     time TEXT, --"HH-MM"
-    nutrition_name TEXT NOT NULL,
+    nutrition_name_english TEXT NOT NULL,
+    nutrition_name_german TEXT DEFAULT NULL,
     nutrition_mass INTEGER NOT NULL, -- in g
     nutrition_cals INTEGER NOT NULL,
     nutrition_carbs INTEGER NOT NULL, -- in g
