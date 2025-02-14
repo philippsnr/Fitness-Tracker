@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS Exercise (   -- fertig
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
-    difficulty TEXT NOT NULL,
+    difficulty INTEGER NOT NULL,    -- 1-3
     info TEXT NOT NULL,
     picture_path TEXT NOT NULL
 ) STRICT;
