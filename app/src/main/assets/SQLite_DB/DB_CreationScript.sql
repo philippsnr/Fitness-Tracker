@@ -84,5 +84,6 @@ CREATE TABLE IF NOT EXISTS NutritiondayNutritionAssignment (    -- Linus
     nutrition_carbs INTEGER NOT NULL, -- in g
     nutrition_fats INTEGER NOT NULL,
     nutrition_proteins INTEGER NOT NULL,
+    nutrition_picture_path TEXT DEFAULT NULL,
     FOREIGN KEY (nutritionday_id) REFERENCES Nutritionday (id)
 ) STRICT;
