@@ -11,6 +11,7 @@ public class NutritiondayNutritionAssignment {
     private final int nutritionCarbs;
     private final int nutritionFats;
     private final int nutritionProteins;
+    private String nutritionPicturePath;
 
     public NutritiondayNutritionAssignment ( int id, int nutritiondayId, String time, String nutritionNameEnglish, int nutritionMass, int nutritionCals, int nutritionCarbs, int nutritionFats, int nutritionProteins) {
         this.id = id;
@@ -24,6 +25,7 @@ public class NutritiondayNutritionAssignment {
         this.nutritionProteins = nutritionProteins;
     }
     public void setNutritionNameGerman (String nutritionNameGerman) { this.nutritionNameGerman = nutritionNameGerman; }
+    public void setNutritionPicturePath (String nutritionPicturePath) { this.nutritionPicturePath = nutritionPicturePath; }
 
     public int getId() { return id; }
     public int getNutritiondayId() { return nutritiondayId; }
@@ -35,4 +37,5 @@ public class NutritiondayNutritionAssignment {
     public int getNutritionCarbs() { return nutritionCarbs; }
     public int getNutritionFats() { return nutritionFats; }
     public int getNutritionProteins() { return nutritionProteins; }
+    public String getNutritionPicturePath() { return nutritionPicturePath; }
 }
