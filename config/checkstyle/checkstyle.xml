@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+    "file:config/checkstyle/configuration_1_3.dtd">
+
+<module name="Checker">
+    <module name="TreeWalker">
+
+        <!-- ✅ 1. Maximale Zeilenlänge: 100 Zeichen -->
+        <module name="LineLength">
+            <property name="max" value="100"/>
+        </module>
+
+        <!-- ✅ 2. Maximale Methodenlänge: 12 Zeilen -->
+        <module name="MethodLength">
+            <property name="max" value="12"/>
+        </module>
+
+        <!-- ✅ 3. Variablen- und Funktionsbenennung: camelCase mit Kleinbuchstaben am Anfang -->
+        <module name="MethodName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
+
+        <module name="LocalVariableName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
+
+        <module name="ParameterName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
+
+        <!-- ✅ 4. Klassenbenennung: CamelCase mit Großbuchstaben am Anfang -->
+        <module name="ClassName">
+            <property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
+        </module>
+
+        <!-- ✅ 5. Kommentare: Nur Doc-Strings erlaubt -->
+        <module name="JavadocMethod">
+            <property name="scope" value="public"/>
+            <property name="allowMissingParamTags" value="true"/>
+            <property name="allowMissingReturnTag" value="true"/>
+        </module>
+
+        <module name="JavadocType">
+            <property name="scope" value="public"/>
+        </module>
+
+        <module name="JavadocVariable"/>
+
+        <!-- Verhindert nicht-dokumentierte öffentliche Methoden -->
+        <module name="MissingJavadocMethod">
+            <property name="scope" value="public"/>
+        </module>
+
+        <!-- Verhindert nicht-dokumentierte öffentliche Klassen -->
+        <module name="MissingJavadocType">
+            <property name="scope" value="public"/>
+        </module>
+
+        <!-- ✅ 6. Variablen-Sprache: Englisch (Manuell prüfen, keine direkte Checkstyle-Regel möglich) -->
+
+        <!-- ✅ 7. Programm-Sprache (UI): Deutsch (Manuell prüfen, keine direkte Checkstyle-Regel möglich) -->
+
+        <!-- ✅ 8. Sicherheitsrichtlinien -->
+
+        <!-- Keine Passwörter oder API-Schlüssel im Code -->
+        <module name="Regexp">
+            <property name="format" value="(?i)(password|api[_-]?key|token)"/>
+            <property name="message" value="Keine Passwörter oder API-Schlüssel im Code speichern!"/>
+            <property name="illegalPattern" value="true"/>
+        </module>
+
+        <!-- SQL-Injections vermeiden: Keine direkte SQL-Konkatenation -->
+        <module name="Regexp">
+            <property name="format" value="SELECT.*FROM.*WHERE.*[+].*"/>
+            <property name="message" value="Vermeide SQL-Konkatenation – Prepared Statements verwenden!"/>
+            <property name="illegalPattern" value="true"/>
+        </module>
+
+        <!-- Benutzer-Input immer validieren (Manuell prüfen, keine direkte Checkstyle-Regel möglich) -->
+
+    </module>
+</module>
