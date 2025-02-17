@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS Exercise (   -- fertig
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     difficulty INTEGER NOT NULL,    -- 1-3
     info TEXT NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS Exercise (   -- fertig
 ) STRICT;
 
 CREATE TABLE IF NOT EXISTS ExerciseSet (    -- Nils -- sollte fertig sein
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     TrainingdayExerciseAssignment_id INTEGER NOT NULL,
     set_number INTEGER NOT NULL,
     repetitions INTEGER NOT NULL,
@@ -16,13 +16,13 @@ CREATE TABLE IF NOT EXISTS ExerciseSet (    -- Nils -- sollte fertig sein
 ) STRICT;
 
 CREATE TABLE IF NOT EXISTS MuscleGroup (    -- fertig
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     picture_path TEXT NOT NULL
 ) STRICT;
 
 CREATE TABLE IF NOT EXISTS ExerciseMuscleGroupAssignment (  -- fertig
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     Exercise_id INTEGER NOT NULL,
     MuscleGroup_id INTEGER NOT NULL,
     FOREIGN KEY (Exercise_id) REFERENCES Exercise (id),
@@ -30,20 +30,20 @@ CREATE TABLE IF NOT EXISTS ExerciseMuscleGroupAssignment (  -- fertig
 ) STRICT;
 
 CREATE TABLE IF NOT EXISTS Trainingplan (   -- Nils
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     isActive INTEGER  NOT NULL DEFAULT 0
 ) STRICT;
 
 CREATE Table IF NOT EXISTS Trainingday (    -- Janne
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     Trainingplan_id INTEGER NOT NULL,
     FOREIGN KEY (Trainingplan_id) REFERENCES Trainingplan (id)
 ) STRICT;
 
 CREATE TABLE IF NOT EXISTS TrainingdayExerciseAssignment (  -- Linus
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     Trainingday_id INTEGER NOT NULL,
     Exercise_id INTEGER NOT NULL,
     FOREIGN KEY (Trainingday_id) REFERENCES Trainingday (id),
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS TrainingdayExerciseAssignment (  -- Linus
 ) STRICT;
 
 CREATE TABLE IF NOT EXISTS User (   -- Janne
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     birth_date TEXT, -- "DD-MM-YYYY"
     goal TEXT NOT NULL CHECK (goal IN ("Abnehmen", "Gewicht halten (=Recomposition)", "Zunehmen")), --alle Ziele beinhalten den Wunsch Muskeln aufzubauen
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS User (   -- Janne
 ) STRICT;
 
 CREATE TABLE IF NOT EXISTS UserInformation (    -- Janne
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
     date TEXT, -- "DD-MM-YYYY"
     height INTEGER NOT NULL,
@@ -69,12 +69,12 @@ CREATE TABLE IF NOT EXISTS UserInformation (    -- Janne
 ) STRICT;
 
 CREATE TABLE IF NOT EXISTS Nutritionday (   -- Linus
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     date TEXT -- "DD-MM-YYYY"
 ) STRICT;
 
 CREATE TABLE IF NOT EXISTS NutritiondayNutritionAssignment (    -- Linus
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     nutritionday_id INTEGER NOT NULL,
     time TEXT, --"HH-MM"
     nutrition_name_english TEXT NOT NULL,
