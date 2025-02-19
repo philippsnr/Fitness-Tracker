@@ -25,7 +25,8 @@ public class ExerciseSetRepository
                 int setNumber = cursor.getInt(cursor.getColumnIndexOrThrow("setNumber"));
                 int repetition = cursor.getInt(cursor.getColumnIndexOrThrow("repetition"));
                 int weight = cursor.getInt(cursor.getColumnIndexOrThrow("weight"));
-                lastSets.add(new ExerciseSet(id, trainingdayExerciseAssignmentId, setNumber, repetition, weight));
+                String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
+                lastSets.add(new ExerciseSet(id, trainingdayExerciseAssignmentId, setNumber, repetition, weight, date));
             } while (cursor.moveToNext());
         }
         cursor.close();

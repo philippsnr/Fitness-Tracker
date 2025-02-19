@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS ExerciseSet (    -- Nils -- sollte fertig sein
     set_number INTEGER NOT NULL,
     repetitions INTEGER NOT NULL,
     weight INTEGER NOT NULL,
+    date TEXT NOT NULL,
     FOREIGN KEY (TrainingdayExerciseAssignment_id) REFERENCES TrainingdayExerciseAssignment (id)
 ) STRICT;
 
