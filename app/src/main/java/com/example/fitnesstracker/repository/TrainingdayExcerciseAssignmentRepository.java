@@ -15,9 +15,9 @@ public class TrainingdayExcerciseAssignmentRepository {
         this.dbHelper = new DatabaseHelper(context);
     }
 
-    public TrainingdayExcerciseAssignment getTrainingdayExcerciseAssignment(int trainingdayId) {
+    public TrainingdayExcerciseAssignment getTrainingdayExcerciseAssignments(int trainingdayId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM Nutritionday WHERE trainingday_id = ?", new String[]{String.valueOf(trainingdayId)});
+        Cursor cursor = db.rawQuery("SELECT * FROM TrainingdayExerciseAssignment WHERE trainingday_id = ?", new String[]{String.valueOf(trainingdayId)});
 
         if (cursor.moveToFirst()) {
             TrainingdayExcerciseAssignment trainingdayExcerciseAssignment = new TrainingdayExcerciseAssignment(
