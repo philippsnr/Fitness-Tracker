@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS Trainingplan (   -- Nils
     isActive INTEGER  NOT NULL DEFAULT 0
 ) STRICT;
 
-CREATE Table IF NOT EXISTS Trainingday (    -- Janne
+CREATE Table IF NOT EXISTS Trainingday (    -- Philipp
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     Trainingplan_id INTEGER NOT NULL,
