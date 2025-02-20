@@ -38,7 +38,7 @@ public class UserRepository {
     }
 
     // **User speichern (einfügen oder updaten)**
-    public void createUser(User user) {
+    public void writeUser(User user) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("name", user.getName());

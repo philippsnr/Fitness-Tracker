@@ -15,11 +15,34 @@ public class UserInformationRepository {
     }
 
     // **Letzte gespeicherte User-Information abrufen**
-    public UserInformation getUserInformation(int userId) {
+    public UserInformation getLatestUserInformation() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM UserInformation ORDER BY date DESC LIMIT 1", null);
+
+        if (cursor.moveToFirst()) {
+            UserInformation userInfo = new UserInformation(
+                    cursor.getInt(0),
+                    cursor.getInt(1),
+                    cursor.getString(2),
+                    cursor.getInt(3),
+                    cursor.getInt(4),
+                    cursor.getInt(5)
+            );
+            cursor.close();
+            db.close();
+            return userInfo;
+        }
+
+        cursor.close();
+        db.close();
+        return null; // Falls keine Daten vorhanden sind
+    }
+
+    public UserInformation getUserInformationDate(String date) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery(
-                "SELECT * FROM UserInformation WHERE user_id = ? ORDER BY date DESC LIMIT 1",
-                new String[]{String.valueOf(userId)}
+                "SELECT * FROM UserInformation WHERE date = ? ORDER BY date DESC LIMIT 1",
+                new String[]{date}
         );
 
         if (cursor.moveToFirst()) {
@@ -42,7 +65,7 @@ public class UserInformationRepository {
     }
 
     // **Neue User-Information speichern oder aktualisieren**
-    public void setUserInformation(UserInformation userInfo) {
+    public void writeUserInformation(UserInformation userInfo) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("user_id", userInfo.getUserId());
