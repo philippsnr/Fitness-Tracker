@@ -1,4 +1,4 @@
-package com.example.fitnesstracker.ui;
+package com.example.fitnesstracker.ui.exercise;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
