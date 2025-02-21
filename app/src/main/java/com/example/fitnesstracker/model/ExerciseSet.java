@@ -33,7 +33,6 @@ public class ExerciseSet {
     public int getRepetition() { return repetition; }
     public int getWeight() { return weight; }
     public LocalDate getDate() { return date; }
-
     //Setter
     public void setSetNumber(int setNumber) { this.setNumber = setNumber; }
     public void setRepetition(int repetition) { this.repetition = repetition; }

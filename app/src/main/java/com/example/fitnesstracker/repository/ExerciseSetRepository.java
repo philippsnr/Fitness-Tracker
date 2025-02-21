@@ -1,6 +1,8 @@
 package com.example.fitnesstracker.repository;
 
 import com.example.fitnesstracker.model.ExerciseSet;
+
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -35,6 +37,15 @@ public class ExerciseSetRepository
     }
     public void saveNewSet(ExerciseSet newSet)
     {
-
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("id", newSet.getId());
+        values.put("TrainingdayExerciseAssignment_id", newSet.getTrainingdayExerciseAssignment_id());
+        values.put("set_number", newSet.getSetNumber());
+        values.put("repetitions", newSet.getRepetition());
+        values.put("weight", newSet.getWeight());
+        values.put("date", newSet.getDate().toString());
+        db.insert("ExerciseSet", null, values);
+        db.close();
     }
 }
