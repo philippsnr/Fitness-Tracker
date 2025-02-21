@@ -54,3 +54,4 @@ pubspec.lock
 *.tmp
 ~$*
 
+gradle/libs.versions.toml

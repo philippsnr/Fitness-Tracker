@@ -1,16 +1,21 @@
-package com.example.fitnesstracker;
+package com.example.fitnesstracker.ui;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.example.fitnesstracker.R;
+import com.example.fitnesstracker.ui.nutrition.NutritionFragment;
+import com.example.fitnesstracker.ui.progress.ProgressionFragment;
+import com.example.fitnesstracker.ui.exercise.ExerciseFragment;
+import com.example.fitnesstracker.ui.training.TrainingFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
-
+ 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
