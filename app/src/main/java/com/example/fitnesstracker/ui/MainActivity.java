@@ -8,6 +8,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.fitnesstracker.R;
+import com.example.fitnesstracker.ui.nutrition.NutritionFragment;
+import com.example.fitnesstracker.ui.progress.ProgressionFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
