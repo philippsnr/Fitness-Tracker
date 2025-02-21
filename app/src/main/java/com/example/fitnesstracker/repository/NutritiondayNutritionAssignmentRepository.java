@@ -43,7 +43,7 @@ public class NutritiondayNutritionAssignmentRepository {
         return null;
     }
 
-    public void setNutritiondayNiútritionAssignment (NutritiondayNutritionAssignment nutritiondayNutritionAssignment) {
+    public void setNutritiondayNutritionAssignment(NutritiondayNutritionAssignment nutritiondayNutritionAssignment) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("nutritionday_id", nutritiondayNutritionAssignment.getNutritiondayId());
