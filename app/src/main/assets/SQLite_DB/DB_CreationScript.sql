@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS TrainingdayExerciseAssignment (  -- Linus
     FOREIGN KEY (Exercise_id) REFERENCES Exercise (id)
 ) STRICT;
 
-CREATE TABLE IF NOT EXISTS User (   -- Janne
+CREATE TABLE IF NOT EXISTS User (   -- fertig
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     birth_date TEXT, -- "DD-MM-YYYY"
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS User (   -- Janne
     trainingdaysPerWeek INTEGER NOT NULL CHECK (trainingdaysPerWeek BETWEEN 0 AND 7)
 ) STRICT;
 
-CREATE TABLE IF NOT EXISTS UserInformation (    -- Janne
+CREATE TABLE IF NOT EXISTS UserInformation (    -- ferig
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
     date TEXT, -- "DD-MM-YYYY"
