@@ -7,8 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import com.example.fitnesstracker.database.DatabaseHelper;
 import com.example.fitnesstracker.model.UserInformation;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class UserInformationRepository {
     private final DatabaseHelper dbHelper;
@@ -98,7 +100,11 @@ public class UserInformationRepository {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("user_id", userInfo.getUserId());
-        values.put("date", userInfo.getDate());
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String dateString = dateFormat.format(userInfo.getDate());  // Date in String konvertieren
+        values.put("date", dateString);
+
         values.put("height", userInfo.getHeight());
         values.put("weight", userInfo.getWeight());
         values.put("KFA", userInfo.getKfa());
