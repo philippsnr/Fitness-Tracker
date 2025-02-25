@@ -3,6 +3,7 @@ package com.example.fitnesstracker.model;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class UserInformation {
     private int id;
@@ -12,7 +13,7 @@ public class UserInformation {
     private int weight;
     private int kfa; // Körperfettanteil in Prozent
 
-    // Konstruktor, der ein Date akzeptiert
+    // Konstruktoren
     public UserInformation(int id, int userId, Date date, int height, int weight, int kfa) {
         this.id = id;
         this.userId = userId;
@@ -22,25 +23,22 @@ public class UserInformation {
         this.kfa = kfa;
     }
 
-    // Konstruktor, der einen Date-String akzeptiert und ihn in ein Date umwandelt
     public UserInformation(int id, int userId, String dateString, int height, int weight, int kfa) {
         this.id = id;
         this.userId = userId;
-        // Datum von String in Date umwandeln
-        this.date = parseDate(dateString);
+        this.date = parseDate(dateString);  // Datum konvertieren
         this.height = height;
         this.weight = weight;
         this.kfa = kfa;
     }
 
-    // Hilfsmethode, um das Datum aus einem String zu parsen
     private Date parseDate(String dateString) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  // Format anpassen, falls notwendig
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
         try {
-            return dateFormat.parse(dateString);  // String in Date umwandeln
+            return dateFormat.parse(dateString);
         } catch (ParseException e) {
             e.printStackTrace();
-            return null;  // Falls das Parsing fehlschlägt, null zurückgeben
+            return null;
         }
     }
 
