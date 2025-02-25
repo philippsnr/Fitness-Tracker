@@ -2,7 +2,7 @@
     <item
         android:id="@+id/nav_progression"
         android:icon="@drawable/ic_progression"
-        android:title="Progression" />
+        android:title="Progression"/>
     <item
         android:id="@+id/nav_nutrition"
         android:icon="@drawable/ic_nutrition"

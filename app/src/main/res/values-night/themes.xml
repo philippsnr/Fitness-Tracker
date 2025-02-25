@@ -2,6 +2,14 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.FitnessTracker" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorSecondary">@color/secundary</item>
+
+        <item name="colorOnBackground">@color/background</item>
+
+        <item name="android:textColor">@color/text</item>
+
+        <item name="android:statusBarColor">@color/secundary_background</item>
+
     </style>
 </resources>

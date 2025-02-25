@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Style für die BottomNavigationView ohne Active Indicator (Oval um das Icon) -->
+    <style name="NoActiveIndicator" parent="">
+        <item name="android:colorBackground">@android:color/transparent</item>
+        <item name="android:color">@android:color/transparent</item>
+        <item name="android:alpha">0</item>
+    </style>
+</resources>
