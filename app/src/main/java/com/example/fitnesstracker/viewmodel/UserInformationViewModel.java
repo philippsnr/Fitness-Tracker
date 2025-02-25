@@ -7,6 +7,7 @@ import com.example.fitnesstracker.model.UserInformation;
 import com.example.fitnesstracker.repository.UserInformationRepository;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.List;
 
 public class UserInformationViewModel extends AndroidViewModel {
 
@@ -17,6 +18,17 @@ public class UserInformationViewModel extends AndroidViewModel {
         super(application);
         repository = new UserInformationRepository(application);
         executorService = Executors.newSingleThreadExecutor();
+    }
+
+    public void getAllUserInformation(OnListDataLoadedListener listener) {
+        executorService.execute(() -> {
+            List<UserInformation> dataList = repository.getAllUserInformation();
+            listener.onDataLoaded(dataList);
+        });
+    }
+
+    public interface OnListDataLoadedListener {
+        void onDataLoaded(List<UserInformation> dataList);
     }
 
     public void getUserInformationDate(String date, OnDataLoadedListener listener) {
