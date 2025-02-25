@@ -101,7 +101,7 @@ public class UserInformationRepository {
         ContentValues values = new ContentValues();
         values.put("user_id", userInfo.getUserId());
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());  // Format angepasst
         String dateString = dateFormat.format(userInfo.getDate());  // Date in String konvertieren
         values.put("date", dateString);
 
