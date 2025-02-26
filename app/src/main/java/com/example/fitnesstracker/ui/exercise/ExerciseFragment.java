@@ -14,7 +14,7 @@ public class ExerciseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Layout für das Fragment laden
-        View view = inflater.inflate(R.layout.fragment_exercise, container, false);
+        View view = inflater.inflate(R.layout.fragment_muscle_groups, container, false);
 
         return view;
     }
