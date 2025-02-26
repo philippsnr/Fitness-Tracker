@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="activeListHeading">Aktiver Trainingsplan</string>
+    <string name="allTrainingPlansHeading">Alle Trainingspläne</string>
+</resources>
