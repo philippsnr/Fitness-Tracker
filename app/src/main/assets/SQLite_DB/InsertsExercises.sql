@@ -55,7 +55,6 @@ INSERT INTO Exercise (id, name, difficulty, info, picture_path) VALUES
 (54, 'Curls - Barbell', 1, 'Halte eine Langhantel mit schulterbreitem Griff. Beuge die Arme, spanne den Bizeps an, und senke die Hantel langsam ab.', 'drawable/exercises/curls-barbell'),
 (55, 'Curls - Cable', 1, 'Positioniere dich an der Kabelmaschine mit geradem Griff. Beuge die Arme, ziehe den Griff kontrolliert nach oben, und lasse ihn langsam zurück.', 'drawable/exercises/curls-cable'),
 (56, 'Curls behind the Back - Dumbells', 1, 'Halte eine Kurzhantel hinter deinem Rücken. Beuge den Arm kontrolliert nach oben und senke ihn langsam ab.', 'drawable/exercises/curls-behind-the-back-dumbells'),
-(57, 'Curls behind the Back - Maschine', 1, 'Positioniere dich an der Maschine, sodass du das Gewicht hinter deinem Rücken ziehst. Beuge den Arm kontrolliert und lasse ihn langsam zurück.', 'drawable/exercises/curls-behind-the-back-maschine'),
 (58, 'Curls behind the Back - Cable', 1, 'Stelle dich seitlich an den Kabelzug. Ziehe den Griff hinter deinem Rücken nach oben und lasse ihn langsam zurück.', 'drawable/exercises/curls-behind-the-back-cable'),
 (59, 'Hammercurls - Cable', 1, 'Halte den Griff am Kabelzug im Hammergriff (neutral). Ziehe den Griff kontrolliert nach oben und senke ihn langsam ab.', 'drawable/exercises/hammercurls-cable'),
 (60, 'Hammercurls - Dumbells', 1, 'Halte eine Kurzhantel in jeder Hand im neutralen Griff. Beuge die Arme gleichzeitig oder abwechselnd und lasse sie kontrolliert zurück.', 'drawable/exercises/hammercurls-dumbells'),

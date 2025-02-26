@@ -9,25 +9,25 @@ INSERT INTO Trainingday (name, Trainingplan_id) VALUES
 
 -- Beispiel-Übungszuweisungen für Ganzkörper Tag 1
 INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
-(1, 1), -- Kniebeugen
-(1, 2), -- Bankdrücken
-(1, 3); -- Klimmzüge
+(1, 39), -- Kniebeugen
+(1, 1), -- Bankdrücken
+(1, 10); -- Klimmzüge
 
 -- Beispiel-Übungszuweisungen für Ganzkörper Tag 2
 INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
-(2, 4), -- Kreuzheben
-(2, 5), -- Schulterdrücken
-(2, 6); -- Rudern
+(2, 11), -- LatPulldown
+(2, 75), -- Schulterdrücken
+(2, 19); -- Rudern
 
 -- Beispiel-Übungszuweisungen für Ganzkörper Tag 3
 INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
-(3, 7), -- Beinpresse
-(3, 8), -- Dips
-(3, 9); -- Face Pulls
+(3, 43), -- Beinpresse
+(3, 9), -- Dips
+(3, 74); -- Face Pulls
 
 
 -- Erstelle den Trainingsplan
-INSERT INTO Trainingplan (name, isActive) VALUES ("Push Pull Beine", 0);
+INSERT INTO Trainingplan (name, isActive) VALUES ("Push Pull Beine", 1);
 
 -- IDs der Trainingstage speichern
 INSERT INTO Trainingday (name, Trainingplan_id) VALUES
@@ -40,36 +40,36 @@ INSERT INTO Trainingday (name, Trainingplan_id) VALUES
 
 -- Push 1
 INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
-(4, 2), -- Bankdrücken
-(4, 5), -- Schulterdrücken
-(4, 8); -- Dips
+(4, 1), -- Bankdrücken
+(4, 75), -- Schulterdrücken
+(4, 9); -- Dips
 
 -- Pull 1
 INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
-(5, 3), -- Klimmzüge
-(5, 6), -- Rudern
-(5, 9); -- Face Pulls
+(5, 10), -- Klimmzüge
+(5, 19), -- Rudern
+(5, 74); -- Face Pulls
 
 -- Beine 1
 INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
-(6, 1), -- Kniebeugen
-(6, 4), -- Kreuzheben
-(6, 7); -- Beinpresse
+(6, 39), -- Kniebeugen
+(6, 10), -- pullups
+(6, 43); -- Beinpresse
 
 -- Push 2
 INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
-(7, 2), -- Bankdrücken
-(7, 5), -- Schulterdrücken
-(7, 8); -- Dips
+(7, 1), -- Bankdrücken
+(7, 75), -- Schulterdrücken
+(7, 9); -- Dips
 
 -- Pull 2
 INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
-(8, 3), -- Klimmzüge
-(8, 6), -- Rudern
-(8, 9); -- Face Pulls
+(8, 10), -- Klimmzüge
+(8, 19), -- Rudern
+(8, 74); -- Face Pulls
 
 -- Beine 2
 INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
-(9, 1), -- Kniebeugen
-(9, 4), -- Kreuzheben
-(9, 7); -- Beinpresse
+(9, 39), -- Kniebeugen
+(9, 35), -- rumanian deadlift
+(9, 43); -- Beinpresse
