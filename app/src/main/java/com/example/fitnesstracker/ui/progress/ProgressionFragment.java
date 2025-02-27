@@ -1,6 +1,7 @@
 package com.example.fitnesstracker.ui.progress;
 
 import android.app.AlertDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.example.fitnesstracker.model.UserInformation;
 import com.example.fitnesstracker.viewmodel.UserInformationViewModel;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -74,37 +76,64 @@ public class ProgressionFragment extends Fragment {
         final long baseDate = dataList.get(0).getDate().getTime();
         final float millisInDay = 86400000f; // Millisekunden pro Tag
 
-        List<Entry> entries = new ArrayList<>();
+        // Zwei Listen für die Einträge: eine für Gewicht, eine für KFA
+        List<Entry> weightEntries = new ArrayList<>();
+        List<Entry> kfaEntries = new ArrayList<>();
 
         // Für jedes Datum den Unterschied in Tagen als x-Wert berechnen
         for (UserInformation info : dataList) {
             float diffDays = (info.getDate().getTime() - baseDate) / millisInDay;
-            // Da weight jetzt ein double ist, casten wir in float
-            entries.add(new Entry(diffDays, (float) info.getWeight()));
+            weightEntries.add(new Entry(diffDays, (float) info.getWeight()));
+            // Nur KFA-Einträge hinzufügen, wenn der Wert ungleich 0 ist
+            if(info.getKfa() != 0) {
+                kfaEntries.add(new Entry(diffDays, (float) info.getKfa()));
+            }
         }
 
         getActivity().runOnUiThread(() -> {
-            LineDataSet dataSet = new LineDataSet(entries, "Gewichtsverlauf");
-            dataSet.setValueTextSize(12f);
-            dataSet.setCircleRadius(4f);
-            dataSet.setLineWidth(2f);
-            dataSet.setDrawValues(false);
-            dataSet.setDrawFilled(true);
-            dataSet.setFillColor(ContextCompat.getColor(requireContext(), R.color.primary));
-            dataSet.setFillAlpha(80);
-            dataSet.setColor(ContextCompat.getColor(requireContext(), R.color.primary));
-            dataSet.setCircleColor(ContextCompat.getColor(requireContext(), R.color.primary));
+            // Datensatz für das Gewicht erstellen (linke Y-Achse)
+            LineDataSet weightDataSet = new LineDataSet(weightEntries, "Gewicht (kg)");
+            weightDataSet.setValueTextSize(12f);
+            weightDataSet.setCircleRadius(4f);
+            weightDataSet.setLineWidth(2f);
+            weightDataSet.setDrawValues(false);
+            weightDataSet.setDrawFilled(true);
+            weightDataSet.setFillColor(ContextCompat.getColor(requireContext(), R.color.primary));
+            weightDataSet.setFillAlpha(80);
+            weightDataSet.setColor(ContextCompat.getColor(requireContext(), R.color.primary));
+            weightDataSet.setCircleColor(ContextCompat.getColor(requireContext(), R.color.primary));
+            weightDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 
-            LineData lineData = new LineData(dataSet);
+            LineData lineData;
+            // Nur den KFA-Datensatz hinzufügen, wenn auch Einträge vorhanden sind
+            if (kfaEntries.isEmpty()) {
+                lineData = new LineData(weightDataSet);
+                // Rechte Y-Achse deaktivieren, wenn kein KFA angezeigt wird
+                weightChart.getAxisRight().setEnabled(false);
+            } else {
+                LineDataSet kfaDataSet = new LineDataSet(kfaEntries, "KFA (%)");
+                kfaDataSet.setValueTextSize(12f);
+                kfaDataSet.setCircleRadius(4f);
+                kfaDataSet.setLineWidth(2f);
+                kfaDataSet.setDrawValues(false);
+                kfaDataSet.setDrawFilled(false); // Kein gefüllter Bereich für KFA
+                kfaDataSet.setColor(ContextCompat.getColor(requireContext(), R.color.blue));
+                kfaDataSet.setCircleColor(ContextCompat.getColor(requireContext(), R.color.blue));
+                kfaDataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
+
+                lineData = new LineData(weightDataSet, kfaDataSet);
+                // Rechte Y-Achse aktivieren, da KFA-Daten vorliegen
+                weightChart.getAxisRight().setEnabled(true);
+            }
+
             weightChart.setData(lineData);
 
-            weightChart.getAxisRight().setEnabled(false);
             weightChart.getAxisLeft().setDrawGridLines(false);
             weightChart.getXAxis().setDrawGridLines(false);
             weightChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
             weightChart.setExtraBottomOffset(10f);
 
-            // X-Achse formatieren: Den x-Wert zurück in ein Datum konvertieren
+            // X-Achse formatieren: Den x-Wert (Tage-Differenz) zurück in ein Datum konvertieren
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM", Locale.getDefault());
             weightChart.getXAxis().setValueFormatter(new ValueFormatter() {
                 @Override
@@ -113,10 +142,17 @@ public class ProgressionFragment extends Fragment {
                     return dateFormat.format(new Date(millis));
                 }
             });
-            // Optional: Granularität setzen, damit z. B. immer mindestens ein Tag angezeigt wird
             weightChart.getXAxis().setGranularity(1f);
 
-            weightChart.getLegend().setEnabled(false);
+            // Legende anzeigen, um beide Linien zu unterscheiden
+            Legend legend = weightChart.getLegend();
+            legend.setTextColor(ContextCompat.getColor(requireContext(), R.color.text));
+            legend.setForm(Legend.LegendForm.LINE); // Linienform für die Einträge
+            legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+            legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+            legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+            legend.setDrawInside(false);
+
             Description description = new Description();
             description.setText("");
             weightChart.setDescription(description);
@@ -147,6 +183,8 @@ public class ProgressionFragment extends Fragment {
         // Dialog-Layout laden (ohne Datumseingabe)
         View dialogView = getLayoutInflater().inflate(R.layout.progression_dialog_add_data, null);
         EditText etWeight = dialogView.findViewById(R.id.etWeight);
+        EditText etHeight = dialogView.findViewById(R.id.etHeight);
+        EditText etKfa = dialogView.findViewById(R.id.etKfa);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Neue Daten eingeben");
@@ -160,9 +198,12 @@ public class ProgressionFragment extends Fragment {
                     // Aktuelles Datum verwenden
                     Date currentDate = new Date();
 
-                    // Beispielwerte für weitere Felder (z.B. Höhe, KFA)
-                    int height = 170; // Beispielwert
-                    int kfa = 20;     // Beispielwert
+                    // Größe und KFA optional abfragen und Standardwerte verwenden, falls leer
+                    String heightStr = etHeight.getText().toString().trim();
+                    String kfaStr = etKfa.getText().toString().trim();
+
+                    int height = !heightStr.isEmpty() ? Integer.parseInt(heightStr) : 0;
+                    int kfa = !kfaStr.isEmpty() ? Integer.parseInt(kfaStr) : 0;
 
                     // Neue UserInformation erstellen (Verwendung des Date-Konstruktors)
                     UserInformation newData = new UserInformation(0, 1, currentDate, height, weight, kfa);
@@ -173,7 +214,7 @@ public class ProgressionFragment extends Fragment {
 
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
-                    // Optional: Fehlermeldung anzeigen
+                    // Optional: Fehlermeldung anzeigen, falls die Eingabe ungültig ist
                 }
             }
         });
