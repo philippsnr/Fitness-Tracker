@@ -63,7 +63,6 @@ public class TrainingplanAdapter extends RecyclerView.Adapter<TrainingplanAdapte
         }
     }
 
-
     @Override
     public int getItemCount() {
         return plans.size();

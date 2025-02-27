@@ -5,23 +5,33 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <TextView
+        android:id="@+id/tvActivePlanHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/activeListHeading"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
     <!-- Aktiver Trainingsplan -->
     <TextView
         android:id="@+id/tvActivePlan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/activeListHeading"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"/>
 
     <!-- Liste aller Trainingspläne -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/allTrainingPlansHeading"
-        android:textSize="20sp"
+        android:textSize="25sp"
         android:textStyle="bold"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="10dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTrainingPlans"

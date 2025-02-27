@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Standardmäßig das Home-Fragment anzeigen
         if (savedInstanceState == null) {
-            loadFragment(new ProgressionFragment());
+            loadFragment(new TrainingFragment());
         }
     }
 
