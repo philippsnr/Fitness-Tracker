@@ -13,5 +13,19 @@
         android:hint="Gewicht (in kg)"
         android:inputType="numberDecimal" />
 
-    <!-- Weitere Eingaben (z.B. Höhe, KFA) können hier hinzugefügt werden -->
+    <!-- Größeingabe (optional) -->
+    <EditText
+        android:id="@+id/etHeight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Größe (in cm, optional)"
+        android:inputType="number" />
+
+    <!-- KFA-Eingabe (optional) -->
+    <EditText
+        android:id="@+id/etKfa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="KFA (%) (optional)"
+        android:inputType="number" />
 </LinearLayout>
