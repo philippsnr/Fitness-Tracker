@@ -10,7 +10,7 @@
         android:id="@+id/etWeight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Gewicht (in kg)"
+        android:hint="Gewicht (kg)"
         android:inputType="numberDecimal" />
 
     <!-- Größeingabe (optional) -->
@@ -18,7 +18,7 @@
         android:id="@+id/etHeight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Größe (in cm, optional)"
+        android:hint="Optional: Größe (cm)"
         android:inputType="number" />
 
     <!-- KFA-Eingabe (optional) -->
@@ -26,6 +26,6 @@
         android:id="@+id/etKfa"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="KFA (%) (optional)"
+        android:hint="Optional: KFA (%)"
         android:inputType="number" />
 </LinearLayout>
