@@ -32,7 +32,7 @@ public class UserInformationRepository {
                         cursor.getInt(1),
                         cursor.getString(2),
                         cursor.getInt(3),
-                        cursor.getInt(4),
+                        cursor.getDouble(4),
                         cursor.getInt(5)
                 );
                 userInfoList.add(userInfo);
@@ -56,7 +56,7 @@ public class UserInformationRepository {
                     cursor.getInt(1),
                     cursor.getString(2),
                     cursor.getInt(3),
-                    cursor.getInt(4),
+                    cursor.getDouble(4),
                     cursor.getInt(5)
             );
             cursor.close();
@@ -82,7 +82,7 @@ public class UserInformationRepository {
                     cursor.getInt(1),
                     cursor.getString(2),
                     cursor.getInt(3),
-                    cursor.getInt(4),
+                    cursor.getDouble(4),
                     cursor.getInt(5)
             );
             cursor.close();
