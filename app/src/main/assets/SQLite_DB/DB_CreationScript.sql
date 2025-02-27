@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS UserInformation (    -- ferig
     user_id INTEGER,
     date TEXT, -- "DD-MM-YYYY"
     height INTEGER NOT NULL,
-    weight INTEGER NOT NULL,
+    weight REAL NOT NULL,
     KFA INTEGER NOT NULL, -- Körperfettanteil in Prozent -> Bild zur Schätzung
     FOREIGN KEY (user_id) REFERENCES User (id)
 ) STRICT;
