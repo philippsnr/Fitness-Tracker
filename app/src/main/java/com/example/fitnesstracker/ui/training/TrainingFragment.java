@@ -1,5 +1,6 @@
 package com.example.fitnesstracker.ui.training;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,50 +43,77 @@ public class TrainingFragment extends Fragment {
         // ViewModel initialisieren
         viewModel = new ViewModelProvider(requireActivity()).get(TrainingplanViewModel.class);
 
-        // Adapter initialisieren und setzen
-        adapter = new TrainingplanAdapter(new ArrayList<>(), plan -> {
-            if (plan != null) {
-                viewModel.setActiveTrainingplan(plan.getId(),
-                        () -> System.out.println("Plan erfolgreich gesetzt"),
-                        error -> System.err.println("Fehler: " + error.getMessage()));
+        // Adapter initialisieren und den Listener setzen
+        adapter = new TrainingplanAdapter(new ArrayList<>(), new TrainingplanAdapter.OnItemClickListener() {
+            @Override
+            public void onViewClick(int position) {
+                // Logik für "Ansehen" einfügen
+                Trainingplan plan = adapter.getItem(position);
+                System.out.println("Details anzeigen für: " + plan.getName());
+            }
+
+            @Override
+            public void onEditClick(int position) {
+                // Logik für "Bearbeiten" einfügen
+                Trainingplan plan = adapter.getItem(position);
+                System.out.println("Bearbeiten: " + plan.getName());
+            }
+
+            @Override
+            public void onDeleteClick(int position) {
+                // Zeige einen Bestätigungsdialog
+                new AlertDialog.Builder(requireContext())
+                        .setTitle("Löschen bestätigen")
+                        .setMessage("Möchten Sie diesen Trainingsplan wirklich unwiderruflich löschen?")
+                        .setPositiveButton("Ja", (dialog, which) -> {
+                            // Der Benutzer hat „Ja“ gewählt – führe die Löschaktion aus
+                            Trainingplan plan = adapter.getItem(position);
+
+                            // Aufruf der ViewModel-Methode zum Löschen des Trainingsplans
+                            viewModel.deleteTrainingplan(plan,
+                                    () -> {
+                                        // Erfolgreiches Löschen - Rückmeldung an den Benutzer
+                                        Toast.makeText(requireContext(), "Trainingsplan gelöscht", Toast.LENGTH_SHORT).show();
+
+                                        // Aktualisiere die Liste der Trainingspläne
+                                        viewModel.loadAllTrainingplans(
+                                                plans -> requireActivity().runOnUiThread(() -> adapter.updatePlans(plans)),
+                                                error -> System.err.println("Fehler beim Laden der Trainingspläne: " + error.getMessage())
+                                        );
+                                    },
+                                    error -> {
+                                        // Fehler beim Löschen
+                                        Toast.makeText(requireContext(), "Fehler beim Löschen des Plans", Toast.LENGTH_SHORT).show();
+                                        error.printStackTrace(); // Fehlerprotokollierung
+                                    });
+                        })
+                        .setNegativeButton("Nein", (dialog, which) -> {
+                            // Der Benutzer hat „Nein“ gewählt – schließe einfach den Dialog
+                            dialog.dismiss();
+                        })
+                        .setCancelable(false) // Verhindert, dass der Dialog einfach geschlossen wird
+                        .show();
             }
         });
+
         rvTrainingPlans.setAdapter(adapter);
 
-        // Aktiven Trainingsplan beobachten
+        // Aktiven Trainingsplan laden
         viewModel.loadActiveTrainingplan(
-                plan -> {
+                plan -> requireActivity().runOnUiThread(() -> {
                     if (plan != null) {
                         tvActivePlan.setText(plan.getName());
                     } else {
                         tvActivePlan.setText("Kein aktiver Plan");
                     }
-                },
-                error -> {
-                    System.err.println("Fehler beim Laden des aktiven Plans: " + error.getMessage());
-                }
-        );
-
-        // Liste aller Trainingspläne beobachten
-        viewModel.loadAllTrainingplans(
-                plans -> requireActivity().runOnUiThread(() -> {
-                    if (adapter == null) {
-                        adapter = new TrainingplanAdapter(plans, plan ->
-                                viewModel.setActiveTrainingplan(
-                                        plan.getId(),
-                                        () -> System.out.println("Plan erfolgreich gesetzt"),
-                                        error -> System.err.println("Fehler: " + error.getMessage())
-                                )
-                        );
-                        rvTrainingPlans.setAdapter(adapter);
-                    } else {
-                        adapter.updatePlans(plans);
-                    }
                 }),
-                error -> requireActivity().runOnUiThread(() ->
-                        System.err.println("Fehler beim Laden der Trainingspläne: " + error.getMessage())
-                )
+                error -> System.err.println("Fehler beim Laden des aktiven Plans: " + error.getMessage())
         );
 
+        // Liste aller Trainingspläne laden
+        viewModel.loadAllTrainingplans(
+                plans -> requireActivity().runOnUiThread(() -> adapter.updatePlans(plans)),
+                error -> System.err.println("Fehler beim Laden der Trainingspläne: " + error.getMessage())
+        );
     }
 }

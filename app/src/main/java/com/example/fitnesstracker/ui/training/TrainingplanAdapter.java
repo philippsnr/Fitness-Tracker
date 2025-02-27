@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,37 +15,50 @@ import java.util.List;
 
 public class TrainingplanAdapter extends RecyclerView.Adapter<TrainingplanAdapter.PlanViewHolder> {
 
-    private List<Trainingplan> plans;
+    private List<Trainingplan> trainingplans;
     private OnItemClickListener listener;
 
+    // Interface für Klick-Listener
     public interface OnItemClickListener {
-        void onItemClick(Trainingplan plan);
+        void onViewClick(int position);
+        void onEditClick(int position);
+        void onDeleteClick(int position);
     }
 
-    public TrainingplanAdapter(List<Trainingplan> plans, OnItemClickListener listener) {
-        this.plans = plans;
+    public TrainingplanAdapter(List<Trainingplan> trainingplans, OnItemClickListener listener) {
+        this.trainingplans = trainingplans;
         this.listener = listener;
     }
 
-    public static class PlanViewHolder extends RecyclerView.ViewHolder {
+    public class PlanViewHolder extends RecyclerView.ViewHolder {
         TextView name;
+        ImageView ivView, ivEdit, ivDelete;
 
         public PlanViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.tvPlanName);
+            ivView = itemView.findViewById(R.id.ivView);
+            ivEdit = itemView.findViewById(R.id.ivEdit);
+            ivDelete = itemView.findViewById(R.id.ivDelete);
+
+            // Setze Klick-Listener für jedes Icon
+            ivView.setOnClickListener(v -> listener.onViewClick(getAdapterPosition()));
+            ivEdit.setOnClickListener(v -> listener.onEditClick(getAdapterPosition()));
+            ivDelete.setOnClickListener(v -> listener.onDeleteClick(getAdapterPosition()));
         }
 
-        public void bind(final Trainingplan plan, final OnItemClickListener listener) {
+        public void bind(final Trainingplan plan) {
             name.setText(plan.getName());
-            itemView.setOnClickListener(v -> listener.onItemClick(plan));
         }
     }
+
+    // Methode zum Aktualisieren der Liste
     public void updatePlans(List<Trainingplan> newPlans) {
-        if (this.plans == null) {
-            this.plans = new ArrayList<>();
+        if (this.trainingplans == null) {
+            this.trainingplans = new ArrayList<>();
         }
-        this.plans.clear();
-        this.plans.addAll(newPlans);
+        this.trainingplans.clear();
+        this.trainingplans.addAll(newPlans);
         notifyDataSetChanged();
     }
 
@@ -58,13 +72,18 @@ public class TrainingplanAdapter extends RecyclerView.Adapter<TrainingplanAdapte
 
     @Override
     public void onBindViewHolder(@NonNull PlanViewHolder holder, int position) {
-        if (plans != null && position < plans.size()) {
-            holder.bind(plans.get(position), listener);
+        if (trainingplans != null && position < trainingplans.size()) {
+            holder.bind(trainingplans.get(position));
         }
     }
 
     @Override
     public int getItemCount() {
-        return plans.size();
+        return trainingplans.size();
+    }
+
+    // Methode, um auf ein spezifisches Training zuzugreifen
+    public Trainingplan getItem(int position) {
+        return trainingplans.get(position);
     }
 }

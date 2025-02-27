@@ -2,4 +2,8 @@
 <resources>
     <string name="activeListHeading">Aktiver Trainingsplan</string>
     <string name="allTrainingPlansHeading">Alle Trainingspläne</string>
+    <string name="view_plan">Trainingsplan anzeigen</string>
+    <string name="edit_plan">Trainingsplan bearbeiten</string>
+    <string name="delete_plan">Trainingsplan löschen</string>
+    <string name="name_plan">Trainingsplan Name</string>
 </resources>
