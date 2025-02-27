@@ -156,7 +156,7 @@ public class ProgressionFragment extends Fragment {
 
             if (!weightStr.isEmpty()) {
                 try {
-                    int weight = Integer.parseInt(weightStr);
+                    double weight = Double.parseDouble(weightStr);
                     // Aktuelles Datum verwenden
                     Date currentDate = new Date();
 
