@@ -14,9 +14,23 @@
         android:layout_gravity="center_horizontal"
         android:paddingBottom="16dp"/>
 
+    <!-- ScrollView für Muskelgruppen-Buttons -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+        <LinearLayout
+            android:id="@+id/buttonContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"/>
+    </ScrollView>
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_muscle_groups"
+        android:id="@+id/recyclerViewExercises"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"/>
+
 </LinearLayout>
