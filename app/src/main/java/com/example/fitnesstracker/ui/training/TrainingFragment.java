@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.viewmodel.TrainingplanViewModel;
+import com.example.fitnesstracker.model.Trainingplan;
+
+import java.util.ArrayList;
 
 public class TrainingFragment extends Fragment {
 
@@ -35,21 +39,40 @@ public class TrainingFragment extends Fragment {
         RecyclerView rvTrainingPlans = view.findViewById(R.id.rvTrainingPlans);
         rvTrainingPlans.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        // ViewModel initialisieren (empfohlen mit requireActivity(), falls von mehreren Fragmenten genutzt)
+        // ViewModel initialisieren
         viewModel = new ViewModelProvider(requireActivity()).get(TrainingplanViewModel.class);
+
+        // Adapter initialisieren und setzen
+        adapter = new TrainingplanAdapter(new ArrayList<>(), plan -> {
+            if (plan != null) {
+                viewModel.setActiveTrainingplan(plan.getId(),
+                        () -> System.out.println("Plan erfolgreich gesetzt"),
+                        error -> System.err.println("Fehler: " + error.getMessage()));
+            }
+        });
+        rvTrainingPlans.setAdapter(adapter);
 
         // Aktiven Trainingsplan beobachten
         viewModel.loadActiveTrainingplan(
-                plan -> tvActivePlan.setText(plan != null ? plan.getName() : "Kein aktiver Plan"),
-                error -> tvActivePlan.setText("Fehler beim Laden des Plans")
+                plan -> {
+                    if (plan != null) {
+                        tvActivePlan.setText(plan.getName());
+                    } else {
+                        tvActivePlan.setText("Kein aktiver Plan");
+                    }
+                },
+                error -> {
+                    System.err.println("Fehler beim Laden des aktiven Plans: " + error.getMessage());
+                }
         );
 
+        // Liste aller Trainingspläne beobachten
         viewModel.loadAllTrainingplans(
-                plans -> {
+                plans -> requireActivity().runOnUiThread(() -> {
                     if (adapter == null) {
                         adapter = new TrainingplanAdapter(plans, plan ->
                                 viewModel.setActiveTrainingplan(
-                                        plan.getId(),  // 🔹 Hier die ID extrahieren!
+                                        plan.getId(),
                                         () -> System.out.println("Plan erfolgreich gesetzt"),
                                         error -> System.err.println("Fehler: " + error.getMessage())
                                 )
@@ -58,10 +81,11 @@ public class TrainingFragment extends Fragment {
                     } else {
                         adapter.updatePlans(plans);
                     }
-                },
-                error -> System.err.println("Fehler beim Laden der Trainingspläne: " + error.getMessage())
+                }),
+                error -> requireActivity().runOnUiThread(() ->
+                        System.err.println("Fehler beim Laden der Trainingspläne: " + error.getMessage())
+                )
         );
-
 
     }
 }

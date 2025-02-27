@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class TrainingplanAdapter extends RecyclerView.Adapter<TrainingplanAdapter.PlanViewHolder> {
@@ -38,10 +40,14 @@ public class TrainingplanAdapter extends RecyclerView.Adapter<TrainingplanAdapte
         }
     }
     public void updatePlans(List<Trainingplan> newPlans) {
+        if (this.plans == null) {
+            this.plans = new ArrayList<>();
+        }
         this.plans.clear();
         this.plans.addAll(newPlans);
         notifyDataSetChanged();
     }
+
     @NonNull
     @Override
     public PlanViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -52,8 +58,11 @@ public class TrainingplanAdapter extends RecyclerView.Adapter<TrainingplanAdapte
 
     @Override
     public void onBindViewHolder(@NonNull PlanViewHolder holder, int position) {
-        holder.bind(plans.get(position), listener);
+        if (plans != null && position < plans.size()) {
+            holder.bind(plans.get(position), listener);
+        }
     }
+
 
     @Override
     public int getItemCount() {
