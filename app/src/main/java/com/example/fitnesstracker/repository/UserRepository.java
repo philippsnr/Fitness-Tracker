@@ -18,7 +18,6 @@ public class UserRepository {
     public User getUser() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM User LIMIT 1", null);
-
         if (cursor.moveToFirst()) {
             User user = new User(
                     cursor.getInt(0),
@@ -31,7 +30,6 @@ public class UserRepository {
             db.close();
             return user;
         }
-
         cursor.close();
         db.close();
         return null; // Falls kein User existiert
