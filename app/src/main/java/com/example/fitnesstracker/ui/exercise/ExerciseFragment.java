@@ -13,27 +13,30 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fitnesstracker.R;
-import com.example.fitnesstracker.model.Exercise;
 import com.example.fitnesstracker.model.MuscleGroup;
-import com.example.fitnesstracker.viewmodel.ExerciseViewModel;
 import com.example.fitnesstracker.repository.MuscleGroupRepository;
+import com.example.fitnesstracker.viewmodel.ExerciseViewModel;
 
 import java.util.List;
 
 public class ExerciseFragment extends Fragment {
     private ExerciseViewModel exerciseViewModel;
+    private RecyclerView recyclerView;
     private ExerciseAdapter exerciseAdapter;
     private LinearLayout buttonContainer;
     private MuscleGroupRepository muscleGroupRepository;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Layout für das Fragment laden
         View view = inflater.inflate(R.layout.fragment_exercise, container, false);
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewExercises);
+        recyclerView = view.findViewById(R.id.recyclerViewExercises);
         buttonContainer = view.findViewById(R.id.buttonContainer);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        exerciseAdapter = new ExerciseAdapter();
+        // Hier wird der Kontext an den Adapter übergeben:
+        exerciseAdapter = new ExerciseAdapter(getContext());
         recyclerView.setAdapter(exerciseAdapter);
 
         exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
@@ -55,6 +58,7 @@ public class ExerciseFragment extends Fragment {
 
     private void loadExercisesForMuscleGroup(int muscleGroupId) {
         exerciseViewModel.loadExercisesForMuscleGroup(muscleGroupId, exercises -> {
+            // Update der UI auf dem Haupt-Thread
             getActivity().runOnUiThread(() -> {
                 exerciseAdapter.setExercises(exercises);
             });

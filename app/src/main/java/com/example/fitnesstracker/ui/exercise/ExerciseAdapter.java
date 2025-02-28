@@ -1,5 +1,7 @@
 package com.example.fitnesstracker.ui.exercise;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,11 @@ import java.util.List;
 
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
     private List<Exercise> exercises = new ArrayList<>();
+    private Context context;
+
+    public ExerciseAdapter(Context context) {
+        this.context = context;
+    }
 
     @NonNull
     @Override
@@ -26,6 +33,14 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         Exercise exercise = exercises.get(position);
         holder.nameTextView.setText(exercise.getName());
         holder.difficultyTextView.setText("Difficulty: " + exercise.getDifficulty());
+        // Set click listener to open detail activity
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ExerciseDetailActivity.class);
+            intent.putExtra("exerciseName", exercise.getName());
+            intent.putExtra("exerciseInfo", exercise.getInfo());
+            intent.putExtra("exercisePicturePath", exercise.getPicturePath());
+            context.startActivity(intent);
+        });
     }
 
     @Override
