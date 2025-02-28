@@ -28,13 +28,16 @@ public class ExerciseDetailActivity extends AppCompatActivity {
         textViewInfo.setText(exerciseInfo);
 
         // Load image from file path (assumes local file path is provided)
+        loadImage(exercisePicturePath, imageViewExercise);
+    }
+
+    protected void loadImage(String exercisePicturePath, ImageView imageViewExercise) {
         if (exercisePicturePath != null && !exercisePicturePath.isEmpty()) {
             File imgFile = new File(exercisePicturePath);
             if (imgFile.exists()) {
                 Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                 imageViewExercise.setImageBitmap(bitmap);
             } else {
-                // Fallback if image file doesn't exist – stelle sicher, dass placeholder_image in drawable existiert
                 imageViewExercise.setImageResource(R.drawable.placeholder_image);
             }
         } else {
