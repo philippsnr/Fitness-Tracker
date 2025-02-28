@@ -15,17 +15,17 @@
         android:paddingBottom="16dp"/>
 
     <!-- ScrollView für Muskelgruppen-Buttons -->
-    <ScrollView
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fillViewport="true">
         <LinearLayout
             android:id="@+id/buttonContainer"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"/>
-    </ScrollView>
+    </HorizontalScrollView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewExercises"

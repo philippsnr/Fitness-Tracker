@@ -22,7 +22,6 @@ import java.util.List;
 
 public class ExerciseFragment extends Fragment {
     private ExerciseViewModel exerciseViewModel;
-    private RecyclerView recyclerView;
     private ExerciseAdapter exerciseAdapter;
     private LinearLayout buttonContainer;
     private MuscleGroupRepository muscleGroupRepository;
@@ -31,7 +30,7 @@ public class ExerciseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_exercise, container, false);
 
-        recyclerView = view.findViewById(R.id.recyclerViewExercises);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewExercises);
         buttonContainer = view.findViewById(R.id.buttonContainer);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         exerciseAdapter = new ExerciseAdapter();
