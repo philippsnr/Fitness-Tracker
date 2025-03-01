@@ -31,13 +31,6 @@ public class UserInformationViewModel extends AndroidViewModel {
         void onDataLoaded(List<UserInformation> dataList);
     }
 
-    public void getUserInformationDate(String date, OnDataLoadedListener listener) {
-        executorService.execute(() -> {
-            UserInformation data = repository.getUserInformationDate(date);
-            listener.onDataLoaded(data);
-        });
-    }
-
     public void getLastUserInformation(OnDataLoadedListener listener) {
         executorService.execute(() -> {
             UserInformation data = repository.getLatestUserInformation();
