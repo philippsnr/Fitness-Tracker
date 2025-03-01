@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.fitnesstracker.R;
+
 import java.io.File;
 
 public class ExerciseDetailActivity extends AppCompatActivity {
@@ -18,19 +19,19 @@ public class ExerciseDetailActivity extends AppCompatActivity {
         TextView textViewName = findViewById(R.id.textViewExerciseDetailName);
         TextView textViewInfo = findViewById(R.id.textViewExerciseDetailInfo);
         ImageView imageViewExercise = findViewById(R.id.imageViewExercise);
+        String exercisePicturePath = retrieveData(textViewName, textViewInfo);
+        loadImage(exercisePicturePath, imageViewExercise);
+    }
 
-        // Retrieve data from Intent extras
+    protected String retrieveData(TextView textViewName, TextView textViewInfo){
         String exerciseName = getIntent().getStringExtra("exerciseName");
         String exerciseInfo = getIntent().getStringExtra("exerciseInfo");
         String exercisePicturePath = getIntent().getStringExtra("exercisePicturePath");
 
         textViewName.setText(exerciseName);
         textViewInfo.setText(exerciseInfo);
-
-        // Load image from file path (assumes local file path is provided)
-        loadImage(exercisePicturePath, imageViewExercise);
+        return exercisePicturePath;
     }
-
     protected void loadImage(String exercisePicturePath, ImageView imageViewExercise) {
         if (exercisePicturePath != null && !exercisePicturePath.isEmpty()) {
             File imgFile = new File(exercisePicturePath);

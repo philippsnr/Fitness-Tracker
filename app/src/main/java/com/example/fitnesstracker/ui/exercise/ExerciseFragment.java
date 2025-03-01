@@ -31,19 +31,20 @@ public class ExerciseFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Layout für das Fragment laden
         View view = inflater.inflate(R.layout.fragment_exercise, container, false);
-
         recyclerView = view.findViewById(R.id.recyclerViewExercises);
         buttonContainer = view.findViewById(R.id.buttonContainer);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        // Hier wird der Kontext an den Adapter übergeben:
+        createAdapter();
+        loadMuscleGroups();
+        return view;
+    }
+
+    protected void createAdapter(){
         exerciseAdapter = new ExerciseAdapter(getContext());
         recyclerView.setAdapter(exerciseAdapter);
 
         exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
         muscleGroupRepository = new MuscleGroupRepository(getContext());
-
-        loadMuscleGroups();
-        return view;
     }
 
     private void loadMuscleGroups() {

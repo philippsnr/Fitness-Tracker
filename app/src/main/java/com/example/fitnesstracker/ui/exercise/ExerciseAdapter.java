@@ -33,7 +33,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         Exercise exercise = exercises.get(position);
         holder.nameTextView.setText(exercise.getName());
         holder.difficultyTextView.setText("Difficulty: " + exercise.getDifficulty());
-        // Set click listener to open detail activity
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ExerciseDetailActivity.class);
             intent.putExtra("exerciseName", exercise.getName());
