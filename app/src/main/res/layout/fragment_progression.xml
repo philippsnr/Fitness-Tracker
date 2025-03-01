@@ -2,78 +2,80 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:orientation="vertical">
 
-    <!-- Titel -->
+    <!-- Header: geht bis in die oberen Ecken -->
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
         android:text="@string/progression_title"
-        android:textColor="@color/text"
-        android:textSize="24sp" />
+        android:textAlignment="center"
+        android:textColor="@color/background"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        android:background="@drawable/fragment_header"
+        android:padding="16dp" />
 
+    <!-- Restlicher Content mit Padding -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginTop="8dp"
-        android:padding="16dp">
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/txtGoal"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Ziel: -"
-            android:textSize="20sp"
-            android:textColor="@color/text"
-            android:textStyle="bold"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:paddingEnd="8dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp"
+            android:padding="16dp"
+            android:background="@drawable/rounded_border">
 
-        <ImageView
-            android:id="@+id/btnEditGoal"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/ic_edit"
-            android:contentDescription="Ziel bearbeiten"
-            android:padding="6dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="8dp"
-            app:tint="@android:color/white" />
+            <TextView
+                android:id="@+id/txtGoal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Ziel: -"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingEnd="8dp" />
 
+            <ImageView
+                android:id="@+id/btnEditGoal"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_edit"
+                android:contentDescription="Ziel bearbeiten"
+                android:padding="6dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                app:tint="@android:color/white" />
+        </LinearLayout>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/weightChart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAddData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Neuer Eintrag"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_border"
+            android:paddingHorizontal="16dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            style="@style/Widget.MaterialComponents.Button"
+            app:icon="@drawable/ic_add"
+            app:iconTint="@null"
+            app:iconGravity="textStart"
+            app:iconSize="24dp"/>
     </LinearLayout>
-
-
-    <!-- LineChart für Gewichtsdaten -->
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/weightChart"
-        android:layout_width="match_parent"
-        android:layout_height="300dp" />
-
-    <!-- Button zum Hinzufügen neuer Daten -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnAddData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Neuer Eintrag"
-        android:textColor="@android:color/white"
-        android:backgroundTint="@color/primary"
-        android:paddingHorizontal="16dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
-        style="@style/Widget.MaterialComponents.Button"
-        app:icon="@drawable/ic_add"
-        app:iconTint="@null"
-        app:iconGravity="textStart"
-        app:iconSize="24dp"/>
-
-
-
-
 </LinearLayout>

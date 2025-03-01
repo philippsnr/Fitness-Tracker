@@ -1,6 +1,7 @@
 package com.example.fitnesstracker.ui.progress;
 
 import android.app.AlertDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -121,12 +122,13 @@ public class ProgressionFragment extends Fragment {
 
         LineData lineData = kfaEntries.isEmpty() ?
                 new LineData(weightDataSet) :
-                new LineData(weightDataSet, createDataSet(kfaEntries, "KFA (%)", R.color.blue, YAxis.AxisDependency.RIGHT, false));
+                new LineData(weightDataSet, createDataSet(kfaEntries, "KFA (%)", R.color.neon_blue, YAxis.AxisDependency.RIGHT, false));
 
         weightChart.setData(lineData);
         weightChart.getAxisRight().setEnabled(!kfaEntries.isEmpty());
         configureAxes(baseDate);
         configureLegend();
+        weightChart.setExtraOffsets(0f, 0f, 0f, 15f);
         weightChart.invalidate();
     }
 
@@ -167,6 +169,11 @@ public class ProgressionFragment extends Fragment {
             }
         });
         weightChart.getXAxis().setGranularity(1f);
+
+        // Achsenfarben
+        weightChart.getXAxis().setTextColor(ContextCompat.getColor(requireContext(), R.color.text));
+        weightChart.getAxisLeft().setTextColor(ContextCompat.getColor(requireContext(), R.color.text));
+        weightChart.getAxisRight().setTextColor(ContextCompat.getColor(requireContext(), R.color.text));
     }
 
     /**
