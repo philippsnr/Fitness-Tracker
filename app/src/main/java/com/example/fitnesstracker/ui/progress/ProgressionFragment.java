@@ -1,21 +1,23 @@
 package com.example.fitnesstracker.ui.progress;
 
 import android.app.AlertDialog;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.widget.ImageView;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.model.UserInformation;
 import com.example.fitnesstracker.viewmodel.UserInformationViewModel;
+import com.example.fitnesstracker.viewmodel.UserViewModel;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -27,7 +29,6 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -36,7 +37,10 @@ import java.util.Locale;
 public class ProgressionFragment extends Fragment {
 
     private LineChart weightChart;
-    private UserInformationViewModel viewModel;
+    private UserInformationViewModel userInformationViewModel;
+    private UserViewModel userViewModel;
+    private TextView txtGoal;
+
 
     /**
      * Erstellt und initialisiert das Fragment.
@@ -49,8 +53,14 @@ public class ProgressionFragment extends Fragment {
         Button btnAddData = view.findViewById(R.id.btnAddData);
         btnAddData.setOnClickListener(v -> showAddDataDialog());
 
-        viewModel = new ViewModelProvider(this).get(UserInformationViewModel.class);
+        userInformationViewModel = new ViewModelProvider(this).get(UserInformationViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        loadUserGoal();
         loadWeightData();
+
+        txtGoal = view.findViewById(R.id.txtGoal);
+        ImageView btnEditGoal = view.findViewById(R.id.btnEditGoal);
+        btnEditGoal.setOnClickListener(v -> showEditGoalDialog());
 
         return view;
     }
@@ -59,7 +69,7 @@ public class ProgressionFragment extends Fragment {
      * Lädt die gespeicherten Gewichtsdaten und aktualisiert das Diagramm.
      */
     private void loadWeightData() {
-        viewModel.getAllUserInformation(dataList -> {
+        userInformationViewModel.getAllUserInformation(dataList -> {
             if (dataList != null && !dataList.isEmpty()) {
                 updateChart(dataList);
             }
@@ -72,7 +82,7 @@ public class ProgressionFragment extends Fragment {
     private void updateChart(List<UserInformation> dataList) {
         if (!isChartUpdateValid(dataList)) return;
 
-        Collections.sort(dataList, Comparator.comparing(UserInformation::getDate));
+        dataList.sort(Comparator.comparing(UserInformation::getDate));
         long baseDate = dataList.get(0).getDate().getTime();
 
         List<Entry> weightEntries = new ArrayList<>();
@@ -199,7 +209,7 @@ public class ProgressionFragment extends Fragment {
     private void handleAddDataSubmit(EditText etWeight, EditText etHeight, EditText etKfa) {
         UserInformation newData = convertInputToUserInformation(etWeight, etHeight, etKfa);
         if (newData != null) {
-            viewModel.writeUserInformation(newData);
+            userInformationViewModel.writeUserInformation(newData);
             loadWeightData(); // Chart aktualisieren
         }
     }
@@ -227,4 +237,61 @@ public class ProgressionFragment extends Fragment {
             return null;
         }
     }
+
+    /**
+     * Lädt das Benutzerziel aus dem ViewModel und zeigt es in der TextView an.
+     */
+    private void loadUserGoal() {
+        userViewModel.getUserGoal(new UserViewModel.OnGoalLoadedListener() {
+            @Override
+            public void onGoalLoaded(String goal) {
+                if (goal != null) {
+                    txtGoal.setText("Ziel: " + goal);
+                } else {
+                    txtGoal.setText("Ziel: Nicht gesetzt");
+                }
+            }
+        });
+    }
+
+    /**
+     * Zeigt einen Dialog zur Auswahl des Trainingsziels an.
+     */
+    private void showEditGoalDialog() {
+        View dialogView = getLayoutInflater().inflate(R.layout.progression_dialog_edit_goal, null);
+        RadioGroup radioGroupGoals = dialogView.findViewById(R.id.radioGroupGoals);
+
+        // Aktuelles Ziel aus der UI holen (optional für Vorauswahl)
+        String currentGoal = txtGoal.getText().toString();
+
+        if (currentGoal.contains("Abnehmen")) {
+            radioGroupGoals.check(R.id.rbLoseWeight);
+        } else if (currentGoal.contains("Gewicht halten")) {
+            radioGroupGoals.check(R.id.rbMaintainWeight);
+        } else if (currentGoal.contains("Zunehmen")) {
+            radioGroupGoals.check(R.id.rbGainWeight);
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Trainingsziel wählen");
+        builder.setView(dialogView);
+        builder.setPositiveButton("Speichern", (dialog, which) -> {
+            int selectedId = radioGroupGoals.getCheckedRadioButtonId();
+            String newGoal = "";
+
+            if (selectedId == R.id.rbLoseWeight) {
+                newGoal += "Abnehmen";
+            } else if (selectedId == R.id.rbMaintainWeight) {
+                newGoal += "Gewicht halten";
+            } else if (selectedId == R.id.rbGainWeight) {
+                newGoal += "Zunehmen";
+            }
+
+            txtGoal.setText("Ziel: " + newGoal);
+            userViewModel.updateUserGoal(newGoal);
+        });
+        builder.setNegativeButton("Abbrechen", null);
+        builder.create().show();
+    }
+
 }
