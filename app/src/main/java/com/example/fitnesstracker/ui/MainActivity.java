@@ -1,34 +1,30 @@
 package com.example.fitnesstracker.ui;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
 import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.ui.nutrition.NutritionFragment;
 import com.example.fitnesstracker.ui.progress.ProgressionFragment;
 import com.example.fitnesstracker.ui.exercise.ExerciseFragment;
 import com.example.fitnesstracker.ui.training.TrainingFragment;
+import com.example.fitnesstracker.ui.onboarding.OnboardingFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
- 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Bottom Navigation Bar initialisieren
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
 
-        // Listener für die Bottom Navigation Bar mit Lambda-Ausdruck
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
-
-            // Verwende if-else anstelle von switch
             int itemId = item.getItemId();
             if (itemId == R.id.nav_progression) {
                 selectedFragment = new ProgressionFragment();
@@ -40,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment = new ExerciseFragment();
             }
 
-            // Fragment austauschen
             if (selectedFragment != null) {
                 loadFragment(selectedFragment);
             }
@@ -48,40 +43,25 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        // Standardmäßig das Home-Fragment anzeigen
+        // Prüfe, ob das Onboarding bereits abgeschlossen wurde
+        SharedPreferences prefs = getSharedPreferences("onboarding", MODE_PRIVATE);
+        boolean onboardingComplete = prefs.getBoolean("onboarding_complete", false);
+
         if (savedInstanceState == null) {
-            loadFragment(new ProgressionFragment());
-        }
-    }
-
-    // Methode zum Laden eines Fragments
-    private void loadFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        Fragment existingFragment = fragmentManager.findFragmentByTag(fragment.getClass().getSimpleName());
-
-        if (existingFragment == null) {
-            fragmentTransaction.add(R.id.fragment_container, fragment, fragment.getClass().getSimpleName());
-        }
-
-        for (Fragment frag : fragmentManager.getFragments()) {
-            if (frag == existingFragment) {
-                fragmentTransaction.show(frag);
+            if (!onboardingComplete) {
+                // Lade das Onboarding-Fragment
+                loadFragment(new OnboardingFragment());
             } else {
-                fragmentTransaction.hide(frag);
+                // Lade das Standardfragment, z. B. ProgressionFragment
+                loadFragment(new ProgressionFragment());
             }
         }
-
-        fragmentTransaction.commit();
     }
 
-    /*
     private void loadFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.commit();
     }
-    */
 }
