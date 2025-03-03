@@ -1,20 +1,20 @@
 package com.example.fitnesstracker.ui;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
 import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.ui.nutrition.NutritionFragment;
 import com.example.fitnesstracker.ui.progress.ProgressionFragment;
 import com.example.fitnesstracker.ui.exercise.ExerciseFragment;
 import com.example.fitnesstracker.ui.training.TrainingFragment;
+import com.example.fitnesstracker.ui.onboarding.OnboardingFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,7 +26,10 @@ public class MainActivity extends AppCompatActivity {
 
         initBottomNavigation();
 
-        // Standardmäßig das Home-Fragment anzeigen
+        // Prüfe, ob das Onboarding bereits abgeschlossen wurde
+        SharedPreferences prefs = getSharedPreferences("onboarding", MODE_PRIVATE);
+        boolean onboardingComplete = prefs.getBoolean("onboarding_complete", false);
+
         if (savedInstanceState == null) {
             loadFragment(new ProgressionFragment());
         }
@@ -87,10 +90,16 @@ public class MainActivity extends AppCompatActivity {
             if (frag == existingFragment) {
                 fragmentTransaction.show(frag);
             } else {
-                fragmentTransaction.hide(frag);
+                // Lade das Standardfragment, z. B. ProgressionFragment
+                loadFragment(new ProgressionFragment());
             }
         }
+    }
 
+    private void loadFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.commit();
     }
 }
