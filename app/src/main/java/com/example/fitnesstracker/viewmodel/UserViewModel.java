@@ -12,7 +12,6 @@ public class UserViewModel extends AndroidViewModel {
 
     private final UserRepository repository;
     private final ExecutorService executorService;
-    private User user;
 
     public UserViewModel(@NonNull Application application) {
         super(application);
@@ -20,18 +19,18 @@ public class UserViewModel extends AndroidViewModel {
         executorService = Executors.newSingleThreadExecutor();
     }
 
-    public void writeDatabaseUser() {
-        executorService.execute(() -> repository.writeUser(user));
-    }
-
-    public void getDatabaseUser(OnUserLoadedListener listener) {
+    public void getUserGoal(OnGoalLoadedListener listener) {
         executorService.execute(() -> {
-            user = repository.getUser();
-            listener.onUserLoaded(user);
+            String goal = repository.getUserGoal();
+            listener.onGoalLoaded(goal);
         });
     }
 
-    public interface OnUserLoadedListener {
-        void onUserLoaded(User user);
+    public interface OnGoalLoadedListener {
+        void onGoalLoaded(String goal);
+    }
+
+    public void updateUserGoal(String goal) {
+        executorService.execute(() -> repository.updateUserGoal(goal));
     }
 }
