@@ -14,45 +14,36 @@ public class UserRepository {
         this.dbHelper = new DatabaseHelper(context);
     }
 
-    // **User holen (es gibt nur einen User)**
-    public User getUser() {
+    public String getUserGoal() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM User LIMIT 1", null);
+        String goal = null;
 
-        if (cursor.moveToFirst()) {
-            User user = new User(
-                    cursor.getInt(0),
-                    cursor.getString(1),
-                    cursor.getString(2),
-                    cursor.getString(3),
-                    cursor.getInt(4)
-            );
+        Cursor cursor = db.query(
+                "User",
+                new String[] {"goal"}, null, null, null, null, null, "1");
+
+        if (cursor != null && cursor.moveToFirst()) {
+            // Prüfen, ob der Spaltenindex gültig ist
+            int columnIndex = cursor.getColumnIndex("goal");
+            if (columnIndex >= 0) {
+                goal = cursor.getString(columnIndex);
+            }
             cursor.close();
-            db.close();
-            return user;
         }
 
-        cursor.close();
         db.close();
-        return null; // Falls kein User existiert
+        return goal;
     }
 
-    // **User speichern (einfügen oder updaten)**
-    public void writeUser(User user) {
+    public void updateUserGoal(String goal) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("name", user.getName());
-        values.put("birth_date", user.getBirthDate());
-        values.put("goal", user.getGoal());
-        values.put("trainingdaysPerWeek", user.getTrainingDaysPerWeek());
+        values.put("goal", goal);
 
-        if (getUser() == null) {
-            db.insert("User", null, values);
-        } else {
-            db.update("User", values, "id = ?", new String[]{"1"});
-        }
+        int rowsAffected = db.update("User", values, null, null);
 
         db.close();
     }
+
 }
 

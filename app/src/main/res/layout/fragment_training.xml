@@ -1,17 +1,64 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Ein einfacher Text -->
+    <TextView
+        android:id="@+id/tvActivePlanHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/activeListHeading"
+        android:textSize="25sp"
+        android:textStyle="bold"/>
+
+
+    <!-- Aktiver Trainingsplan -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tvActivePlan"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/activeListHeading"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="16dp"/>
+
+        <ImageView
+            android:id="@+id/ivEditActivePlan"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:contentDescription="@string/edit_plan"
+            android:src="@drawable/ic_edit"
+            android:layout_marginStart="16dp"
+            app:tint="@color/text"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+
+
+
+    <!-- Liste aller Trainingspläne -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Training Fragment"
-        android:textSize="24sp"
-        android:textColor="@color/text"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp" />
+        android:text="@string/allTrainingPlansHeading"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTrainingPlans"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
 </LinearLayout>

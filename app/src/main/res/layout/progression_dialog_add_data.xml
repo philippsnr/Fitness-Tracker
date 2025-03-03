@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Gewichtseingabe -->
+    <EditText
+        android:id="@+id/etWeight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Gewicht (kg)"
+        android:inputType="numberDecimal" />
+
+    <!-- Größeingabe (optional) -->
+    <EditText
+        android:id="@+id/etHeight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Optional: Größe (cm)"
+        android:inputType="number" />
+
+    <!-- KFA-Eingabe (optional) -->
+    <EditText
+        android:id="@+id/etKfa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Optional: KFA (%)"
+        android:inputType="number" />
+</LinearLayout>

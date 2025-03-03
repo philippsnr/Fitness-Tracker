@@ -4,10 +4,10 @@ public class Trainingplan {
     private int id;
     private String name;
     private boolean isActive;
-    public Trainingplan(int id, String name, int isActive) { // Constructor Overload since SQLite doesn't support booleans
+    public Trainingplan(int id, String name, boolean isActive) { // Constructor Overload since SQLite doesn't support booleans
         this.id = id;
         this.name = name;
-        this.isActive = (isActive == 1);
+        this.isActive = isActive;
     }
     public Trainingplan(String name, boolean isActive)
     {
