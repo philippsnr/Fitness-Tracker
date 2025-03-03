@@ -58,7 +58,30 @@ public class MainActivity extends AppCompatActivity {
     private void loadFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        Fragment existingFragment = fragmentManager.findFragmentByTag(fragment.getClass().getSimpleName());
+
+        if (existingFragment == null) {
+            fragmentTransaction.add(R.id.fragment_container, fragment, fragment.getClass().getSimpleName());
+        }
+
+        for (Fragment frag : fragmentManager.getFragments()) {
+            if (frag == existingFragment) {
+                fragmentTransaction.show(frag);
+            } else {
+                fragmentTransaction.hide(frag);
+            }
+        }
+
+        fragmentTransaction.commit();
+    }
+
+    /*
+    private void loadFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.commit();
     }
+    */
 }
