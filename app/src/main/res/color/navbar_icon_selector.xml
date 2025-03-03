@@ -4,5 +4,5 @@
     <item android:state_checked="true" android:color="@color/secundary"/>
 
     <!-- Standardfarbe für inaktive Icons -->
-    <item android:color="@color/text"/>
+    <item android:color="@color/background"/>
 </selector>

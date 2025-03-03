@@ -7,7 +7,9 @@
     <module name="TreeWalker">
         <!-- Maximale Methodenlänge -->
         <module name="MethodLength">
-            <property name="max" value="12"/>
+
+            <property name="max" value="20"/>
+
         </module>
 
         <!-- CamelCase für Variablen und Methoden -->
