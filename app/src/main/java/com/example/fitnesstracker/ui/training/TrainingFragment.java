@@ -2,6 +2,7 @@ package com.example.fitnesstracker.ui.training;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import android.widget.EditText;
 
 import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.viewmodel.TrainingplanViewModel;
@@ -54,10 +56,42 @@ public class TrainingFragment extends Fragment {
 
             @Override
             public void onEditClick(int position) {
-                // Logik für "Bearbeiten" einfügen
                 Trainingplan plan = adapter.getItem(position);
-                System.out.println("Bearbeiten: " + plan.getName());
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext()); // Context aus dem Fragment holen
+                builder.setTitle("Trainingplan umbenennen");
+
+                final EditText input = new EditText(requireContext()); // Context für EditText
+                input.setText(plan.getName());
+                builder.setView(input);
+
+                builder.setPositiveButton("Speichern", (dialog, which) -> {
+                    String newName = input.getText().toString().trim();
+                    if (!newName.isEmpty()) {
+                        plan.setName(newName);
+
+                        viewModel.updateTrainingplan(plan,
+                                () -> {
+                                    requireActivity().runOnUiThread(() -> {
+                                        adapter.notifyItemChanged(position);
+                                    });
+                                },
+                                exception -> {
+                                    requireActivity().runOnUiThread(() -> {
+                                        Toast.makeText(requireContext(), "Fehler beim Speichern", Toast.LENGTH_SHORT).show();
+                                        Log.e("Trainingplan", "Update-Fehler", exception);
+                                    });
+                                }
+                        );
+                    }
+                });
+
+                builder.setNegativeButton("Abbrechen", (dialog, which) -> dialog.cancel());
+
+                builder.show();
             }
+
+
 
             @Override
             public void onDeleteClick(int position) {
@@ -71,21 +105,18 @@ public class TrainingFragment extends Fragment {
 
                             // Aufruf der ViewModel-Methode zum Löschen des Trainingsplans
                             viewModel.deleteTrainingplan(plan,
-                                    () -> {
-                                        // Erfolgreiches Löschen - Rückmeldung an den Benutzer
+                                    () -> requireActivity().runOnUiThread(() -> {
                                         Toast.makeText(requireContext(), "Trainingsplan gelöscht", Toast.LENGTH_SHORT).show();
-
-                                        // Aktualisiere die Liste der Trainingspläne
                                         viewModel.loadAllTrainingplans(
                                                 plans -> requireActivity().runOnUiThread(() -> adapter.updatePlans(plans)),
                                                 error -> System.err.println("Fehler beim Laden der Trainingspläne: " + error.getMessage())
                                         );
-                                    },
-                                    error -> {
-                                        // Fehler beim Löschen
+                                    }),
+                                    error -> requireActivity().runOnUiThread(() -> {
                                         Toast.makeText(requireContext(), "Fehler beim Löschen des Plans", Toast.LENGTH_SHORT).show();
-                                        error.printStackTrace(); // Fehlerprotokollierung
-                                    });
+                                        error.printStackTrace();
+                                    })
+                            );
                         })
                         .setNegativeButton("Nein", (dialog, which) -> {
                             // Der Benutzer hat „Nein“ gewählt – schließe einfach den Dialog

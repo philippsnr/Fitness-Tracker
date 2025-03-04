@@ -65,13 +65,12 @@ public class TrainingplanRepository {
             Log.e("TrainingplanRepository", "Error adding training plan", e);
         }
     }
-    public void updateTrainingplan(Trainingplan trainingplan)
+    public void updateTrainingplanName(Trainingplan trainingplan)
     {
         try (SQLiteDatabase db = dbHelper.getWritableDatabase())
         {
             ContentValues values = new ContentValues();
             values.put("name", trainingplan.getName());
-            values.put("isActive", trainingplan.getIsActiveAsInt());  // Umwandlung von boolean zu int (1 oder 0)
             String whereClause = "id = ?";
             String[] whereArgs = {String.valueOf(trainingplan.getId())};
             db.update("Trainingplan", values, whereClause, whereArgs);
