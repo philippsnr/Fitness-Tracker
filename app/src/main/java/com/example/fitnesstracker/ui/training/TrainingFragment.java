@@ -49,9 +49,17 @@ public class TrainingFragment extends Fragment {
         adapter = new TrainingplanAdapter(new ArrayList<>(), new TrainingplanAdapter.OnItemClickListener() {
             @Override
             public void onViewClick(int position) {
-                // Logik für "Ansehen" einfügen
+                // Der Trainingsplan, für den wir die Details anzeigen wollen
                 Trainingplan plan = adapter.getItem(position);
-                System.out.println("Details anzeigen für: " + plan.getName());
+
+                // Erstelle das Fragment, das die Details des Trainingsplans anzeigt
+                TrainingdayFragment trainingdayFragment = TrainingdayFragment.newInstance(plan.getId());
+
+                // Ersetze das FrameLayout mit der Detailansicht
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.detailContainer, trainingdayFragment)
+                        .addToBackStack(null) // Das sorgt dafür, dass wir zur vorherigen Ansicht (RecyclerView) zurückkehren können
+                        .commit();
             }
 
             @Override
@@ -71,17 +79,11 @@ public class TrainingFragment extends Fragment {
                         plan.setName(newName);
 
                         viewModel.updateTrainingplan(plan,
-                                () -> {
-                                    requireActivity().runOnUiThread(() -> {
-                                        adapter.notifyItemChanged(position);
-                                    });
-                                },
-                                exception -> {
-                                    requireActivity().runOnUiThread(() -> {
-                                        Toast.makeText(requireContext(), "Fehler beim Speichern", Toast.LENGTH_SHORT).show();
-                                        Log.e("Trainingplan", "Update-Fehler", exception);
-                                    });
-                                }
+                                () -> requireActivity().runOnUiThread(() -> adapter.notifyItemChanged(position)),
+                                exception -> requireActivity().runOnUiThread(() -> {
+                                    Toast.makeText(requireContext(), "Fehler beim Speichern", Toast.LENGTH_SHORT).show();
+                                    Log.e("Trainingplan", "Update-Fehler", exception);
+                                })
                         );
                     }
                 });
