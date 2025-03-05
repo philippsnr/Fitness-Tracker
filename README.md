@@ -1,9 +1,8 @@
-## Coding Policy: 
-Maximale Zeilenlänge: 100 Zeichen  
-Maximale Methodenlänge: 12 Zeilen  
+## Coding Policy:
+Maximale Methodenlänge: 20 Zeilen  
 Variablen und Funktionen Benennung: Camel-Case mit Kleinbuchstabe am Anfang  
 Klassen-Benennung: Camel-Case mit Großbuchstabe am Anfang  
-Kommentare: nur Doc-Strings  
+Doc-Strings für jede Funktion  
 Variablen-Sprache: Englisch  
 Programm-Sprache (UI): Deutsch  
 Sicherheits-Richtlinien: keine Passwörter oder API-Schlüpssel im Code speichern, SQL-Injections vermeiden, Benutzer-Input immer validieren  
