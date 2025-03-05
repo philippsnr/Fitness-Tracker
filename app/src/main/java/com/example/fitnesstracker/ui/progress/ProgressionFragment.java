@@ -265,10 +265,29 @@ public class ProgressionFragment extends Fragment {
      * Zeigt einen Dialog zur Auswahl des Trainingsziels an.
      */
     private void showEditGoalDialog() {
-        View dialogView = getLayoutInflater().inflate(R.layout.progression_dialog_edit_goal, null);
+        View dialogView = getDialogView();
         RadioGroup radioGroupGoals = dialogView.findViewById(R.id.radioGroupGoals);
+        preselectCurrentGoal(radioGroupGoals);
 
-        // Aktuelles Ziel aus der UI holen (optional für Vorauswahl)
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Trainingsziel wählen");
+        builder.setView(dialogView);
+        builder.setPositiveButton("Speichern", (dialog, which) -> saveSelectedGoal(radioGroupGoals));
+        builder.setNegativeButton("Abbrechen", null);
+        builder.create().show();
+    }
+
+    /**
+     * Erstellt und gibt die View für den Dialog zurück.
+     */
+    private View getDialogView() {
+        return getLayoutInflater().inflate(R.layout.progression_dialog_edit_goal, null);
+    }
+
+    /**
+     * Setzt die aktuelle Auswahl basierend auf dem bestehenden Ziel.
+     */
+    private void preselectCurrentGoal(RadioGroup radioGroupGoals) {
         String currentGoal = txtGoal.getText().toString();
 
         if (currentGoal.contains("Abnehmen")) {
@@ -278,27 +297,31 @@ public class ProgressionFragment extends Fragment {
         } else if (currentGoal.contains("Zunehmen")) {
             radioGroupGoals.check(R.id.rbGainWeight);
         }
+    }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Trainingsziel wählen");
-        builder.setView(dialogView);
-        builder.setPositiveButton("Speichern", (dialog, which) -> {
-            int selectedId = radioGroupGoals.getCheckedRadioButtonId();
-            String newGoal = "";
+    /**
+     * Speichert das ausgewählte Ziel und aktualisiert die UI.
+     */
+    private void saveSelectedGoal(RadioGroup radioGroupGoals) {
+        int selectedId = radioGroupGoals.getCheckedRadioButtonId();
+        String newGoal = getGoalFromSelection(selectedId);
 
-            if (selectedId == R.id.rbLoseWeight) {
-                newGoal += "Abnehmen";
-            } else if (selectedId == R.id.rbMaintainWeight) {
-                newGoal += "Gewicht halten";
-            } else if (selectedId == R.id.rbGainWeight) {
-                newGoal += "Zunehmen";
-            }
+        txtGoal.setText("Ziel: " + newGoal);
+        userViewModel.updateUserGoal(newGoal);
+    }
 
-            txtGoal.setText("Ziel: " + newGoal);
-            userViewModel.updateUserGoal(newGoal);
-        });
-        builder.setNegativeButton("Abbrechen", null);
-        builder.create().show();
+    /**
+     * Gibt das Ziel basierend auf der RadioButton-Auswahl zurück.
+     */
+    private String getGoalFromSelection(int selectedId) {
+        if (selectedId == R.id.rbLoseWeight) {
+            return "Abnehmen";
+        } else if (selectedId == R.id.rbMaintainWeight) {
+            return "Gewicht halten";
+        } else if (selectedId == R.id.rbGainWeight) {
+            return "Zunehmen";
+        }
+        return "";
     }
 
 }
