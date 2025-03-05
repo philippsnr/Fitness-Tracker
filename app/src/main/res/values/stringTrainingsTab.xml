@@ -6,4 +6,5 @@
     <string name="edit_plan">Trainingsplan bearbeiten</string>
     <string name="delete_plan">Trainingsplan löschen</string>
     <string name="name_plan">Trainingsplan Name</string>
+    <string name="training_title">Trainingspläne</string>
 </resources>

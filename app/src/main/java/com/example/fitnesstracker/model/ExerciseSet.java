@@ -28,7 +28,7 @@ public class ExerciseSet {
     }
     //Getter
     public int getId() { return id; }
-    public int getTrainingdayExerciseAssignment_id() { return TrainingdayExerciseAssignment_id; }
+    public int getTrainingdayExerciseAssignmentId() { return TrainingdayExerciseAssignment_id; }
     public int getSetNumber() { return setNumber; }
     public int getRepetition() { return repetition; }
     public int getWeight() { return weight; }
