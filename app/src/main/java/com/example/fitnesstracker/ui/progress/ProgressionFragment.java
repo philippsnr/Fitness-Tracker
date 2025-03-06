@@ -3,6 +3,7 @@ package com.example.fitnesstracker.ui.progress;
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,7 +119,7 @@ public class ProgressionFragment extends Fragment {
      * Konfiguriert das Diagramm mit den übergebenen Daten.
      */
     private void configureChart(long baseDate, List<Entry> weightEntries, List<Entry> kfaEntries) {
-        LineDataSet weightDataSet = createDataSet(weightEntries, "Gewicht (kg)", R.color.primary, YAxis.AxisDependency.LEFT, true);
+        LineDataSet weightDataSet = createDataSet(weightEntries, "Gewicht (kg)", Color.WHITE, YAxis.AxisDependency.LEFT, true);
 
         LineData lineData = kfaEntries.isEmpty() ?
                 new LineData(weightDataSet) :
@@ -135,18 +136,18 @@ public class ProgressionFragment extends Fragment {
     /**
      * Erstellt und konfiguriert einen Datensatz für das Diagramm.
      */
-    private LineDataSet createDataSet(List<Entry> entries, String label, int colorRes, YAxis.AxisDependency axis, boolean filled) {
+    private LineDataSet createDataSet(List<Entry> entries, String label, int color, YAxis.AxisDependency axis, boolean filled) {
         LineDataSet dataSet = new LineDataSet(entries, label);
         dataSet.setValueTextSize(12f);
         dataSet.setCircleRadius(4f);
         dataSet.setLineWidth(2f);
         dataSet.setDrawValues(false);
         dataSet.setDrawFilled(filled);
-        dataSet.setColor(ContextCompat.getColor(requireContext(), colorRes));
-        dataSet.setCircleColor(ContextCompat.getColor(requireContext(), colorRes));
+        dataSet.setColor(color);
+        dataSet.setCircleColor(color);
         dataSet.setAxisDependency(axis);
         if (filled) {
-            dataSet.setFillColor(ContextCompat.getColor(requireContext(), colorRes));
+            dataSet.setFillColor(color);
             dataSet.setFillAlpha(80);
         }
         return dataSet;
@@ -171,9 +172,9 @@ public class ProgressionFragment extends Fragment {
         weightChart.getXAxis().setGranularity(1f);
 
         // Achsenfarben
-        weightChart.getXAxis().setTextColor(ContextCompat.getColor(requireContext(), R.color.text));
-        weightChart.getAxisLeft().setTextColor(ContextCompat.getColor(requireContext(), R.color.text));
-        weightChart.getAxisRight().setTextColor(ContextCompat.getColor(requireContext(), R.color.text));
+        weightChart.getXAxis().setTextColor(Color.WHITE);
+        weightChart.getAxisLeft().setTextColor(Color.WHITE);
+        weightChart.getAxisRight().setTextColor(Color.WHITE);
     }
 
     /**
@@ -181,7 +182,7 @@ public class ProgressionFragment extends Fragment {
      */
     private void configureLegend() {
         Legend legend = weightChart.getLegend();
-        legend.setTextColor(ContextCompat.getColor(requireContext(), R.color.text));
+        legend.setTextColor(Color.WHITE);
         legend.setForm(Legend.LegendForm.LINE);
         legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
