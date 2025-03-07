@@ -42,6 +42,8 @@ public class ProgressionFragment extends Fragment {
     private UserInformationViewModel userInformationViewModel;
     private UserViewModel userViewModel;
     private TextView txtGoal;
+    private TextView bmiTextView;
+    private View bmiBorder;
 
 
     /**
@@ -50,21 +52,31 @@ public class ProgressionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_progression, container, false);
-        weightChart = view.findViewById(R.id.weightChart);
+
+        initializeElements(view);
 
         Button btnAddData = view.findViewById(R.id.btnAddData);
         btnAddData.setOnClickListener(v -> showAddDataDialog());
-
-        userInformationViewModel = new ViewModelProvider(this).get(UserInformationViewModel.class);
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        loadUserGoal();
-        loadWeightData();
-
-        txtGoal = view.findViewById(R.id.txtGoal);
         ImageView btnEditGoal = view.findViewById(R.id.btnEditGoal);
         btnEditGoal.setOnClickListener(v -> showEditGoalDialog());
 
+        loadUserGoal();
+        loadWeightData();
+        loadBMI();
+
         return view;
+    }
+
+    /**
+     * Initialisiert die View Variablen.
+     */
+    private void initializeElements(View view) {
+        weightChart = view.findViewById(R.id.weightChart);
+        bmiTextView = view.findViewById(R.id.bmi_value);
+        userInformationViewModel = new ViewModelProvider(this).get(UserInformationViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        txtGoal = view.findViewById(R.id.txtGoal);
+        bmiBorder = view.findViewById(R.id.bmi_border);
     }
 
     /**
@@ -325,4 +337,27 @@ public class ProgressionFragment extends Fragment {
         return "";
     }
 
+    /**
+     * Lädt das BMI aus dem ViewModel und zeigt es an.
+     */
+    private void loadBMI() {
+        userInformationViewModel.getBMI(new UserInformationViewModel.OnBMILoadedListener() {
+            @Override
+            public void onBMILoaded(double bmi) {
+                bmiTextView.setText(Double.toString(bmi));
+
+                int color;
+                if (bmi < 18.5) {
+                    color = Color.BLUE;
+                } else if (bmi < 25) {
+                    color = Color.GREEN;
+                } else if (bmi < 30) {
+                    color = Color.YELLOW;
+                } else {
+                    color = Color.RED;
+                }
+                bmiBorder.getBackground().setTint(color);
+            }
+        });
+    }
 }
