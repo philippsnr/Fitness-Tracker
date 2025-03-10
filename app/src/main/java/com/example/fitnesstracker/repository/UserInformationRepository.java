@@ -14,6 +14,7 @@ import java.util.Locale;
 
 public class UserInformationRepository {
     private final DatabaseHelper dbHelper;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     public UserInformationRepository(Context context) {
         this.dbHelper = new DatabaseHelper(context);
@@ -21,9 +22,8 @@ public class UserInformationRepository {
 
     // Alle gespeicherten User-Informationen abrufen
     public List<UserInformation> getAllUserInformation() {
-
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM UserInformation ORDER BY date DESC", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM UserInformation ORDER BY date ASC", null);
 
         List<UserInformation> userInfoList = getUserInfoList(cursor);
 
@@ -71,15 +71,14 @@ public class UserInformationRepository {
         db.close();
         return null; // Falls keine Daten vorhanden sind
     }
-    
+
     // **Neue User-Information speichern oder aktualisieren**
     public void writeUserInformation(UserInformation userInfo) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("user_id", userInfo.getUserId());
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());  // Format angepasst
-        String dateString = dateFormat.format(userInfo.getDate());  // Date in String konvertieren
+        String dateString = dateFormat.format(userInfo.getDate());
         values.put("date", dateString);
 
         values.put("height", userInfo.getHeight());

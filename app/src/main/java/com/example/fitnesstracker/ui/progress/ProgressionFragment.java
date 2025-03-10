@@ -3,6 +3,7 @@ package com.example.fitnesstracker.ui.progress;
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,8 @@ public class ProgressionFragment extends Fragment {
     private UserInformationViewModel userInformationViewModel;
     private UserViewModel userViewModel;
     private TextView txtGoal;
+    private TextView bmiTextView;
+    private View bmiBorder;
 
 
     /**
@@ -49,21 +52,31 @@ public class ProgressionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_progression, container, false);
-        weightChart = view.findViewById(R.id.weightChart);
+
+        initializeElements(view);
 
         Button btnAddData = view.findViewById(R.id.btnAddData);
         btnAddData.setOnClickListener(v -> showAddDataDialog());
-
-        userInformationViewModel = new ViewModelProvider(this).get(UserInformationViewModel.class);
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        loadUserGoal();
-        loadWeightData();
-
-        txtGoal = view.findViewById(R.id.txtGoal);
         ImageView btnEditGoal = view.findViewById(R.id.btnEditGoal);
         btnEditGoal.setOnClickListener(v -> showEditGoalDialog());
 
+        loadUserGoal();
+        loadWeightData();
+        loadBMI();
+
         return view;
+    }
+
+    /**
+     * Initialisiert die View Variablen.
+     */
+    private void initializeElements(View view) {
+        weightChart = view.findViewById(R.id.weightChart);
+        bmiTextView = view.findViewById(R.id.bmi_value);
+        userInformationViewModel = new ViewModelProvider(this).get(UserInformationViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        txtGoal = view.findViewById(R.id.txtGoal);
+        bmiBorder = view.findViewById(R.id.bmi_border);
     }
 
     /**
@@ -83,7 +96,6 @@ public class ProgressionFragment extends Fragment {
     private void updateChart(List<UserInformation> dataList) {
         if (!isChartUpdateValid(dataList)) return;
 
-        dataList.sort(Comparator.comparing(UserInformation::getDate));
         long baseDate = dataList.get(0).getDate().getTime();
 
         List<Entry> weightEntries = new ArrayList<>();
@@ -118,7 +130,7 @@ public class ProgressionFragment extends Fragment {
      * Konfiguriert das Diagramm mit den übergebenen Daten.
      */
     private void configureChart(long baseDate, List<Entry> weightEntries, List<Entry> kfaEntries) {
-        LineDataSet weightDataSet = createDataSet(weightEntries, "Gewicht (kg)", R.color.primary, YAxis.AxisDependency.LEFT, true);
+        LineDataSet weightDataSet = createDataSet(weightEntries, "Gewicht (kg)", Color.WHITE, YAxis.AxisDependency.LEFT, true);
 
         LineData lineData = kfaEntries.isEmpty() ?
                 new LineData(weightDataSet) :
@@ -135,18 +147,18 @@ public class ProgressionFragment extends Fragment {
     /**
      * Erstellt und konfiguriert einen Datensatz für das Diagramm.
      */
-    private LineDataSet createDataSet(List<Entry> entries, String label, int colorRes, YAxis.AxisDependency axis, boolean filled) {
+    private LineDataSet createDataSet(List<Entry> entries, String label, int color, YAxis.AxisDependency axis, boolean filled) {
         LineDataSet dataSet = new LineDataSet(entries, label);
         dataSet.setValueTextSize(12f);
         dataSet.setCircleRadius(4f);
         dataSet.setLineWidth(2f);
         dataSet.setDrawValues(false);
         dataSet.setDrawFilled(filled);
-        dataSet.setColor(ContextCompat.getColor(requireContext(), colorRes));
-        dataSet.setCircleColor(ContextCompat.getColor(requireContext(), colorRes));
+        dataSet.setColor(color);
+        dataSet.setCircleColor(color);
         dataSet.setAxisDependency(axis);
         if (filled) {
-            dataSet.setFillColor(ContextCompat.getColor(requireContext(), colorRes));
+            dataSet.setFillColor(color);
             dataSet.setFillAlpha(80);
         }
         return dataSet;
@@ -171,9 +183,9 @@ public class ProgressionFragment extends Fragment {
         weightChart.getXAxis().setGranularity(1f);
 
         // Achsenfarben
-        weightChart.getXAxis().setTextColor(ContextCompat.getColor(requireContext(), R.color.text));
-        weightChart.getAxisLeft().setTextColor(ContextCompat.getColor(requireContext(), R.color.text));
-        weightChart.getAxisRight().setTextColor(ContextCompat.getColor(requireContext(), R.color.text));
+        weightChart.getXAxis().setTextColor(Color.WHITE);
+        weightChart.getAxisLeft().setTextColor(Color.WHITE);
+        weightChart.getAxisRight().setTextColor(Color.WHITE);
     }
 
     /**
@@ -181,7 +193,7 @@ public class ProgressionFragment extends Fragment {
      */
     private void configureLegend() {
         Legend legend = weightChart.getLegend();
-        legend.setTextColor(ContextCompat.getColor(requireContext(), R.color.text));
+        legend.setTextColor(Color.WHITE);
         legend.setForm(Legend.LegendForm.LINE);
         legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
@@ -218,6 +230,7 @@ public class ProgressionFragment extends Fragment {
         if (newData != null) {
             userInformationViewModel.writeUserInformation(newData);
             loadWeightData(); // Chart aktualisieren
+            loadBMI(); // BMI aktualisieren
         }
     }
 
@@ -265,10 +278,29 @@ public class ProgressionFragment extends Fragment {
      * Zeigt einen Dialog zur Auswahl des Trainingsziels an.
      */
     private void showEditGoalDialog() {
-        View dialogView = getLayoutInflater().inflate(R.layout.progression_dialog_edit_goal, null);
+        View dialogView = getDialogView();
         RadioGroup radioGroupGoals = dialogView.findViewById(R.id.radioGroupGoals);
+        preselectCurrentGoal(radioGroupGoals);
 
-        // Aktuelles Ziel aus der UI holen (optional für Vorauswahl)
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Trainingsziel wählen");
+        builder.setView(dialogView);
+        builder.setPositiveButton("Speichern", (dialog, which) -> saveSelectedGoal(radioGroupGoals));
+        builder.setNegativeButton("Abbrechen", null);
+        builder.create().show();
+    }
+
+    /**
+     * Erstellt und gibt die View für den Dialog zurück.
+     */
+    private View getDialogView() {
+        return getLayoutInflater().inflate(R.layout.progression_dialog_edit_goal, null);
+    }
+
+    /**
+     * Setzt die aktuelle Auswahl basierend auf dem bestehenden Ziel.
+     */
+    private void preselectCurrentGoal(RadioGroup radioGroupGoals) {
         String currentGoal = txtGoal.getText().toString();
 
         if (currentGoal.contains("Abnehmen")) {
@@ -278,27 +310,78 @@ public class ProgressionFragment extends Fragment {
         } else if (currentGoal.contains("Zunehmen")) {
             radioGroupGoals.check(R.id.rbGainWeight);
         }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Trainingsziel wählen");
-        builder.setView(dialogView);
-        builder.setPositiveButton("Speichern", (dialog, which) -> {
-            int selectedId = radioGroupGoals.getCheckedRadioButtonId();
-            String newGoal = "";
-
-            if (selectedId == R.id.rbLoseWeight) {
-                newGoal += "Abnehmen";
-            } else if (selectedId == R.id.rbMaintainWeight) {
-                newGoal += "Gewicht halten";
-            } else if (selectedId == R.id.rbGainWeight) {
-                newGoal += "Zunehmen";
-            }
-
-            txtGoal.setText("Ziel: " + newGoal);
-            userViewModel.updateUserGoal(newGoal);
-        });
-        builder.setNegativeButton("Abbrechen", null);
-        builder.create().show();
     }
 
+    /**
+     * Speichert das ausgewählte Ziel und aktualisiert die UI.
+     */
+    private void saveSelectedGoal(RadioGroup radioGroupGoals) {
+        int selectedId = radioGroupGoals.getCheckedRadioButtonId();
+        String newGoal = getGoalFromSelection(selectedId);
+
+        txtGoal.setText("Ziel: " + newGoal);
+        userViewModel.updateUserGoal(newGoal);
+    }
+
+    /**
+     * Gibt das Ziel basierend auf der RadioButton-Auswahl zurück.
+     */
+    private String getGoalFromSelection(int selectedId) {
+        if (selectedId == R.id.rbLoseWeight) {
+            return "Abnehmen";
+        } else if (selectedId == R.id.rbMaintainWeight) {
+            return "Gewicht halten";
+        } else if (selectedId == R.id.rbGainWeight) {
+            return "Zunehmen";
+        }
+        return "";
+    }
+
+    /**
+     * Lädt das BMI aus dem ViewModel und zeigt es an.
+     */
+    private void loadBMI() {
+        userInformationViewModel.getBMI(new UserInformationViewModel.OnBMILoadedListener() {
+            @Override
+            public void onBMILoaded(double bmi) {
+                getActivity().runOnUiThread(() -> updateBmiUI(bmi));
+            }
+        });
+    }
+
+    /**
+     * Aktualisiert die BMI-UI-Komponenten.
+     */
+    private void updateBmiUI(double bmi) {
+        if (getContext() == null || bmiBorder == null) return;
+
+        bmiTextView.setText(formatBmiValue(bmi));
+        bmiBorder.getBackground().setTint(getBmiColor(bmi));
+    }
+
+    /**
+     * Formatiert den BMI-Wert auf eine Dezimalstelle.
+     */
+    private String formatBmiValue(double bmi) {
+        return String.format(Locale.getDefault(), "%.1f", bmi);
+    }
+
+    /**
+     * Bestimmt die Farbe basierend auf dem BMI-Wert.
+     */
+    private int getBmiColor(double bmi) {
+        int colorResource = R.color.bmi_normal;
+
+        if (bmi < 18.5) {
+            colorResource = R.color.bmi_underweight;
+        } else if (bmi < 25) {
+            colorResource = R.color.bmi_normal;
+        } else if (bmi < 30) {
+            colorResource = R.color.bmi_overweight;
+        } else {
+            colorResource = R.color.bmi_obese;
+        }
+
+        return ContextCompat.getColor(requireContext(), colorResource);
+    }
 }
