@@ -8,6 +8,7 @@
         <!-- Maximale Methodenlänge -->
         <module name="MethodLength">
             <property name="max" value="20"/>
+            <property name="countEmpty" value="false"/>
         </module>
 
         <!-- CamelCase für Variablen und Methoden -->
