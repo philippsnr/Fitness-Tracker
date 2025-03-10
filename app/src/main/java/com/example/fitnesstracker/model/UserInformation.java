@@ -13,6 +13,8 @@ public class UserInformation {
     private double weight;
     private int kfa; // Körperfettanteil in Prozent
 
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
     // Konstruktoren
     public UserInformation(int id, int userId, Date date, int height, double weight, int kfa) {
         this.id = id;
@@ -33,7 +35,6 @@ public class UserInformation {
     }
 
     private Date parseDate(String dateString) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
         try {
             return dateFormat.parse(dateString);
         } catch (ParseException e) {
