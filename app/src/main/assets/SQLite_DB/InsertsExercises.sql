@@ -84,25 +84,26 @@ INSERT INTO Exercise (id, name, difficulty, info, picture_path) VALUES
 (84, 'Cable-Crunches', 2, 'Knie dich vor den Kabelzug mit einem Seilgriff. Ziehe das Seil nach unten, während du den Oberkörper einrollst und die Bauchmuskeln anspannst.', 'cable-crunches'),
 (85, 'Rumpfseitheben', 1, 'Lege dich seitlich auf eine Bank oder auf die Matte. Hebe den Oberkörper seitlich nach oben, spanne die seitlichen Bauchmuskeln an, und senke ihn langsam zurück.', 'rumpfseitheben'),
 (86, 'Abs-Rotation', 1, 'Setze dich mit angewinkelten Beinen auf den Boden, halte ein Gewicht in den Händen. Drehe den Oberkörper abwechselnd nach links und rechts, während die Beine stabil bleiben.', 'abs-rotation');
+
 INSERT INTO MuscleGroup (id, name, picture_path) VALUES
-(1, 'Chest', 'drawable/muscle_groups/chest'),
-(2, 'Latisimus', 'drawable/muscle_groups/latisimus'),
-(3, 'Upper Back', 'drawable/muscle_groups/upper_back'),
-(4, 'Lower Back', 'drawable/muscle_groups/lower_back'),
-(5, 'Adduktoren', 'drawable/muscle_groups/adduktoren'),
-(6, 'Abduktoren', 'drawable/muscle_groups/abduktoren'),
-(7, 'Glutes Maximus', 'drawable/muscle_groups/glutes_maximus'),
-(8, 'Calfs', 'drawable/muscle_groups/calfs'),
-(9, 'Hamstrings', 'drawable/muscle_groups/hamstrings'),
-(10, 'Quadtrizeps', 'drawable/muscle_groups/quadtrizeps'),
-(11, 'Triceps', 'drawable/muscle_groups/triceps'),
-(12, 'Biceps', 'drawable/muscle_groups/biceps'),
-(13, 'Forearms', 'drawable/muscle_groups/forearms'),
-(14, 'Lateral Deltoid', 'drawable/muscle_groups/lateral_deltoid'),
-(15, 'Rear Deltoid', 'drawable/muscle_groups/rear_deltoid'),
-(16, 'Front Deltoid', 'drawable/muscle_groups/front_deltoid'),
-(17, 'Neck', 'drawable/muscle_groups/neck'),
-(18, 'Abs', 'drawable/muscle_groups/abs');
+(1, 'Chest', 'chest'),
+(2, 'Latisimus', 'latisimus'),
+(3, 'Upper Back', 'upper_back'),
+(4, 'Lower Back', 'lower_back'),
+(5, 'Adduktoren', 'adduktoren'),
+(6, 'Abduktoren', 'abduktoren'),
+(7, 'Glutes Maximus', 'glutes_maximus'),
+(8, 'Calfs', 'calfs'),
+(9, 'Hamstrings', 'hamstrings'),
+(10, 'Quadtrizeps', 'quadtrizeps'),
+(11, 'Triceps', 'triceps'),
+(12, 'Biceps', 'biceps'),
+(13, 'Forearms', 'forearms'),
+(14, 'Lateral Deltoid', 'lateral_deltoid'),
+(15, 'Rear Deltoid', 'rear_deltoid'),
+(16, 'Front Deltoid', 'front_deltoid'),
+(17, 'Neck', 'neck'),
+(18, 'Abs', 'abs');
 
 INSERT INTO ExerciseMuscleGroupAssignment (id, Exercise_id, MuscleGroup_id) VALUES
 -- Chest
