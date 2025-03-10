@@ -75,7 +75,7 @@ public class TrainingplanViewModel extends AndroidViewModel {
     public void updateTrainingplan(Trainingplan trainingplan, Runnable onComplete, Consumer<Exception> onError) {
         executorService.execute(() -> {
             try {
-                repository.updateTrainingplan(trainingplan);
+                repository.updateTrainingplanName(trainingplan);
                 onComplete.run();
             } catch (Exception e) {
                 Log.e("TrainingplanViewModel", "Error updating training plan", e);
