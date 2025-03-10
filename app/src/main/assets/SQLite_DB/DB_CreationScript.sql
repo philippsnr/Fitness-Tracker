@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS TrainingdayExerciseAssignment (  -- Linus
 CREATE TABLE IF NOT EXISTS User (   -- fertig
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    birth_date TEXT, -- "DD-MM-YYYY"
+    birth_date TEXT, -- "YYYY-MM-DD"
     goal TEXT NOT NULL CHECK (goal IN ("Abnehmen", "Gewicht halten", "Zunehmen")), --alle Ziele beinhalten den Wunsch Muskeln aufzubauen
     trainingdaysPerWeek INTEGER NOT NULL CHECK (trainingdaysPerWeek BETWEEN 0 AND 7)
 );
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS User (   -- fertig
 CREATE TABLE IF NOT EXISTS UserInformation (    -- ferig
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
-    date TEXT, -- "DD-MM-YYYY"
+    date TEXT, -- "YYYY-MM-DD"
     height INTEGER NOT NULL,
     weight REAL NOT NULL,
     KFA INTEGER NOT NULL, -- Körperfettanteil in Prozent -> Bild zur Schätzung
