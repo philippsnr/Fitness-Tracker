@@ -16,47 +16,57 @@
         android:background="@drawable/fragment_header"
         android:padding="16dp" />
 
-    <!-- ScrollView für den restlichen Content -->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/welcomeMuscleMessage"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_gravity="center_horizontal"
-                android:paddingBottom="16dp"/>
-
-            <!-- ScrollView für Muskelgruppen-Buttons -->
-            <HorizontalScrollView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fillViewport="true">
-                <LinearLayout
-                    android:id="@+id/buttonContainer"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="10dp"
+                android:padding="16dp"
+                android:background="@drawable/rounded_border_primary">
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center"/>
-            </HorizontalScrollView>
+                    android:text="@string/welcomeMuscleMessage"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="16dp"/>
+
+                <!-- ScrollView für Muskelgruppen-Buttons -->
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true">
+                    <LinearLayout
+                        android:id="@+id/buttonContainer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"/>
+
+                </HorizontalScrollView>
+
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewExercises"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"/>
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"/>
 
         </LinearLayout>
-    </ScrollView>
 
 </LinearLayout>
