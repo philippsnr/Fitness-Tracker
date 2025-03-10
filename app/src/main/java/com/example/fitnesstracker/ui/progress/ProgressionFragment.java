@@ -230,6 +230,7 @@ public class ProgressionFragment extends Fragment {
         if (newData != null) {
             userInformationViewModel.writeUserInformation(newData);
             loadWeightData(); // Chart aktualisieren
+            loadBMI(); // BMI aktualisieren
         }
     }
 
@@ -343,20 +344,44 @@ public class ProgressionFragment extends Fragment {
         userInformationViewModel.getBMI(new UserInformationViewModel.OnBMILoadedListener() {
             @Override
             public void onBMILoaded(double bmi) {
-                bmiTextView.setText(Double.toString(bmi));
-
-                int color;
-                if (bmi < 18.5) {
-                    color = Color.BLUE;
-                } else if (bmi < 25) {
-                    color = Color.GREEN;
-                } else if (bmi < 30) {
-                    color = Color.YELLOW;
-                } else {
-                    color = Color.RED;
-                }
-                bmiBorder.getBackground().setTint(color);
+                getActivity().runOnUiThread(() -> updateBmiUI(bmi));
             }
         });
+    }
+
+    /**
+     * Aktualisiert die BMI-UI-Komponenten.
+     */
+    private void updateBmiUI(double bmi) {
+        if (getContext() == null || bmiBorder == null) return;
+
+        bmiTextView.setText(formatBmiValue(bmi));
+        bmiBorder.getBackground().setTint(getBmiColor(bmi));
+    }
+
+    /**
+     * Formatiert den BMI-Wert auf eine Dezimalstelle.
+     */
+    private String formatBmiValue(double bmi) {
+        return String.format(Locale.getDefault(), "%.1f", bmi);
+    }
+
+    /**
+     * Bestimmt die Farbe basierend auf dem BMI-Wert.
+     */
+    private int getBmiColor(double bmi) {
+        int colorResource = R.color.bmi_normal;
+
+        if (bmi < 18.5) {
+            colorResource = R.color.bmi_underweight;
+        } else if (bmi < 25) {
+            colorResource = R.color.bmi_normal;
+        } else if (bmi < 30) {
+            colorResource = R.color.bmi_overweight;
+        } else {
+            colorResource = R.color.bmi_obese;
+        }
+
+        return ContextCompat.getColor(requireContext(), colorResource);
     }
 }
