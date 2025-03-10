@@ -36,7 +36,6 @@ firebase-debug.log
 
 # Unit test results
 test-results/
-*.xml
 
 # Miscellaneous
 .DS_Store             # macOS spezifisch

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <stroke android:width="10dp" android:color="#FFA500"/> <!-- Orange Umrandung -->
+    <size android:width="200dp" android:height="200dp"/>
+    <solid android:color="@android:color/transparent"/> <!-- Innen transparent -->
+</shape>

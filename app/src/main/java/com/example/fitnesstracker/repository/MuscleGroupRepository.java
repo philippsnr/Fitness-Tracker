@@ -19,7 +19,7 @@ public class MuscleGroupRepository {
     public List<MuscleGroup> getAllMuscleGroups() {
         List<MuscleGroup> muscleGroups = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM MuscleGroup", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM MuscleGroup ORDER BY name", null);
         if (cursor.moveToFirst()) {
             do {
                 int muscleGroupId = cursor.getInt(0);

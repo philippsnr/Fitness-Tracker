@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="activeListHeading"><u>Aktiver Trainingsplan</u></string>
+    <string name="allTrainingPlansHeading"><u>Alle Trainingspläne</u></string>
+    <string name="view_plan">Trainingsplan anzeigen</string>
+    <string name="edit_plan">Trainingsplan bearbeiten</string>
+    <string name="delete_plan">Trainingsplan löschen</string>
+    <string name="name_plan">Trainingsplan Name</string>
+    <string name="training_title">Trainingspläne</string>
+</resources>

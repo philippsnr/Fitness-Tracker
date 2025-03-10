@@ -1,7 +1,10 @@
 package com.example.fitnesstracker.ui;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -15,38 +18,13 @@ import com.example.fitnesstracker.ui.training.TrainingFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
- 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Bottom Navigation Bar initialisieren
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-
-        // Listener für die Bottom Navigation Bar mit Lambda-Ausdruck
-        bottomNav.setOnItemSelectedListener(item -> {
-            Fragment selectedFragment = null;
-
-            // Verwende if-else anstelle von switch
-            int itemId = item.getItemId();
-            if (itemId == R.id.nav_progression) {
-                selectedFragment = new ProgressionFragment();
-            } else if (itemId == R.id.nav_nutrition) {
-                selectedFragment = new NutritionFragment();
-            } else if (itemId == R.id.nav_training) {
-                selectedFragment = new TrainingFragment();
-            } else if (itemId == R.id.nav_exercise) {
-                selectedFragment = new ExerciseFragment();
-            }
-
-            // Fragment austauschen
-            if (selectedFragment != null) {
-                loadFragment(selectedFragment);
-            }
-
-            return true;
-        });
+        initBottomNavigation();
 
         // Standardmäßig das Home-Fragment anzeigen
         if (savedInstanceState == null) {
@@ -54,11 +32,65 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Methode zum Laden eines Fragments
+    /**
+     * Initialisiert die Bottom Navigation Bar und setzt den Listener.
+     */
+    private void initBottomNavigation() {
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setOnItemSelectedListener(this::onNavigationItemSelected);
+    }
+
+    /**
+     * Behandelt die Auswahl eines Menü-Items in der Bottom Navigation.
+     */
+    private boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Fragment selectedFragment = getFragmentForMenuItem(item.getItemId());
+
+        if (selectedFragment != null) {
+            loadFragment(selectedFragment);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Gibt das entsprechende Fragment für das ausgewählte Menü-Item zurück.
+     */
+    @Nullable
+    private Fragment getFragmentForMenuItem(int itemId) {
+        if (itemId == R.id.nav_progression) {
+            return new ProgressionFragment();
+        } else if (itemId == R.id.nav_nutrition) {
+            return new NutritionFragment();
+        } else if (itemId == R.id.nav_training) {
+            return new TrainingFragment();
+        } else if (itemId == R.id.nav_exercise) {
+            return new ExerciseFragment();
+        }
+        return null;
+    }
+
+    /**
+     * Methode zum Laden eines Fragments.
+     */
     private void loadFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, fragment);
+
+        Fragment existingFragment = fragmentManager.findFragmentByTag(fragment.getClass().getSimpleName());
+
+        if (existingFragment == null) {
+            fragmentTransaction.add(R.id.fragment_container, fragment, fragment.getClass().getSimpleName());
+        }
+
+        for (Fragment frag : fragmentManager.getFragments()) {
+            if (frag == existingFragment) {
+                fragmentTransaction.show(frag);
+            } else {
+                fragmentTransaction.hide(frag);
+            }
+        }
+
         fragmentTransaction.commit();
     }
 }

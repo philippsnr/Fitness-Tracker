@@ -39,7 +39,7 @@ public class ExerciseSetRepository
     {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("TrainingdayExerciseAssignment_id", newSet.getTrainingdayExerciseAssignment_id());
+        values.put("TrainingdayExerciseAssignment_id", newSet.getTrainingdayExerciseAssignmentId());
         values.put("set_number", newSet.getSetNumber());
         values.put("repetitions", newSet.getRepetition());
         values.put("weight", newSet.getWeight());

@@ -2,7 +2,14 @@
 <resources>
     <color name="primary">#4E6E5D</color>
     <color name="secundary">#4DA167</color>
-    <color name="background">#4D5057</color>
+    <color name="background2">#4D5057</color>
+    <color name="background">#F5F5DD</color>
     <color name="secundary_background">#041F1E</color>
-    <color name="text">#DFDFDF</color>
+    <color name="text">#000000</color>
+    <color name="blue">#184387</color>
+    <color name="neon_blue">#00CBCC</color>
+    <color name="bmi_underweight">#2196F3</color>  <!-- Blau -->
+    <color name="bmi_normal">#4CAF50</color>       <!-- Grün -->
+    <color name="bmi_overweight">#FFEB3B</color>   <!-- Gelb -->
+    <color name="bmi_obese">#F44336</color>        <!-- Rot -->
 </resources>
