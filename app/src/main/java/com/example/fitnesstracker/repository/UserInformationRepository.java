@@ -23,7 +23,7 @@ public class UserInformationRepository {
     // Alle gespeicherten User-Informationen abrufen
     public List<UserInformation> getAllUserInformation() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM UserInformation ORDER BY date DESC", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM UserInformation ORDER BY date ASC", null);
 
         List<UserInformation> userInfoList = getUserInfoList(cursor);
 

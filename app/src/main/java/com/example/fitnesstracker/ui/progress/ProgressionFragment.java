@@ -96,7 +96,6 @@ public class ProgressionFragment extends Fragment {
     private void updateChart(List<UserInformation> dataList) {
         if (!isChartUpdateValid(dataList)) return;
 
-        dataList.sort(Comparator.comparing(UserInformation::getDate));
         long baseDate = dataList.get(0).getDate().getTime();
 
         List<Entry> weightEntries = new ArrayList<>();
