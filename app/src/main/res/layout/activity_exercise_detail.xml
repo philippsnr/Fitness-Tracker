@@ -20,7 +20,7 @@
         <ImageView
             android:id="@+id/imageViewExercise"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="400dp"
             android:scaleType="centerCrop"
             android:contentDescription="@string/exercise_image_description"/>
 
