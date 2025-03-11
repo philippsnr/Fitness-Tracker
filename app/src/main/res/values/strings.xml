@@ -2,7 +2,6 @@
     <string name="app_name">Fitness Tracker</string>
     <string name="welcomeMuscleMessage"> Wähle eine Muskelgruppe</string>
     <string name="w_hle_eine_muskelgruppe">Wähle eine Muskelgruppe</string>
-    <string name="exercise_image_description">Humunkulus</string>
     <string name="progression_title">Fortschritt</string>
     <string name="exercise_title">Übungen</string>
 </resources>

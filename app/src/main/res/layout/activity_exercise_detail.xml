@@ -1,34 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background">
 
-    <LinearLayout
+    <!-- Header -->
+    <TextView
+        android:id="@+id/textViewExerciseDetailName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:textAlignment="center"
+        android:textColor="@color/background"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        android:background="@drawable/fragment_header"
+        android:padding="16dp" />
 
-        <TextView
-            android:id="@+id/textViewExerciseDetailName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:paddingBottom="8dp"/>
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/imageViewExercise"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/exercise_image_description"/>
-
-        <TextView
-            android:id="@+id/textViewExerciseDetailInfo"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:paddingTop="8dp"/>
-    </LinearLayout>
-</ScrollView>
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/imageViewExercise"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:layout_marginBottom="10dp"
+                android:adjustViewBounds="true"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:id="@+id/textViewExerciseDetailInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_border_primary"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:padding="16dp"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
