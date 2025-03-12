@@ -23,7 +23,7 @@ import com.example.fitnesstracker.model.Trainingplan;
 
 import java.util.ArrayList;
 
-public class TrainingFragment extends Fragment {
+public class TrainingplanFragment extends Fragment {
 
     private TrainingplanViewModel viewModel;
     private TrainingplanAdapter adapter;
