@@ -38,6 +38,7 @@ public class NutritiondayNutritionAssignmentRepository {
             db.close();
             return nutritiondayNutritionAssignment;
         }
+
         cursor.close();
         db.close();
         return null;
