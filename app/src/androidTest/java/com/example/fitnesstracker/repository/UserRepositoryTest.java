@@ -1,4 +1,4 @@
-package com.example.fitnesstracker.progression;
+package com.example.fitnesstracker.repository;
 
 import static org.junit.Assert.*;
 
@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.example.fitnesstracker.database.DatabaseHelper;
-import com.example.fitnesstracker.repository.UserRepository;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
