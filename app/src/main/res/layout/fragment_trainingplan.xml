@@ -70,7 +70,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:contentDescription="@string/edit_plan"
-                        android:src="@drawable/ic_edit"
+                        android:src="@drawable/ic_change"
                         android:layout_marginStart="8dp"
                         app:tint="@android:color/white"/>
                 </LinearLayout>
