@@ -23,6 +23,7 @@ public class TrainingplanAdapter extends RecyclerView.Adapter<TrainingplanAdapte
         void onViewClick(int position);
         void onEditClick(int position);
         void onDeleteClick(int position);
+        void onChangeActiveClick(int position); // Wird hier nicht verwendet, da das Icon im Fragment liegt
     }
 
     public TrainingplanAdapter(List<Trainingplan> trainingplans, OnItemClickListener listener) {
@@ -41,7 +42,7 @@ public class TrainingplanAdapter extends RecyclerView.Adapter<TrainingplanAdapte
             ivEdit = itemView.findViewById(R.id.ivEdit);
             ivDelete = itemView.findViewById(R.id.ivDelete);
 
-            // Setze Klick-Listener für jedes Icon
+            // Setze Klick-Listener für die Icons
             ivView.setOnClickListener(v -> listener.onViewClick(getAdapterPosition()));
             ivEdit.setOnClickListener(v -> listener.onEditClick(getAdapterPosition()));
             ivDelete.setOnClickListener(v -> listener.onDeleteClick(getAdapterPosition()));

@@ -66,7 +66,7 @@
                         android:textStyle="bold"/>
 
                     <ImageView
-                        android:id="@+id/ivEditActivePlan"
+                        android:id="@+id/ivChangeActivePlan"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:contentDescription="@string/edit_plan"
