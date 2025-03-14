@@ -16,7 +16,9 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.fitnesstracker.R;
+import com.example.fitnesstracker.model.ExerciseSet;
 import com.example.fitnesstracker.model.UserInformation;
+import com.example.fitnesstracker.viewmodel.ExerciseSetViewModel;
 import com.example.fitnesstracker.viewmodel.UserInformationViewModel;
 import com.example.fitnesstracker.viewmodel.UserViewModel;
 import com.github.mikephil.charting.charts.BarChart;
@@ -25,20 +27,27 @@ import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class ProgressionFragment extends Fragment {
 
     private LineChart weightChart;
+    private BarChart exerciseChart;
     private UserInformationViewModel userInformationViewModel;
+    private ExerciseSetViewModel exerciseSetViewModel;
     private UserViewModel userViewModel;
     private TextView txtGoal;
     private TextView bmiTextView;
@@ -62,6 +71,7 @@ public class ProgressionFragment extends Fragment {
         loadUserGoal();
         loadWeightData();
         loadBMI();
+        loadExerciseData();
 
         return view;
     }
@@ -71,9 +81,11 @@ public class ProgressionFragment extends Fragment {
      */
     private void initializeElements(View view) {
         weightChart = view.findViewById(R.id.weightChart);
+        exerciseChart = view.findViewById(R.id.exerciseChart);
         bmiTextView = view.findViewById(R.id.bmi_value);
         userInformationViewModel = new ViewModelProvider(this).get(UserInformationViewModel.class);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        exerciseSetViewModel = new ViewModelProvider(this).get(ExerciseSetViewModel.class);
         txtGoal = view.findViewById(R.id.txtGoal);
         bmiBorder = view.findViewById(R.id.bmi_border);
     }
@@ -202,6 +214,83 @@ public class ProgressionFragment extends Fragment {
         Description description = new Description();
         description.setText("");
         weightChart.setDescription(description);
+    }
+
+    /**
+     * Lädt die gespeicherten Exercisedaten und aktualisiert das Diagramm.
+     */
+    private void loadExerciseData() {
+        exerciseSetViewModel.loadSetsPerWeek(setsPerWeek -> {
+            if (setsPerWeek != null && !setsPerWeek.isEmpty()) {
+                updateExerciseChart(setsPerWeek);
+            }
+        });
+    }
+
+    /**
+     * Aktualisiert das Balkendiagramm mit den neuen Daten.
+     */
+    private void updateExerciseChart(Map<Integer, Integer> setsPerWeek) {
+        List<BarEntry> barEntries = new ArrayList<>();
+        List<Integer> weeks = new ArrayList<>(setsPerWeek.keySet());
+        Collections.sort(weeks);
+        for (Integer week : weeks) {
+            barEntries.add(new BarEntry(week, setsPerWeek.get(week)));
+        }
+        getActivity().runOnUiThread(() -> configureExerciseChart(barEntries));
+    }
+
+    /**
+     * Konfiguriert das Balkendiagramm mit den übergebenen Daten.
+     */
+    private void configureExerciseChart(List<BarEntry> barEntries) {
+        BarDataSet dataSet = new BarDataSet(barEntries, "Sets pro Woche");
+        dataSet.setValueTextSize(12f);
+        dataSet.setColor(Color.BLUE);
+        dataSet.setValueTextColor(Color.WHITE);
+        BarData barData = new BarData(dataSet);
+        exerciseChart.setData(barData);
+        configureExerciseChartAxes();
+        configureExerciseChartLegend();
+        exerciseChart.invalidate();
+    }
+
+    /**
+     * Konfiguriert die Achsen des Balkendiagramms.
+     */
+    private void configureExerciseChartAxes() {
+        XAxis xAxis = exerciseChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularity(1f);
+        xAxis.setDrawGridLines(false);
+        xAxis.setTextColor(Color.WHITE);
+        xAxis.setValueFormatter(new ValueFormatter() {
+            @Override public String getFormattedValue(float value) { return "Woche " + ((int) value); }
+        });
+        YAxis leftAxis = exerciseChart.getAxisLeft();
+        leftAxis.setDrawGridLines(false);
+        leftAxis.setTextColor(Color.WHITE);
+        leftAxis.setGranularity(1f);
+        leftAxis.setValueFormatter(new ValueFormatter() {
+            @Override public String getFormattedValue(float value) { return String.valueOf((int) value); }
+        });
+        exerciseChart.getAxisRight().setEnabled(false);
+    }
+
+    /**
+     * Konfiguriert die Legende des Balkendiagramms.
+     */
+    private void configureExerciseChartLegend() {
+        Legend legend = exerciseChart.getLegend();
+        legend.setTextColor(Color.WHITE);
+        legend.setForm(Legend.LegendForm.SQUARE);
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        legend.setDrawInside(false);
+        Description description = new Description();
+        description.setText("");
+        exerciseChart.setDescription(description);
     }
 
     /**
