@@ -8,7 +8,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.example.fitnesstracker.database.DatabaseHelper;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ExerciseSetRepository
 {
@@ -47,4 +49,28 @@ public class ExerciseSetRepository
         db.insert("ExerciseSet", null, values);
         db.close();
     }
+
+    public Map<Integer, Integer> getSetsPerWeek() {
+        Map<Integer, Integer> setsPerWeek = new HashMap<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        // Das Query extrahiert die Kalenderwoche und zählt die Sets pro Woche.
+        // CAST wird genutzt, um den String der Woche in einen Integer zu konvertieren.
+        String query = "SELECT CAST(strftime('%W', date) AS INTEGER) AS week, COUNT(*) AS count " +
+                "FROM ExerciseSet GROUP BY week ORDER BY week";
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int week = cursor.getInt(cursor.getColumnIndexOrThrow("week"));
+                int count = cursor.getInt(cursor.getColumnIndexOrThrow("count"));
+                setsPerWeek.put(week, count);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return setsPerWeek;
+    }
+
 }
