@@ -244,16 +244,66 @@ public class ProgressionFragment extends Fragment {
      * Konfiguriert das Balkendiagramm mit den übergebenen Daten.
      */
     private void configureExerciseChart(List<BarEntry> barEntries) {
-        BarDataSet dataSet = new BarDataSet(barEntries, "Sets pro Woche");
-        dataSet.setValueTextSize(12f);
-        dataSet.setColor(Color.BLUE);
-        dataSet.setValueTextColor(Color.WHITE);
+        BarDataSet dataSet = createBarDataSet(barEntries);
         BarData barData = new BarData(dataSet);
         exerciseChart.setData(barData);
         configureExerciseChartAxes();
         configureExerciseChartLegend();
         exerciseChart.invalidate();
     }
+
+    /**
+     * Erzeugt das BarDataSet und setzt Farben und Formatierungen.
+     */
+    private BarDataSet createBarDataSet(List<BarEntry> barEntries) {
+        BarDataSet dataSet = new BarDataSet(barEntries, "Sets pro Woche");
+        dataSet.setColors(getBarColors(barEntries));
+        dataSet.setValueTextSize(12f);
+        dataSet.setValueTextColor(Color.WHITE);
+        dataSet.setValueFormatter(createValueFormatter());
+        return dataSet;
+    }
+
+    /**
+     * Erstellt einen ValueFormatter, der die Balkenwerte als ganze Zahlen formatiert.
+     */
+    private ValueFormatter createValueFormatter() {
+        return new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return String.format("%d", (int) value);
+            }
+        };
+    }
+
+    /**
+     * Ermittelt die Farben für die Balken basierend auf der Anzahl der Sets.
+     */
+    private List<Integer> getBarColors(List<BarEntry> barEntries) {
+        List<Integer> colors = new ArrayList<>();
+        for (BarEntry entry : barEntries) {
+            colors.add(getSetColor((int) entry.getY()));
+        }
+        return colors;
+    }
+
+    /**
+     * Ermittelt die Farbe für einen Balken basierend auf der Anzahl der Sets.
+     */
+    private int getSetColor(int count) {
+        int colorResource;
+        if (count < 8) {
+            colorResource = R.color.low_exercise_sets;
+        } else if (count < 12) {
+            colorResource = R.color.medium_exercise_sets;
+        } else if (count < 16) {
+            colorResource = R.color.good_exercise_sets;
+        } else {
+            colorResource = R.color.optimal_exercise_sets;
+        }
+        return ContextCompat.getColor(requireContext(), colorResource);
+    }
+
 
     /**
      * Konfiguriert die Achsen des Balkendiagramms.
@@ -265,23 +315,17 @@ public class ProgressionFragment extends Fragment {
         xAxis.setDrawGridLines(false);
         xAxis.setTextColor(Color.WHITE);
         xAxis.setValueFormatter(new ValueFormatter() {
-            @Override public String getFormattedValue(float value) { return "Woche " + ((int) value); }
+            @Override public String getFormattedValue(float value) { return "KW" + ((int) value); }
         });
         exerciseChart.getAxisLeft().setEnabled(false);
         exerciseChart.getAxisRight().setEnabled(false);
     }
 
     /**
-     * Konfiguriert die Legende des Balkendiagramms.
+     * Deaktiviert die Legende des Balkendiagramms.
      */
     private void configureExerciseChartLegend() {
-        Legend legend = exerciseChart.getLegend();
-        legend.setTextColor(Color.WHITE);
-        legend.setForm(Legend.LegendForm.SQUARE);
-        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        legend.setDrawInside(false);
+        exerciseChart.getLegend().setEnabled(false);
         Description description = new Description();
         description.setText("");
         exerciseChart.setDescription(description);

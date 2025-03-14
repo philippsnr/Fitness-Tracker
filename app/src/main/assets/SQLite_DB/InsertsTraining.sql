@@ -79,12 +79,15 @@ INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
 INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
 (4, 1, 10, 60, "26-02-2025"),
 (4, 2, 8, 65, "26-02-2025"),
+(4, 3, 6, 70, "26-02-2025"),
+(4, 2, 8, 65, "26-02-2025"),
 (4, 3, 6, 70, "26-02-2025");
 
 -- Klimmzüge (Pull-Ups) - 3 Sets
 INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
 (5, 1, 10, 0, "26-02-2025"),
 (5, 2, 8, 5, "26-02-2025"),
+(5, 3, 6, 10, "26-02-2025"),
 (5, 3, 6, 10, "26-02-2025");
 
 -- Beinpresse (Leg Press) - 3 Sets
@@ -105,14 +108,12 @@ INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitio
 -- Klimmzüge (Pull-Ups) - 3 Sets
 INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
 (5, 1, 10, 0, "05-03-2025"),
-(5, 2, 8, 5, "05-03-2025"),
 (5, 3, 6, 10, "05-03-2025");
 
 -- Beinpresse (Leg Press) - 3 Sets
 INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
 (9, 1, 12, 105, "05-03-2025"),
-(9, 2, 10, 115, "05-03-2025"),
-(9, 3, 8, 125, "05-03-2025");
+(9, 2, 10, 115, "05-03-2025");
 
 --------------------------------------------------
 
@@ -121,10 +122,17 @@ INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitio
 INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
 (4, 1, 10, 64, "12-03-2025"),
 (4, 2, 8, 69, "12-03-2025"),
+(4, 3, 6, 74, "12-03-2025"),
+(4, 1, 10, 64, "12-03-2025"),
+(4, 2, 8, 69, "12-03-2025"),
+(4, 2, 8, 69, "12-03-2025"),
 (4, 3, 6, 74, "12-03-2025");
 
 -- Klimmzüge (Pull-Ups) - 3 Sets
 INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
+(5, 1, 10, 0, "12-03-2025"),
+(5, 2, 8, 5, "12-03-2025"),
+(5, 3, 6, 10, "12-03-2025"),
 (5, 1, 10, 0, "12-03-2025"),
 (5, 2, 8, 5, "12-03-2025"),
 (5, 3, 6, 10, "12-03-2025");
@@ -142,11 +150,15 @@ INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitio
 INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
 (4, 1, 10, 66, "19-03-2025"),
 (4, 2, 8, 71, "19-03-2025"),
+(4, 3, 6, 76, "19-03-2025"),
+(4, 2, 8, 71, "19-03-2025"),
 (4, 3, 6, 76, "19-03-2025");
 
 -- Klimmzüge (Pull-Ups) - 3 Sets
 INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
 (5, 1, 10, 0, "19-03-2025"),
+(5, 2, 8, 5, "19-03-2025"),
+(5, 3, 6, 10, "19-03-2025"),
 (5, 2, 8, 5, "19-03-2025"),
 (5, 3, 6, 10, "19-03-2025");
 
@@ -163,17 +175,18 @@ INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitio
 INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
 (4, 1, 10, 68, "26-03-2025"),
 (4, 2, 8, 73, "26-03-2025"),
+(4, 3, 6, 78, "26-03-2025"),
+(4, 2, 8, 73, "26-03-2025"),
 (4, 3, 6, 78, "26-03-2025");
 
 -- Klimmzüge (Pull-Ups) - 3 Sets
 INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
 (5, 1, 10, 0, "26-03-2025"),
-(5, 2, 8, 5, "26-03-2025"),
 (5, 3, 6, 10, "26-03-2025");
 
 -- Beinpresse (Leg Press) - 3 Sets
 INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
 (9, 1, 12, 120, "26-03-2025"),
 (9, 2, 10, 130, "26-03-2025"),
+(9, 3, 8, 140, "26-03-2025"),
 (9, 3, 8, 140, "26-03-2025");
-
