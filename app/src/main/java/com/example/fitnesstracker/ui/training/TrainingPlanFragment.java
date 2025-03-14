@@ -25,10 +25,10 @@ import com.example.fitnesstracker.viewmodel.TrainingplanViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrainingplanFragment extends Fragment {
+public class TrainingPlanFragment extends Fragment {
 
     private TrainingplanViewModel viewModel;
-    private TrainingplanAdapter adapter;
+    private TrainingPlanAdapter adapter;
     private Trainingplan activePlan;
     private ImageView ivChangeActivePlan;
 
@@ -69,15 +69,15 @@ public class TrainingplanFragment extends Fragment {
     private void setupRecyclerView() {
         RecyclerView rvTrainingPlans = requireView().findViewById(R.id.rvTrainingPlans);
         rvTrainingPlans.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new TrainingplanAdapter(new ArrayList<>(), createItemClickListener());
+        adapter = new TrainingPlanAdapter(new ArrayList<>(), createItemClickListener());
         rvTrainingPlans.setAdapter(adapter);
     }
 
     /**
      * Erstellt und gibt den OnItemClickListener für das RecyclerView zurück.
      */
-    private TrainingplanAdapter.OnItemClickListener createItemClickListener() {
-        return new TrainingplanAdapter.OnItemClickListener() {
+    private TrainingPlanAdapter.OnItemClickListener createItemClickListener() {
+        return new TrainingPlanAdapter.OnItemClickListener() {
             @Override
             public void onViewClick(int position) {
                 openTrainingPlanDetails(position);
@@ -199,15 +199,15 @@ public class TrainingplanFragment extends Fragment {
 
     /**
      * Öffnet die Detailansicht eines Trainingsplans.
-     * Hier wird das TrainingdayFragment in den fragment_container geladen,
+     * Hier wird das TrainingDayFragment in den fragment_container geladen,
      * sodass die Bottom Navigation sichtbar bleibt.
      */
     private void openTrainingPlanDetails(int position) {
         Trainingplan plan = adapter.getItem(position);
-        Log.d("TrainingplanFragment", "Klick auf Plan: " + plan.getName());
+        Log.d("TrainingPlanFragment", "Klick auf Plan: " + plan.getName());
         Toast.makeText(requireContext(), "Öffne Trainingsplan: " + plan.getName(), Toast.LENGTH_SHORT).show();
 
-        TrainingdayFragment detailsFragment = TrainingdayFragment.newInstance(plan.getId(), plan.getName());
+        TrainingDayFragment detailsFragment = TrainingDayFragment.newInstance(plan.getId(), plan.getName());
         getParentFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, detailsFragment)
                 .addToBackStack(null)

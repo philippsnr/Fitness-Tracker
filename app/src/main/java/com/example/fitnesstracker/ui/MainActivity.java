@@ -15,7 +15,7 @@ import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.ui.nutrition.NutritionFragment;
 import com.example.fitnesstracker.ui.progress.ProgressionFragment;
 import com.example.fitnesstracker.ui.exercise.ExerciseFragment;
-import com.example.fitnesstracker.ui.training.TrainingplanFragment;
+import com.example.fitnesstracker.ui.training.TrainingPlanFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (itemId == R.id.nav_nutrition) {
             return new NutritionFragment();
         } else if (itemId == R.id.nav_training) {
-            return new TrainingplanFragment();
+            return new TrainingPlanFragment();
         } else if (itemId == R.id.nav_exercise) {
             return new ExerciseFragment();
         }

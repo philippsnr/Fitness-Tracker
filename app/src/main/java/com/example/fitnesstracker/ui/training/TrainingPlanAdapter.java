@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrainingplanAdapter extends RecyclerView.Adapter<TrainingplanAdapter.PlanViewHolder> {
+public class TrainingPlanAdapter extends RecyclerView.Adapter<TrainingPlanAdapter.PlanViewHolder> {
 
     private List<Trainingplan> trainingplans;
     private OnItemClickListener listener;
@@ -26,7 +26,7 @@ public class TrainingplanAdapter extends RecyclerView.Adapter<TrainingplanAdapte
         void onChangeActiveClick(int position); // Wird hier nicht verwendet, da das Icon im Fragment liegt
     }
 
-    public TrainingplanAdapter(List<Trainingplan> trainingplans, OnItemClickListener listener) {
+    public TrainingPlanAdapter(List<Trainingplan> trainingplans, OnItemClickListener listener) {
         this.trainingplans = trainingplans;
         this.listener = listener;
     }
@@ -67,7 +67,7 @@ public class TrainingplanAdapter extends RecyclerView.Adapter<TrainingplanAdapte
     @Override
     public PlanViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_training_plan, parent, false);
+                .inflate(R.layout.item_trainingplan, parent, false);
         return new PlanViewHolder(view);
     }
 
