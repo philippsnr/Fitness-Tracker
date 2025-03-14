@@ -267,13 +267,7 @@ public class ProgressionFragment extends Fragment {
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override public String getFormattedValue(float value) { return "Woche " + ((int) value); }
         });
-        YAxis leftAxis = exerciseChart.getAxisLeft();
-        leftAxis.setDrawGridLines(false);
-        leftAxis.setTextColor(Color.WHITE);
-        leftAxis.setGranularity(1f);
-        leftAxis.setValueFormatter(new ValueFormatter() {
-            @Override public String getFormattedValue(float value) { return String.valueOf((int) value); }
-        });
+        exerciseChart.getAxisLeft().setEnabled(false);
         exerciseChart.getAxisRight().setEnabled(false);
     }
 
