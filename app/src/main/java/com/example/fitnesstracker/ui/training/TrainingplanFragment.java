@@ -6,10 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,8 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fitnesstracker.R;
-import com.example.fitnesstracker.viewmodel.TrainingplanViewModel;
 import com.example.fitnesstracker.model.Trainingplan;
+import com.example.fitnesstracker.viewmodel.TrainingplanViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,28 +30,13 @@ public class TrainingplanFragment extends Fragment {
     private TrainingplanViewModel viewModel;
     private TrainingplanAdapter adapter;
     private Trainingplan activePlan;
-    private ImageView ivChangeActivePlan; // Icon zum Wechseln des aktiven Plans im Fragment
+    private ImageView ivChangeActivePlan;
 
-    /**
-     * Erstellt und gibt die View für das Fragment zurück.
-     *
-     * @param inflater  Das LayoutInflater-Objekt, das zum Aufblasen der XML-Layout-Datei verwendet wird.
-     * @param container Die übergeordnete View-Gruppe, in die das Fragment eingefügt wird (kann null sein).
-     * @param savedInstanceState Falls vorhanden, enthält dies den zuletzt gespeicherten Zustand des Fragments.
-     * @return Die aufgeblasene View für das Fragment.
-     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_trainingplan, container, false);
     }
 
-    /**
-     * Wird aufgerufen, nachdem die View des Fragments erstellt wurde.
-     * Initialisiert die UI-Elemente, das ViewModel und lädt die Trainingspläne.
-     *
-     * @param view               Die erstellte View des Fragments.
-     * @param savedInstanceState Falls vorhanden, enthält dies den zuletzt gespeicherten Zustand des Fragments.
-     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -60,11 +45,8 @@ public class TrainingplanFragment extends Fragment {
         loadTrainingPlans();
     }
 
-
     /**
-     * Initialisiert die UI-Elemente des Fragments.
-     *
-     * @param view Die Root-View des Fragments
+     * Initialisiert die UI-Elemente und setzt den Klick-Listener für das Icon.
      */
     private void initUI(View view) {
         initViews(view);
@@ -74,8 +56,6 @@ public class TrainingplanFragment extends Fragment {
 
     /**
      * Initialisiert die Views anhand der übergebenen Root-View.
-     *
-     * @param view Die Root-View des Fragments
      */
     private void initViews(View view) {
         TextView tvActivePlan = view.findViewById(R.id.tvActivePlan);
@@ -95,8 +75,6 @@ public class TrainingplanFragment extends Fragment {
 
     /**
      * Erstellt und gibt den OnItemClickListener für das RecyclerView zurück.
-     *
-     * @return Instanz von TrainingplanAdapter.OnItemClickListener
      */
     private TrainingplanAdapter.OnItemClickListener createItemClickListener() {
         return new TrainingplanAdapter.OnItemClickListener() {
@@ -104,21 +82,23 @@ public class TrainingplanFragment extends Fragment {
             public void onViewClick(int position) {
                 openTrainingPlanDetails(position);
             }
+
             @Override
             public void onEditClick(int position) {
                 showRenameDialog(adapter.getItem(position), position);
             }
+
             @Override
             public void onDeleteClick(int position) {
                 showDeleteConfirmationDialog(adapter.getItem(position));
             }
+
             @Override
             public void onChangeActiveClick(int position) {
                 showOtherTrainingplansDialog();
             }
         };
     }
-
 
     /**
      * Zeigt einen Dialog, in dem ein inaktiver Trainingsplan als aktiv ausgewählt werden kann.
@@ -134,8 +114,6 @@ public class TrainingplanFragment extends Fragment {
 
     /**
      * Erstellt eine Liste aller inaktiven Trainingspläne.
-     *
-     * @return Liste der inaktiven Trainingspläne
      */
     private List<Trainingplan> getInactiveTrainingplans() {
         List<Trainingplan> inactivePlans = new ArrayList<>();
@@ -150,8 +128,6 @@ public class TrainingplanFragment extends Fragment {
 
     /**
      * Zeigt einen Dialog zur Auswahl eines neuen aktiven Trainingsplans.
-     *
-     * @param inactivePlans Liste der inaktiven Trainingspläne
      */
     private void showTrainingplanSelectionDialog(List<Trainingplan> inactivePlans) {
         String[] planNames = new String[inactivePlans.size()];
@@ -160,16 +136,12 @@ public class TrainingplanFragment extends Fragment {
         }
         new AlertDialog.Builder(requireContext())
                 .setTitle("Wähle einen Trainingsplan als aktiv")
-                .setItems(planNames, (dialog, which) ->
-                        showConfirmationDialog(inactivePlans.get(which))
-                )
+                .setItems(planNames, (dialog, which) -> showConfirmationDialog(inactivePlans.get(which)))
                 .show();
     }
 
     /**
      * Zeigt einen Bestätigungsdialog zur Aktivierung eines ausgewählten Trainingsplans.
-     *
-     * @param selectedPlan Der zu aktivierende Trainingsplan
      */
     private void showConfirmationDialog(Trainingplan selectedPlan) {
         new AlertDialog.Builder(requireContext())
@@ -182,8 +154,6 @@ public class TrainingplanFragment extends Fragment {
 
     /**
      * Aktiviert den ausgewählten Trainingsplan und lädt die Daten neu.
-     *
-     * @param selectedPlan Der zu aktivierende Trainingsplan
      */
     private void activateTrainingplan(Trainingplan selectedPlan) {
         viewModel.setActiveTrainingplan(selectedPlan.getId(),
@@ -197,8 +167,6 @@ public class TrainingplanFragment extends Fragment {
         );
     }
 
-
-
     /**
      * Initialisiert das ViewModel.
      */
@@ -210,37 +178,38 @@ public class TrainingplanFragment extends Fragment {
      * Lädt alle Trainingspläne und den aktiven Plan.
      */
     private void loadTrainingPlans() {
-        // Lade den aktiven Trainingsplan
         viewModel.loadActiveTrainingplan(
                 plan -> requireActivity().runOnUiThread(() -> updateActivePlan(plan)),
                 error -> Log.e("Trainingplan", "Fehler beim Laden des aktiven Plans", error)
         );
-        // Lade alle Trainingspläne
         viewModel.loadAllTrainingplans(
                 plans -> requireActivity().runOnUiThread(() -> adapter.updatePlans(plans)),
                 error -> Log.e("Trainingplan", "Fehler beim Laden der Trainingspläne", error)
         );
     }
 
-
     /**
      * Aktualisiert die Anzeige des aktiven Trainingsplans.
      */
     private void updateActivePlan(Trainingplan plan) {
-        activePlan = plan;  // Speichere den aktiven Plan
+        activePlan = plan;
         TextView tvActivePlan = requireView().findViewById(R.id.tvActivePlan);
         tvActivePlan.setText(plan != null ? plan.getName() : "Kein aktiver Plan");
     }
 
     /**
      * Öffnet die Detailansicht eines Trainingsplans.
+     * Hier wird das TrainingdayFragment in den fragment_container geladen,
+     * sodass die Bottom Navigation sichtbar bleibt.
      */
     private void openTrainingPlanDetails(int position) {
         Trainingplan plan = adapter.getItem(position);
-        TrainingdayFragment trainingdayFragment = TrainingdayFragment.newInstance(plan.getId());
+        Log.d("TrainingplanFragment", "Klick auf Plan: " + plan.getName());
+        Toast.makeText(requireContext(), "Öffne Trainingsplan: " + plan.getName(), Toast.LENGTH_SHORT).show();
 
+        TrainingdayFragment detailsFragment = TrainingdayFragment.newInstance(plan.getId(), plan.getName());
         getParentFragmentManager().beginTransaction()
-                .replace(R.id.detailContainer, trainingdayFragment)
+                .replace(R.id.fragment_container, detailsFragment)
                 .addToBackStack(null)
                 .commit();
     }
@@ -272,7 +241,6 @@ public class TrainingplanFragment extends Fragment {
             viewModel.updateTrainingplan(plan,
                     () -> requireActivity().runOnUiThread(() -> {
                         adapter.notifyItemChanged(position);
-                        // Prüfe, ob der umbenannte Plan der aktive Plan ist.
                         if (activePlan != null && activePlan.getId() == plan.getId()) {
                             activePlan.setName(newName);
                             TextView tvActivePlan = requireView().findViewById(R.id.tvActivePlan);
@@ -283,7 +251,6 @@ public class TrainingplanFragment extends Fragment {
             );
         }
     }
-
 
     /**
      * Zeigt eine Fehlermeldung an, falls das Speichern fehlschlägt.
