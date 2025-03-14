@@ -53,13 +53,9 @@ public class ExerciseSetRepository
     public Map<Integer, Integer> getSetsPerWeek() {
         Map<Integer, Integer> setsPerWeek = new HashMap<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        // Das Query extrahiert die Kalenderwoche und zählt die Sets pro Woche.
-        // CAST wird genutzt, um den String der Woche in einen Integer zu konvertieren.
-        String query = "SELECT CAST(strftime('%W', date) AS INTEGER) AS week, COUNT(*) AS count " +
+        String query = "SELECT CAST(strftime('%W', substr(date,7,4) || '-' || substr(date,4,2) || '-' || substr(date,1,2)) AS INTEGER) AS week, COUNT(*) AS count " +
                 "FROM ExerciseSet GROUP BY week ORDER BY week";
         Cursor cursor = db.rawQuery(query, null);
-
         if (cursor.moveToFirst()) {
             do {
                 int week = cursor.getInt(cursor.getColumnIndexOrThrow("week"));
@@ -67,10 +63,8 @@ public class ExerciseSetRepository
                 setsPerWeek.put(week, count);
             } while (cursor.moveToNext());
         }
-
         cursor.close();
         db.close();
         return setsPerWeek;
     }
-
 }
