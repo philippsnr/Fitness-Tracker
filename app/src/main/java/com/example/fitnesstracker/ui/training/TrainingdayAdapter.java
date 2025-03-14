@@ -10,12 +10,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.model.Trainingday;
+import com.example.fitnesstracker.model.Trainingplan;
 
 import java.util.List;
 
 public class TrainingdayAdapter extends RecyclerView.Adapter<TrainingdayAdapter.TrainingdayViewHolder> {
 
     private List<Trainingday> trainingdays;
+    private TrainingplanAdapter.OnItemClickListener listener;
+
+    // Interface für Klick-Listener
+    public interface OnItemClickListener {
+        void onViewClick(int position);
+        void onEditClick(int position);
+        void onDeleteClick(int position);
+    }
 
     public TrainingdayAdapter(List<Trainingday> trainingdays) {
         this.trainingdays = trainingdays;

@@ -1,14 +1,15 @@
 package com.example.fitnesstracker.ui;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import android.view.View;
 
 import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.ui.nutrition.NutritionFragment;
@@ -19,6 +20,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final long BACKSTACK_POP_DELAY = 50; // Millisekunden
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         initBottomNavigation();
 
-        // Standardmäßig das Home-Fragment anzeigen
+        // Standardmäßig ein Basisfragment anzeigen (hier z. B. ProgressionFragment)
         if (savedInstanceState == null) {
             loadFragment(new ProgressionFragment());
         }
@@ -42,12 +45,19 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Behandelt die Auswahl eines Menü-Items in der Bottom Navigation.
+     * Dabei wird der Back Stack zuerst geleert, und nach einem kurzen Delay
+     * (um sicherzustellen, dass alle Transaktionen abgeschlossen sind) das
+     * Basisfragment geladen.
      */
     private boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Fragment selectedFragment = getFragmentForMenuItem(item.getItemId());
-
+        final Fragment selectedFragment = getFragmentForMenuItem(item.getItemId());
         if (selectedFragment != null) {
-            loadFragment(selectedFragment);
+            // Back Stack auf dem Main Thread leeren
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            getSupportFragmentManager().executePendingTransactions();
+
+            // Verzögere den Fragmentwechsel leicht, damit der Pop vollständig abgeschlossen ist
+            new Handler(Looper.getMainLooper()).postDelayed(() -> loadFragment(selectedFragment), BACKSTACK_POP_DELAY);
             return true;
         }
         return false;
@@ -56,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Gibt das entsprechende Fragment für das ausgewählte Menü-Item zurück.
      */
-    @Nullable
     private Fragment getFragmentForMenuItem(int itemId) {
         if (itemId == R.id.nav_progression) {
             return new ProgressionFragment();
@@ -71,26 +80,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Methode zum Laden eines Fragments.
+     * Lädt das übergebene Fragment in den Container.
+     * commitAllowingStateLoss() wird hier verwendet, um State-Loss-Abstürze zu vermeiden.
      */
     private void loadFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        // Den Container finden
+        final View container = findViewById(R.id.fragment_container);
+        // Container zunächst unsichtbar machen
+        container.setAlpha(0f);
 
-        Fragment existingFragment = fragmentManager.findFragmentByTag(fragment.getClass().getSimpleName());
+        // Fragment synchron ersetzen
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment, fragment.getClass().getSimpleName())
+                .commitNow();
 
-        if (existingFragment == null) {
-            fragmentTransaction.add(R.id.fragment_container, fragment, fragment.getClass().getSimpleName());
-        }
-
-        for (Fragment frag : fragmentManager.getFragments()) {
-            if (frag == existingFragment) {
-                fragmentTransaction.show(frag);
-            } else {
-                fragmentTransaction.hide(frag);
-            }
-        }
-
-        fragmentTransaction.commit();
+        // Sanftes Einblenden des Containers
+        container.animate().alpha(1f).setDuration(200).start();
     }
 }

@@ -66,7 +66,7 @@ public class TrainingdayFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         // Inflate des Layouts, das einen Header und eine RecyclerView enthält
         View view = inflater.inflate(R.layout.fragment_trainingday, container, false);
-        tvTrainingPlanTitle = view.findViewById(R.id.tvTrainingPlanTitle);
+        tvTrainingPlanTitle = view.findViewById(R.id.tvTrainingdayTitle);
         recyclerView = view.findViewById(R.id.recyclerViewTrainingday);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new TrainingdayAdapter(new ArrayList<>());
