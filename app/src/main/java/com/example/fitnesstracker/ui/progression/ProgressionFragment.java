@@ -1,9 +1,8 @@
-package com.example.fitnesstracker.ui.progress;
+package com.example.fitnesstracker.ui.progression;
 
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,7 @@ import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.model.UserInformation;
 import com.example.fitnesstracker.viewmodel.UserInformationViewModel;
 import com.example.fitnesstracker.viewmodel.UserViewModel;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -31,7 +31,6 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -85,7 +84,7 @@ public class ProgressionFragment extends Fragment {
     private void loadWeightData() {
         userInformationViewModel.getAllUserInformation(dataList -> {
             if (dataList != null && !dataList.isEmpty()) {
-                updateChart(dataList);
+                updateWeightChart(dataList);
             }
         });
     }
@@ -93,29 +92,29 @@ public class ProgressionFragment extends Fragment {
     /**
      * Aktualisiert das Diagramm mit neuen Daten.
      */
-    private void updateChart(List<UserInformation> dataList) {
-        if (!isChartUpdateValid(dataList)) return;
+    private void updateWeightChart(List<UserInformation> dataList) {
+        if (!isWeightChartUpdateValid(dataList)) return;
 
         long baseDate = dataList.get(0).getDate().getTime();
 
         List<Entry> weightEntries = new ArrayList<>();
         List<Entry> kfaEntries = new ArrayList<>();
-        populateChartEntries(dataList, baseDate, weightEntries, kfaEntries);
+        populateWeightChartEntries(dataList, baseDate, weightEntries, kfaEntries);
 
-        getActivity().runOnUiThread(() -> configureChart(baseDate, weightEntries, kfaEntries));
+        getActivity().runOnUiThread(() -> configureWeightChart(baseDate, weightEntries, kfaEntries));
     }
 
     /**
      * Überprüft, ob die Diagrammaktualisierung gültig ist.
      */
-    private boolean isChartUpdateValid(List<UserInformation> dataList) {
+    private boolean isWeightChartUpdateValid(List<UserInformation> dataList) {
         return getContext() != null && weightChart != null && dataList != null && !dataList.isEmpty();
     }
 
     /**
      * Erstellt die Einträge für das Diagramm.
      */
-    private void populateChartEntries(List<UserInformation> dataList, long baseDate, List<Entry> weightEntries, List<Entry> kfaEntries) {
+    private void populateWeightChartEntries(List<UserInformation> dataList, long baseDate, List<Entry> weightEntries, List<Entry> kfaEntries) {
         final float millisInDay = 86400000f;
         for (UserInformation info : dataList) {
             float diffDays = (info.getDate().getTime() - baseDate) / millisInDay;
@@ -129,17 +128,17 @@ public class ProgressionFragment extends Fragment {
     /**
      * Konfiguriert das Diagramm mit den übergebenen Daten.
      */
-    private void configureChart(long baseDate, List<Entry> weightEntries, List<Entry> kfaEntries) {
-        LineDataSet weightDataSet = createDataSet(weightEntries, "Gewicht (kg)", Color.WHITE, YAxis.AxisDependency.LEFT, true);
+    private void configureWeightChart(long baseDate, List<Entry> weightEntries, List<Entry> kfaEntries) {
+        LineDataSet weightDataSet = createWeightDataSet(weightEntries, "Gewicht (kg)", Color.WHITE, YAxis.AxisDependency.LEFT, true);
 
         LineData lineData = kfaEntries.isEmpty() ?
                 new LineData(weightDataSet) :
-                new LineData(weightDataSet, createDataSet(kfaEntries, "KFA (%)", R.color.neon_blue, YAxis.AxisDependency.RIGHT, false));
+                new LineData(weightDataSet, createWeightDataSet(kfaEntries, "KFA (%)", R.color.neon_blue, YAxis.AxisDependency.RIGHT, false));
 
         weightChart.setData(lineData);
         weightChart.getAxisRight().setEnabled(!kfaEntries.isEmpty());
-        configureAxes(baseDate);
-        configureLegend();
+        configureWeightChartAxes(baseDate);
+        configureWeightChartLegend();
         weightChart.setExtraOffsets(0f, 0f, 0f, 15f);
         weightChart.invalidate();
     }
@@ -147,7 +146,7 @@ public class ProgressionFragment extends Fragment {
     /**
      * Erstellt und konfiguriert einen Datensatz für das Diagramm.
      */
-    private LineDataSet createDataSet(List<Entry> entries, String label, int color, YAxis.AxisDependency axis, boolean filled) {
+    private LineDataSet createWeightDataSet(List<Entry> entries, String label, int color, YAxis.AxisDependency axis, boolean filled) {
         LineDataSet dataSet = new LineDataSet(entries, label);
         dataSet.setValueTextSize(12f);
         dataSet.setCircleRadius(4f);
@@ -167,7 +166,7 @@ public class ProgressionFragment extends Fragment {
     /**
      * Konfiguriert die Achsen des Diagramms.
      */
-    private void configureAxes(long baseDate) {
+    private void configureWeightChartAxes(long baseDate) {
         weightChart.getAxisLeft().setDrawGridLines(false);
         weightChart.getXAxis().setDrawGridLines(false);
         weightChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -191,7 +190,7 @@ public class ProgressionFragment extends Fragment {
     /**
      * Konfiguriert die Legende des Diagramms.
      */
-    private void configureLegend() {
+    private void configureWeightChartLegend() {
         Legend legend = weightChart.getLegend();
         legend.setTextColor(Color.WHITE);
         legend.setForm(Legend.LegendForm.LINE);
