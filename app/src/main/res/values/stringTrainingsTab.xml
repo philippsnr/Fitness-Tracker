@@ -11,4 +11,6 @@
     <string name="edit_day">Trainingstag bearbeiten</string>
     <string name="delete_day">Trainingstag löschen</string>
     <string name="name_day">Trainingstag Name</string>
+    <string name="name_exercise">Trainingsübung Name</string>
+    <string name="exercises">Übungen des Trainingtags</string>
 </resources>

@@ -2,6 +2,7 @@ package com.example.fitnesstracker.ui.training;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,6 +120,13 @@ public class TrainingDayFragment extends Fragment {
      */
     private void openTrainingdayDetails(int position) {
         Trainingday trainingday = adapter.getItem(position);
+        Log.d("TrainingDayFragment", "Klick auf Trainingstag: " + trainingday.getName());
+
+        TrainingExerciseFragment detailsFragment = TrainingExerciseFragment.newInstance(trainingday.getId(), trainingday.getName());
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, detailsFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     /**

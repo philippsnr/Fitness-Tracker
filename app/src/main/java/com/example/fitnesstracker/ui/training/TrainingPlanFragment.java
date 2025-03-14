@@ -205,7 +205,6 @@ public class TrainingPlanFragment extends Fragment {
     private void openTrainingPlanDetails(int position) {
         Trainingplan plan = adapter.getItem(position);
         Log.d("TrainingPlanFragment", "Klick auf Plan: " + plan.getName());
-        Toast.makeText(requireContext(), "Öffne Trainingsplan: " + plan.getName(), Toast.LENGTH_SHORT).show();
 
         TrainingDayFragment detailsFragment = TrainingDayFragment.newInstance(plan.getId(), plan.getName());
         getParentFragmentManager().beginTransaction()
