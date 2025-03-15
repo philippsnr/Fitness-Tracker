@@ -1,10 +1,9 @@
 package com.example.fitnesstracker.ui;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.MenuItem;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -14,7 +13,7 @@ import com.example.fitnesstracker.ui.nutrition.NutritionFragment;
 import com.example.fitnesstracker.ui.progress.ProgressionFragment;
 import com.example.fitnesstracker.ui.exercise.ExerciseFragment;
 import com.example.fitnesstracker.ui.training.TrainingFragment;
-import com.example.fitnesstracker.ui.onboarding.OnboardingFragment;
+import com.example.fitnesstracker.ui.onboarding.OnboardingActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,75 +23,44 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initBottomNavigation();
-
-        // Prüfe, ob das Onboarding bereits abgeschlossen wurde
-        SharedPreferences prefs = getSharedPreferences("onboarding", MODE_PRIVATE);
+        // Prüfen, ob das Onboarding bereits abgeschlossen wurde
+        SharedPreferences prefs = getSharedPreferences("onboarding", Context.MODE_PRIVATE);
         boolean onboardingComplete = prefs.getBoolean("onboarding_complete", false);
+
+        if (!onboardingComplete) {
+            // Falls das Onboarding noch nicht abgeschlossen ist, starte es und beende MainActivity
+            Intent intent = new Intent(this, OnboardingActivity.class);
+            startActivity(intent);new android.os.Handler().postDelayed(() -> {
+                finish();
+            }, 100);
+            return;
+        }
+
+        // Navigation nach dem Onboarding
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+
+        bottomNav.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_progression) {
+                selectedFragment = new ProgressionFragment();
+            } else if (itemId == R.id.nav_nutrition) {
+                selectedFragment = new NutritionFragment();
+            } else if (itemId == R.id.nav_training) {
+                selectedFragment = new TrainingFragment();
+            } else if (itemId == R.id.nav_exercise) {
+                selectedFragment = new ExerciseFragment();
+            }
+
+            if (selectedFragment != null) {
+                loadFragment(selectedFragment);
+            }
+
+            return true;
+        });
 
         if (savedInstanceState == null) {
             loadFragment(new ProgressionFragment());
-        }
-    }
-
-    /**
-     * Initialisiert die Bottom Navigation Bar und setzt den Listener.
-     */
-    private void initBottomNavigation() {
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setOnItemSelectedListener(this::onNavigationItemSelected);
-    }
-
-    /**
-     * Behandelt die Auswahl eines Menü-Items in der Bottom Navigation.
-     */
-    private boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Fragment selectedFragment = getFragmentForMenuItem(item.getItemId());
-
-        if (selectedFragment != null) {
-            loadFragment(selectedFragment);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Gibt das entsprechende Fragment für das ausgewählte Menü-Item zurück.
-     */
-    @Nullable
-    private Fragment getFragmentForMenuItem(int itemId) {
-        if (itemId == R.id.nav_progression) {
-            return new ProgressionFragment();
-        } else if (itemId == R.id.nav_nutrition) {
-            return new NutritionFragment();
-        } else if (itemId == R.id.nav_training) {
-            return new TrainingFragment();
-        } else if (itemId == R.id.nav_exercise) {
-            return new ExerciseFragment();
-        }
-        return null;
-    }
-
-    /**
-     * Methode zum Laden eines Fragments.
-     */
-    private void loadFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        Fragment existingFragment = fragmentManager.findFragmentByTag(fragment.getClass().getSimpleName());
-
-        if (existingFragment == null) {
-            fragmentTransaction.add(R.id.fragment_container, fragment, fragment.getClass().getSimpleName());
-        }
-
-        for (Fragment frag : fragmentManager.getFragments()) {
-            if (frag == existingFragment) {
-                fragmentTransaction.show(frag);
-            } else {
-                // Lade das Standardfragment, z. B. ProgressionFragment
-                loadFragment(new ProgressionFragment());
-            }
         }
     }
 
