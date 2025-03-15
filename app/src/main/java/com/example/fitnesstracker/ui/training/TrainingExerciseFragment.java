@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.viewmodel.ExerciseViewModel;
 import com.example.fitnesstracker.viewmodel.TrainingdayExerciseAssignmentViewModel;
@@ -21,6 +22,7 @@ public class TrainingExerciseFragment extends Fragment {
     private String trainingdayName;
     private RecyclerView recyclerView;
     private TrainingExerciseAdapter adapter;
+    // Diese Felder sollen in Tests ersetzt werden können.
     private ExerciseViewModel exerciseViewModel;
     private TrainingdayExerciseAssignmentViewModel assignmentViewModel;
 
@@ -40,16 +42,19 @@ public class TrainingExerciseFragment extends Fragment {
             trainingdayId = getArguments().getInt("trainingdayId");
             trainingdayName = getArguments().getString("trainingdayName");
         }
-        // ViewModels initialisieren
-        exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
-        assignmentViewModel = new ViewModelProvider(this).get(TrainingdayExerciseAssignmentViewModel.class);
+        // Nur initialisieren, falls noch nicht injiziert (z.B. in Tests)
+        if (exerciseViewModel == null) {
+            exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
+        }
+        if (assignmentViewModel == null) {
+            assignmentViewModel = new ViewModelProvider(this).get(TrainingdayExerciseAssignmentViewModel.class);
+        }
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        // Layout aus fragment_trainingexercises.xml aufblasen
         return inflater.inflate(R.layout.fragment_trainingexercise, container, false);
     }
 
@@ -66,10 +71,9 @@ public class TrainingExerciseFragment extends Fragment {
         adapter = new TrainingExerciseAdapter();
         recyclerView.setAdapter(adapter);
 
-        // Asynchron die Exercise-IDs laden und dann die zugehörigen Exercises abrufen
+        // Lade asynchron die Exercise-IDs und dann die zugehörigen Exercises
         assignmentViewModel.getExerciseIdsForTrainingday(trainingdayId, exerciseIds -> {
             exerciseViewModel.loadExercisesByIds(exerciseIds, exercises -> {
-                // Update des Adapters im UI-Thread
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         adapter.setExercises(exercises);
@@ -78,5 +82,14 @@ public class TrainingExerciseFragment extends Fragment {
                 }
             });
         });
+    }
+
+    // Optionale Setter für Testzwecke:
+    public void setExerciseViewModel(ExerciseViewModel exerciseViewModel) {
+        this.exerciseViewModel = exerciseViewModel;
+    }
+
+    public void setAssignmentViewModel(TrainingdayExerciseAssignmentViewModel assignmentViewModel) {
+        this.assignmentViewModel = assignmentViewModel;
     }
 }
