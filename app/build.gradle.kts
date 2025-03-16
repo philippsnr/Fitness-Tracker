@@ -37,8 +37,12 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.firebase.crashlytics.buildtools)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation (libs.jackson.databind)
+    implementation (libs.jackson.databind)
+    implementation (libs.jackson.annotations)
 }
