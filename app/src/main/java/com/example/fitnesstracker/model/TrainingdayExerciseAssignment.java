@@ -1,19 +1,19 @@
 package com.example.fitnesstracker.model;
 
-public class TrainingdayExcerciseAssignment {
+public class TrainingdayExerciseAssignment {
     private final int id;
     private int trainingdayId;
-    private int excerciseId;
+    private int exerciseId;
 
-    public TrainingdayExcerciseAssignment (int id, int trainingdayId, int excerciseId) {
+    public TrainingdayExerciseAssignment(int id, int trainingdayId, int exerciseId) {
         this.id = id;
         this.trainingdayId = trainingdayId;
-        this.excerciseId = excerciseId;
+        this.exerciseId = exerciseId;
     }
 
     public int getId() { return id; }
     public int getTrainingplanId() { return trainingdayId; }
-    public int getExcerciseId() { return excerciseId; }
+    public int getExerciseId() { return exerciseId; }
     public void setTrainingdayId( int trainingdayId ) { this.trainingdayId = trainingdayId; }
-    public void setExcerciseId ( int excerciseId ) { this.excerciseId = excerciseId; }
+    public void setExcerciseId ( int exerciseId) { this.exerciseId = this.exerciseId; }
 }

@@ -39,8 +39,8 @@ dependencies {
 
     // MPAndroidChart für Diagramme
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
-    implementation(libs.fragment.testing)
-    implementation(libs.androidx.junit)
+    //implementation(libs.fragment.testing)
+    //implementation(libs.androidx.junit)
 
     // Lokale Unit Tests (laufen auf der JVM)
     testImplementation(libs.junit)

@@ -5,32 +5,32 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.fitnesstracker.database.DatabaseHelper;
-import com.example.fitnesstracker.model.TrainingdayExcerciseAssignment;
+import com.example.fitnesstracker.model.TrainingdayExerciseAssignment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrainingdayExcerciseAssignmentRepository {
+public class TrainingdayExerciseAssignmentRepository {
 
     private final DatabaseHelper dbHelper;
 
-    public TrainingdayExcerciseAssignmentRepository(Context context) {
+    public TrainingdayExerciseAssignmentRepository(Context context) {
         this.dbHelper = new DatabaseHelper(context);
     }
 
-    public TrainingdayExcerciseAssignment getTrainingdayExcerciseAssignments(int trainingdayId) {
+    public TrainingdayExerciseAssignment getTrainingdayExcerciseAssignments(int trainingdayId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM TrainingdayExerciseAssignment WHERE trainingday_id = ?", new String[]{String.valueOf(trainingdayId)});
 
         if (cursor.moveToFirst()) {
-            TrainingdayExcerciseAssignment trainingdayExcerciseAssignment = new TrainingdayExcerciseAssignment(
+            TrainingdayExerciseAssignment trainingdayExerciseAssignment = new TrainingdayExerciseAssignment(
                     cursor.getInt(cursor.getColumnIndexOrThrow("id")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("trainingday_id")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("excercise_id"))
             );
             cursor.close();
             db.close();
-            return trainingdayExcerciseAssignment;
+            return trainingdayExerciseAssignment;
         }
         cursor.close();
         db.close();
