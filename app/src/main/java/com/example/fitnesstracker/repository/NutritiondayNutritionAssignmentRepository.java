@@ -18,7 +18,7 @@ public class NutritiondayNutritionAssignmentRepository {
 
     public NutritiondayNutritionAssignment getNutritionday(int nutritiondayId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM NutritiondayNutritionAssignmant WHERE nutritionday_id = ?", new String[]{String.valueOf(nutritiondayId)});
+        Cursor cursor = db.rawQuery("SELECT * FROM NutritiondayNutritionAssignment WHERE nutritionday_id = ?", new String[]{String.valueOf(nutritiondayId)});
 
         if (cursor.moveToFirst()) {
             NutritiondayNutritionAssignment nutritiondayNutritionAssignment = new NutritiondayNutritionAssignment(

@@ -25,8 +25,8 @@ public class TrainingdayExerciseAssignmentRepository {
         if (cursor.moveToFirst()) {
             TrainingdayExerciseAssignment trainingdayExerciseAssignment = new TrainingdayExerciseAssignment(
                     cursor.getInt(cursor.getColumnIndexOrThrow("id")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("trainingday_id")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("excercise_id"))
+                    cursor.getInt(cursor.getColumnIndexOrThrow("Trainingday_id")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("Exercise_id"))
             );
             cursor.close();
             db.close();
