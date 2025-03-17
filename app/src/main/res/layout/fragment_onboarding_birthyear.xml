@@ -15,6 +15,7 @@
             android:id="@+id/imageViewPlaceholder"
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:contentDescription="TODO"
             android:scaleType="centerCrop"
             android:src="@drawable/placeholder_image" />
 
@@ -22,17 +23,20 @@
             android:id="@+id/textViewQuestion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="What is your age?"
+            android:text="Select your birth year"
             android:textSize="18sp"
             android:paddingTop="16dp"
             android:gravity="center" />
 
         <EditText
-            android:id="@+id/editTextAge"
+            android:id="@+id/editTextBirthYear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter your age"
-            android:inputType="number" />
+            android:minHeight="48dp"
+            android:padding="8dp"
+            android:hint="Tap to select your birth year"
+            android:inputType="none" />
+
 
         <Button
             android:id="@+id/buttonNext"

@@ -43,7 +43,16 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
 
     @Override
     public void onDataCollected(String key, Object data) {
-        // Speichere die Daten je nach Schlüssel
+        saveCollectedData(key, data);
+
+        if (isLastOnboardingPage()) {
+            completeOnboarding();
+        } else {
+            moveToNextPage();
+        }
+    }
+
+    private void saveCollectedData(String key, Object data) {
         switch (key) {
             case "name":
                 userName = (String) data;
@@ -54,35 +63,49 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
             case "height":
                 height = (Integer) data;
                 break;
-            case "age":
+            case "birthYear":
                 age = (Integer) data;
                 break;
             case "kfa":
                 kfa = (Integer) data;
                 break;
         }
-
-        // Wenn noch nicht die letzte Seite, gehe zur nächsten
-        if (viewPager.getCurrentItem() < pagerAdapter.getItemCount() - 1) {
-            viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-        } else {
-            // Onboarding beenden: Speichere Daten und setze den Flag in SharedPreferences
-            UserInformation userInfo = new UserInformation(0, 1, new Date(), height, weight, kfa);
-            userInformationRepository.writeUserInformation(userInfo);
-
-            SharedPreferences prefs = getSharedPreferences("onboarding", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean("onboarding_complete", true);
-            editor.putString("user_name", userName);
-            editor.putInt("user_age", age);
-            editor.apply();
-
-            // Wechsle zur MainActivity
-            Intent intent = new Intent(OnboardingActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
     }
+
+    private boolean isLastOnboardingPage() {
+        return viewPager.getCurrentItem() >= pagerAdapter.getItemCount() - 1;
+    }
+
+    private void moveToNextPage() {
+        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+    }
+
+    private void completeOnboarding() {
+        saveUserData();
+        saveOnboardingStatus();
+        navigateToMainActivity();
+    }
+
+    private void saveUserData() {
+        UserInformation userInfo = new UserInformation(0, 1, new Date(), height, weight, kfa);
+        userInformationRepository.writeUserInformation(userInfo);
+    }
+
+    private void saveOnboardingStatus() {
+        SharedPreferences prefs = getSharedPreferences("onboarding", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("onboarding_complete", true);
+        editor.putString("user_name", userName);
+        editor.putInt("user_age", age);
+        editor.apply();
+    }
+
+    private void navigateToMainActivity() {
+        Intent intent = new Intent(OnboardingActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
 
     // Innerer Adapter für den ViewPager2
     private class OnboardingPagerAdapter extends androidx.viewpager2.adapter.FragmentStateAdapter {
@@ -102,7 +125,7 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
                 case 2:
                     return new OnboardingHeightFragment();
                 case 3:
-                    return new OnboardingAgeFragment();
+                    return new OnboardingBirthYearFragment();
                 case 4:
                     return new OnboardingKfaFragment();
                 default:

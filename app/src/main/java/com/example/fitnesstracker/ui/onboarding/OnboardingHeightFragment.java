@@ -47,9 +47,7 @@ public class OnboardingHeightFragment extends Fragment {
                 } catch (NumberFormatException e) {
                     Toast.makeText(getContext(), "Invalid height format", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-
+            }});
         return root;
     }
 }
