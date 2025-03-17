@@ -9,10 +9,14 @@ import android.widget.EditText;
 import androidx.fragment.app.Fragment;
 
 import com.example.fitnesstracker.R;
+import com.example.fitnesstracker.model.OpenFoodFactsResponseModel;
 import com.example.fitnesstracker.ui.nutrition.CallOpenFoodFactsApi;
 
 public class NutritionFragment extends Fragment {
 
+    /**
+     *Erstellt und initialisiert das Fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -26,10 +30,15 @@ public class NutritionFragment extends Fragment {
         return view;
     }
 
-    public void showNutritionNamesFromOFFApi(EditText nutritionNameInput) {
-        if ( nutritionNameInput != null ) {
+    /**
+     * Ruft die API-Aufruf-Funktion auf und übergibt Suchbegriff
+     * @param nutritionNameInput eingegebener Suchbegriff
+     */
+    private void showNutritionNamesFromOFFApi(EditText nutritionNameInput) {
+        String nutritionName = nutritionNameInput.getText().toString();
+        if (!nutritionName.isEmpty()) {
             CallOpenFoodFactsApi apiCall = new CallOpenFoodFactsApi();
-            apiCall.callOpenFoodFactsApiForNutritionNames(nutritionNameInput);
+            apiCall.callOpenFoodFactsApiForNutritionNames(nutritionName);
         }
     }
 }

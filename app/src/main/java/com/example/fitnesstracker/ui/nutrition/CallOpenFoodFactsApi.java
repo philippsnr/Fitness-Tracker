@@ -1,8 +1,6 @@
 package com.example.fitnesstracker.ui.nutrition;
 
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.EditText;
 
 import com.example.fitnesstracker.model.OpenFoodFactsResponseModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,61 +9,69 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class CallOpenFoodFactsApi {
 
-    private String basicUrl = "https://world.openfoodfacts.org/cgi/search.pl?";
-    public void callOpenFoodFactsApiForNutritionNames(EditText nutritionName) {
+    private final String basicUrl = "https://world.openfoodfacts.org/cgi/search.pl?";
+    protected void callOpenFoodFactsApiForNutritionNames(String nutritionName) {
         String apiUrlToAdd = "search_terms=" + nutritionName + "&search_simple=1&action=process&json=1&fields=product_name,image_url,code";
         String apiUrl = basicUrl + apiUrlToAdd;
+        Log.d("Nutrition", apiUrl);
 
-        new AsyncApiCall().execute(apiUrl);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executeApiCall(executor, apiUrl);
     }
 
-    private class AsyncApiCall extends AsyncTask<String, Void, OpenFoodFactsResponseModel> {
-
-        protected OpenFoodFactsResponseModel doInBackground(String... urls) {
-
-            HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
-            OpenFoodFactsResponseModel responseObject = null;
-            try {
-                URL url = new URL(urls[0]);
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-
-                reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                StringBuilder stringBuilder = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    stringBuilder.append(line);
-                }
-                String jsonResponse = stringBuilder.toString();
-                ObjectMapper objectMapper = new ObjectMapper();
-                responseObject = objectMapper.readValue(jsonResponse, OpenFoodFactsResponseModel.class);
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
+    private void executeApiCall(ExecutorService executor, String apiUrl) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
                 try {
-                    if (reader != null) {
-                        reader.close();
+                    String jsonResponse = apiCall(apiUrl);
+                    if ( jsonResponse != null ) {
+                        OpenFoodFactsResponseModel products = parseJsonResponseToObject(jsonResponse);
+                        Log.d("Nutrition", "Json erfolgreich in Objekt umgewandelt");
+
+                        //nur zum debuggen, muss später raus
+                        for (OpenFoodFactsResponseModel.Product product : products.products) {
+                            Log.d("Nutrition", "Name: " + product.product_name + "Code: " + product.code + "Bild: " + product.image_url);
+                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch(Exception e) {
+                    Log.e("Nutrition", "Fehler beim API-Call", e);
                 }
             }
-            return responseObject;
-        }
+        });
+        executor.shutdown();
+    }
 
-        protected void onPostExecute(OpenFoodFactsResponseModel responseObject) {
-            for (OpenFoodFactsResponseModel.Product product : responseObject.products) {
-                Log.d("API", "Name: " + product.product_name + ", " + "Code: " + product.code + ", " + "Bild: " + product.image_url);
+    private String apiCall(String apiUrl) throws Exception {
+        URL url = new URL(apiUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        int responseCode = connection.getResponseCode();
+
+        if( responseCode == HttpURLConnection.HTTP_OK ) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ( (line = reader.readLine()) != null ) {
+                response.append(line);
             }
+            reader.close();
+            return response.toString();
+        } else {
+            Log.e("Nutrition", "Http-Antwort war fehlerhaft");
+            return null;
         }
+    }
+
+    private OpenFoodFactsResponseModel parseJsonResponseToObject( String jsonResponse ) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        OpenFoodFactsResponseModel products = objectMapper.readValue(jsonResponse, OpenFoodFactsResponseModel.class);
+        return products;
     }
 }
