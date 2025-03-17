@@ -37,21 +37,27 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
 
+    // MPAndroidChart für Diagramme
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation(libs.fragment.testing)
+    implementation(libs.androidx.junit)
+
+    // Lokale Unit Tests (laufen auf der JVM)
     testImplementation(libs.junit)
+    testImplementation("com.google.truth:truth:1.1.3")
+    testImplementation("org.robolectric:robolectric:4.11.1")
+    testImplementation("androidx.test:core:1.5.0") // Aktualisierte Test Core Version für bessere Kompatibilität
+    testImplementation("androidx.fragment:fragment-testing:1.6.2") // Neueste Version für FragmentScenario
+
+    // Instrumented Tests (laufen auf Android-Gerät/Emulator)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
-    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
-
-    // Robolectric für lokale Android-Tests in der JVM
-    testImplementation("org.robolectric:robolectric:4.10.3")
-
-    // AndroidX Test Core (macht u.a. ApplicationProvider verfügbar)
-    testImplementation("androidx.test:core:1.4.0")
-
-    // FragmentScenario (zum Testen von Fragments in local unit tests)
-    testImplementation("androidx.fragment:fragment-testing:1.5.6")
-
-    // JUnit4-Erweiterung für AndroidX Tests
-    testImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.fragment:fragment-testing:1.6.2") // Für FragmentScenario
+    androidTestImplementation("androidx.test:core:1.5.0")
+    androidTestImplementation("org.mockito:mockito-android:5.3.1") // Für Mocking (falls benötigt)
 }
