@@ -46,9 +46,7 @@ public class UserInformationViewModel extends AndroidViewModel {
                 if (heightCm > 0 && weightKg > 0) {
                     double heightM = heightCm / 100.0; // cm → m umwandeln
                     double bmi = weightKg / (heightM * heightM);
-                    DecimalFormat df = (DecimalFormat) DecimalFormat.getInstance(Locale.US);
-                    df.applyPattern("#.#"); // Eine Nachkommastelle
-                    double bmiRounded = Double.parseDouble(df.format(bmi));
+                    double bmiRounded = Math.round(bmi * 10.0) / 10.0; // Eine Nachkommastelle
                     listener.onBMILoaded(bmiRounded);
                 } else {
                     listener.onBMILoaded(-1); // Fehlerwert

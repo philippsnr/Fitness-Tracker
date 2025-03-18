@@ -10,6 +10,7 @@ import com.example.fitnesstracker.repository.ExerciseSetRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -44,4 +45,16 @@ public class ExerciseSetViewModel extends AndroidViewModel
     public interface OnDataLoadedListener {
         void onDataLoaded(List<ExerciseSet> sets);
     }
+
+    public void loadSetsPerWeek(OnSetsPerWeekLoadedListener listener) {
+        executorService.execute(() -> {
+            Map<Integer, Integer> setsPerWeek = repository.getSetsPerWeek();
+            listener.onSetsPerWeekLoaded(setsPerWeek);
+        });
+    }
+
+    public interface OnSetsPerWeekLoadedListener {
+        void onSetsPerWeekLoaded(Map<Integer, Integer> setsPerWeek);
+    }
+
 }

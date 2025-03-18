@@ -53,7 +53,7 @@ public class UserInformationRepository {
     // **Letzte gespeicherte User-Information abrufen**
     public UserInformation getLatestUserInformation() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM UserInformation ORDER BY date DESC LIMIT 1", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM UserInformation ORDER BY date DESC, id DESC LIMIT 1", null);
         if (cursor.moveToFirst()) {
             UserInformation userInfo = new UserInformation(
                     cursor.getInt(0),
