@@ -38,26 +38,30 @@ dependencies {
     implementation(libs.constraintlayout)
 
     // MPAndroidChart für Diagramme
-    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation(libs.mpandroidchart)
     //implementation(libs.fragment.testing)
     //implementation(libs.androidx.junit)
 
     // Lokale Unit Tests (laufen auf der JVM)
     testImplementation(libs.junit)
-    testImplementation("com.google.truth:truth:1.1.3")
-    testImplementation("org.robolectric:robolectric:4.11.1")
-    testImplementation("androidx.test:core:1.5.0") // Aktualisierte Test Core Version für bessere Kompatibilität
-    testImplementation("androidx.fragment:fragment-testing:1.6.2") // Neueste Version für FragmentScenario
+    testImplementation(libs.truth)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.core) // Aktualisierte Test Core Version für bessere Kompatibilität
+    testImplementation(libs.fragment.testing) // Neueste Version für FragmentScenario
+    testImplementation(libs.core.testing)
+    testImplementation(libs.mockito.core)
+
 
     // Instrumented Tests (laufen auf Android-Gerät/Emulator)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    androidTestImplementation("androidx.test:runner:1.5.2")
-    androidTestImplementation("androidx.test:rules:1.5.0")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.fragment:fragment-testing:1.6.2") // Für FragmentScenario
-    androidTestImplementation("androidx.test:core:1.5.0")
-    androidTestImplementation("org.mockito:mockito-android:5.3.1") // Für Mocking (falls benötigt)
+    androidTestImplementation(libs.runner)
+    androidTestImplementation(libs.rules)
+    androidTestImplementation(libs.junit.v121)
+    androidTestImplementation(libs.espresso.contrib)
+    androidTestImplementation(libs.espresso.core.v361)
+    androidTestImplementation(libs.fragment.testing.v162) // Für FragmentScenario
+    androidTestImplementation(libs.core.v150)
+    androidTestImplementation(libs.mockito.android)
+    androidTestImplementation(libs.core.testing) // Für Mocking (falls benötigt)
 }
