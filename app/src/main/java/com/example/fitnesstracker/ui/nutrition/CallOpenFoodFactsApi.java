@@ -10,7 +10,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -48,7 +47,6 @@ public class CallOpenFoodFactsApi {
                         OpenFoodFactsResponseModel products = parseJsonResponseToObject(jsonResponse);
                         Log.d("Nutrition", "Json erfolgreich in Objekt umgewandelt");
                         List<OpenFoodFactsResponseModel.Product> productList = extractProductDetailsFromApiResponse(products);
-
 
                         //nur zum debuggen, muss später raus
                         for (OpenFoodFactsResponseModel.Product product : productList) {
@@ -112,7 +110,6 @@ public class CallOpenFoodFactsApi {
      */
     private OpenFoodFactsResponseModel parseJsonResponseToObject( String jsonResponse ) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
-        OpenFoodFactsResponseModel products = objectMapper.readValue(jsonResponse, OpenFoodFactsResponseModel.class);
-        return products;
+        return objectMapper.readValue(jsonResponse, OpenFoodFactsResponseModel.class);
     }
 }
