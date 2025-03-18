@@ -1,6 +1,13 @@
 package com.example.fitnesstracker.ui;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.MenuItem;
@@ -15,6 +22,8 @@ import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.ui.nutrition.NutritionFragment;
 import com.example.fitnesstracker.ui.progression.ProgressionFragment;
 import com.example.fitnesstracker.ui.exercise.ExerciseFragment;
+import com.example.fitnesstracker.ui.training.TrainingFragment;
+import com.example.fitnesstracker.ui.onboarding.OnboardingActivity;
 import com.example.fitnesstracker.ui.training.TrainingPlanFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -27,7 +36,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initBottomNavigation();
+        if (shouldShowOnboarding()) {
+            startOnboarding();
+            return;
+        }
+
+        setupBottomNavigation();
+
 
         // Standardmäßig ein Basisfragment anzeigen (hier z. B. ProgressionFragment)
         if (savedInstanceState == null) {
@@ -35,14 +50,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Initialisiert die Bottom Navigation Bar und setzt den Listener.
-     */
-    private void initBottomNavigation() {
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setOnItemSelectedListener(this::onNavigationItemSelected);
+    private boolean shouldShowOnboarding() {
+        SharedPreferences prefs = getSharedPreferences("onboarding", Context.MODE_PRIVATE);
+        return !prefs.getBoolean("onboarding_complete", false);
     }
 
+    private void startOnboarding() {
+        Intent intent = new Intent(this, OnboardingActivity.class);
+        startActivity(intent);
+
+        new android.os.Handler().postDelayed(this::finish, 100);
+    }
+
+    private void setupBottomNavigation() {
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = getSelectedFragment(item.getItemId());
+            if (selectedFragment != null) {
+                loadFragment(selectedFragment);
+            }
     /**
      * Behandelt die Auswahl eines Menü-Items in der Bottom Navigation.
      * Dabei wird der Back Stack zuerst geleert, und nach einem kurzen Delay
@@ -59,10 +85,10 @@ public class MainActivity extends AppCompatActivity {
             // Verzögere den Fragmentwechsel leicht, damit der Pop vollständig abgeschlossen ist
             new Handler(Looper.getMainLooper()).postDelayed(() -> loadFragment(selectedFragment), BACKSTACK_POP_DELAY);
             return true;
-        }
-        return false;
+        });
     }
 
+    private Fragment getSelectedFragment(int itemId) {
     /**
      * Gibt das entsprechende Fragment für das ausgewählte Menü-Item zurück.
      */
@@ -78,6 +104,15 @@ public class MainActivity extends AppCompatActivity {
         }
         return null;
     }
+
+
+
+
+    private void loadFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.commit();
 
     /**
      * Lädt das übergebene Fragment in den Container.
