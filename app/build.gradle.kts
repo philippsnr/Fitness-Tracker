@@ -36,12 +36,11 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-
+    implementation(libs.firebase.crashlytics.buildtools)
     // MPAndroidChart für Diagramme
     implementation(libs.mpandroidchart)
     //implementation(libs.fragment.testing)
     //implementation(libs.androidx.junit)
-
     // Lokale Unit Tests (laufen auf der JVM)
     testImplementation(libs.junit)
     testImplementation(libs.truth)
@@ -55,6 +54,9 @@ dependencies {
     // Instrumented Tests (laufen auf Android-Gerät/Emulator)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation (libs.jackson.databind)
+    implementation (libs.jackson.databind)
+    implementation (libs.jackson.annotations)
     androidTestImplementation(libs.runner)
     androidTestImplementation(libs.rules)
     androidTestImplementation(libs.junit.v121)
