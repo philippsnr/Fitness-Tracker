@@ -8,7 +8,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.example.fitnesstracker.database.DatabaseHelper;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ExerciseSetRepository
 {
@@ -24,8 +26,8 @@ public class ExerciseSetRepository
         if (cursor.moveToFirst()) {
             do {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
-                int setNumber = cursor.getInt(cursor.getColumnIndexOrThrow("setNumber"));
-                int repetition = cursor.getInt(cursor.getColumnIndexOrThrow("repetition"));
+                int setNumber = cursor.getInt(cursor.getColumnIndexOrThrow("set_number"));
+                int repetition = cursor.getInt(cursor.getColumnIndexOrThrow("repetitions"));
                 int weight = cursor.getInt(cursor.getColumnIndexOrThrow("weight"));
                 String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
                 lastSets.add(new ExerciseSet(id, trainingdayExerciseAssignmentId, setNumber, repetition, weight, date));
@@ -46,5 +48,23 @@ public class ExerciseSetRepository
         values.put("date", newSet.getDate().toString());
         db.insert("ExerciseSet", null, values);
         db.close();
+    }
+
+    public Map<Integer, Integer> getSetsPerWeek() {
+        Map<Integer, Integer> setsPerWeek = new HashMap<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String query = "SELECT CAST(strftime('%W', substr(date,7,4) || '-' || substr(date,4,2) || '-' || substr(date,1,2)) AS INTEGER) AS week, COUNT(*) AS count " +
+                "FROM ExerciseSet GROUP BY week ORDER BY week";
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int week = cursor.getInt(cursor.getColumnIndexOrThrow("week"));
+                int count = cursor.getInt(cursor.getColumnIndexOrThrow("count"));
+                setsPerWeek.put(week, count);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return setsPerWeek;
     }
 }

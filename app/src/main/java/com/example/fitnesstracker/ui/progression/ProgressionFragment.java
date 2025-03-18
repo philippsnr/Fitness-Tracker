@@ -1,9 +1,8 @@
-package com.example.fitnesstracker.ui.progress;
+package com.example.fitnesstracker.ui.progression;
 
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,29 +16,38 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.fitnesstracker.R;
+import com.example.fitnesstracker.model.ExerciseSet;
 import com.example.fitnesstracker.model.UserInformation;
+import com.example.fitnesstracker.viewmodel.ExerciseSetViewModel;
 import com.example.fitnesstracker.viewmodel.UserInformationViewModel;
 import com.example.fitnesstracker.viewmodel.UserViewModel;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class ProgressionFragment extends Fragment {
 
     private LineChart weightChart;
+    private BarChart exerciseChart;
     private UserInformationViewModel userInformationViewModel;
+    private ExerciseSetViewModel exerciseSetViewModel;
     private UserViewModel userViewModel;
     private TextView txtGoal;
     private TextView bmiTextView;
@@ -63,6 +71,7 @@ public class ProgressionFragment extends Fragment {
         loadUserGoal();
         loadWeightData();
         loadBMI();
+        loadExerciseData();
 
         return view;
     }
@@ -72,9 +81,11 @@ public class ProgressionFragment extends Fragment {
      */
     private void initializeElements(View view) {
         weightChart = view.findViewById(R.id.weightChart);
+        exerciseChart = view.findViewById(R.id.exerciseChart);
         bmiTextView = view.findViewById(R.id.bmi_value);
         userInformationViewModel = new ViewModelProvider(this).get(UserInformationViewModel.class);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        exerciseSetViewModel = new ViewModelProvider(this).get(ExerciseSetViewModel.class);
         txtGoal = view.findViewById(R.id.txtGoal);
         bmiBorder = view.findViewById(R.id.bmi_border);
     }
@@ -85,7 +96,7 @@ public class ProgressionFragment extends Fragment {
     private void loadWeightData() {
         userInformationViewModel.getAllUserInformation(dataList -> {
             if (dataList != null && !dataList.isEmpty()) {
-                updateChart(dataList);
+                updateWeightChart(dataList);
             }
         });
     }
@@ -93,29 +104,29 @@ public class ProgressionFragment extends Fragment {
     /**
      * Aktualisiert das Diagramm mit neuen Daten.
      */
-    private void updateChart(List<UserInformation> dataList) {
-        if (!isChartUpdateValid(dataList)) return;
+    private void updateWeightChart(List<UserInformation> dataList) {
+        if (!isWeightChartUpdateValid(dataList)) return;
 
         long baseDate = dataList.get(0).getDate().getTime();
 
         List<Entry> weightEntries = new ArrayList<>();
         List<Entry> kfaEntries = new ArrayList<>();
-        populateChartEntries(dataList, baseDate, weightEntries, kfaEntries);
+        populateWeightChartEntries(dataList, baseDate, weightEntries, kfaEntries);
 
-        getActivity().runOnUiThread(() -> configureChart(baseDate, weightEntries, kfaEntries));
+        getActivity().runOnUiThread(() -> configureWeightChart(baseDate, weightEntries, kfaEntries));
     }
 
     /**
      * Überprüft, ob die Diagrammaktualisierung gültig ist.
      */
-    private boolean isChartUpdateValid(List<UserInformation> dataList) {
+    private boolean isWeightChartUpdateValid(List<UserInformation> dataList) {
         return getContext() != null && weightChart != null && dataList != null && !dataList.isEmpty();
     }
 
     /**
      * Erstellt die Einträge für das Diagramm.
      */
-    private void populateChartEntries(List<UserInformation> dataList, long baseDate, List<Entry> weightEntries, List<Entry> kfaEntries) {
+    private void populateWeightChartEntries(List<UserInformation> dataList, long baseDate, List<Entry> weightEntries, List<Entry> kfaEntries) {
         final float millisInDay = 86400000f;
         for (UserInformation info : dataList) {
             float diffDays = (info.getDate().getTime() - baseDate) / millisInDay;
@@ -129,17 +140,17 @@ public class ProgressionFragment extends Fragment {
     /**
      * Konfiguriert das Diagramm mit den übergebenen Daten.
      */
-    private void configureChart(long baseDate, List<Entry> weightEntries, List<Entry> kfaEntries) {
-        LineDataSet weightDataSet = createDataSet(weightEntries, "Gewicht (kg)", Color.WHITE, YAxis.AxisDependency.LEFT, true);
+    private void configureWeightChart(long baseDate, List<Entry> weightEntries, List<Entry> kfaEntries) {
+        LineDataSet weightDataSet = createWeightDataSet(weightEntries, "Gewicht (kg)", Color.WHITE, YAxis.AxisDependency.LEFT, true);
 
         LineData lineData = kfaEntries.isEmpty() ?
                 new LineData(weightDataSet) :
-                new LineData(weightDataSet, createDataSet(kfaEntries, "KFA (%)", R.color.neon_blue, YAxis.AxisDependency.RIGHT, false));
+                new LineData(weightDataSet, createWeightDataSet(kfaEntries, "KFA (%)", R.color.neon_blue, YAxis.AxisDependency.RIGHT, false));
 
         weightChart.setData(lineData);
         weightChart.getAxisRight().setEnabled(!kfaEntries.isEmpty());
-        configureAxes(baseDate);
-        configureLegend();
+        configureWeightChartAxes(baseDate);
+        configureWeightChartLegend();
         weightChart.setExtraOffsets(0f, 0f, 0f, 15f);
         weightChart.invalidate();
     }
@@ -147,7 +158,7 @@ public class ProgressionFragment extends Fragment {
     /**
      * Erstellt und konfiguriert einen Datensatz für das Diagramm.
      */
-    private LineDataSet createDataSet(List<Entry> entries, String label, int color, YAxis.AxisDependency axis, boolean filled) {
+    private LineDataSet createWeightDataSet(List<Entry> entries, String label, int color, YAxis.AxisDependency axis, boolean filled) {
         LineDataSet dataSet = new LineDataSet(entries, label);
         dataSet.setValueTextSize(12f);
         dataSet.setCircleRadius(4f);
@@ -167,7 +178,7 @@ public class ProgressionFragment extends Fragment {
     /**
      * Konfiguriert die Achsen des Diagramms.
      */
-    private void configureAxes(long baseDate) {
+    private void configureWeightChartAxes(long baseDate) {
         weightChart.getAxisLeft().setDrawGridLines(false);
         weightChart.getXAxis().setDrawGridLines(false);
         weightChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -191,7 +202,7 @@ public class ProgressionFragment extends Fragment {
     /**
      * Konfiguriert die Legende des Diagramms.
      */
-    private void configureLegend() {
+    private void configureWeightChartLegend() {
         Legend legend = weightChart.getLegend();
         legend.setTextColor(Color.WHITE);
         legend.setForm(Legend.LegendForm.LINE);
@@ -203,6 +214,121 @@ public class ProgressionFragment extends Fragment {
         Description description = new Description();
         description.setText("");
         weightChart.setDescription(description);
+    }
+
+    /**
+     * Lädt die gespeicherten Exercisedaten und aktualisiert das Diagramm.
+     */
+    private void loadExerciseData() {
+        exerciseSetViewModel.loadSetsPerWeek(setsPerWeek -> {
+            if (setsPerWeek != null && !setsPerWeek.isEmpty()) {
+                updateExerciseChart(setsPerWeek);
+            }
+        });
+    }
+
+    /**
+     * Aktualisiert das Balkendiagramm mit den neuen Daten.
+     */
+    private void updateExerciseChart(Map<Integer, Integer> setsPerWeek) {
+        List<BarEntry> barEntries = new ArrayList<>();
+        List<Integer> weeks = new ArrayList<>(setsPerWeek.keySet());
+        Collections.sort(weeks);
+        for (Integer week : weeks) {
+            barEntries.add(new BarEntry(week, setsPerWeek.get(week)));
+        }
+        getActivity().runOnUiThread(() -> configureExerciseChart(barEntries));
+    }
+
+    /**
+     * Konfiguriert das Balkendiagramm mit den übergebenen Daten.
+     */
+    private void configureExerciseChart(List<BarEntry> barEntries) {
+        BarDataSet dataSet = createBarDataSet(barEntries);
+        BarData barData = new BarData(dataSet);
+        exerciseChart.setData(barData);
+        configureExerciseChartAxes();
+        configureExerciseChartLegend();
+        exerciseChart.invalidate();
+    }
+
+    /**
+     * Erzeugt das BarDataSet und setzt Farben und Formatierungen.
+     */
+    private BarDataSet createBarDataSet(List<BarEntry> barEntries) {
+        BarDataSet dataSet = new BarDataSet(barEntries, "Sets pro Woche");
+        dataSet.setColors(getBarColors(barEntries));
+        dataSet.setValueTextSize(12f);
+        dataSet.setValueTextColor(Color.WHITE);
+        dataSet.setValueFormatter(createValueFormatter());
+        return dataSet;
+    }
+
+    /**
+     * Erstellt einen ValueFormatter, der die Balkenwerte als ganze Zahlen formatiert.
+     */
+    private ValueFormatter createValueFormatter() {
+        return new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return String.format("%d", (int) value);
+            }
+        };
+    }
+
+    /**
+     * Ermittelt die Farben für die Balken basierend auf der Anzahl der Sets.
+     */
+    private List<Integer> getBarColors(List<BarEntry> barEntries) {
+        List<Integer> colors = new ArrayList<>();
+        for (BarEntry entry : barEntries) {
+            colors.add(getSetColor((int) entry.getY()));
+        }
+        return colors;
+    }
+
+    /**
+     * Ermittelt die Farbe für einen Balken basierend auf der Anzahl der Sets.
+     */
+    private int getSetColor(int count) {
+        int colorResource;
+        if (count < 8) {
+            colorResource = R.color.low_exercise_sets;
+        } else if (count < 12) {
+            colorResource = R.color.medium_exercise_sets;
+        } else if (count < 16) {
+            colorResource = R.color.good_exercise_sets;
+        } else {
+            colorResource = R.color.optimal_exercise_sets;
+        }
+        return ContextCompat.getColor(requireContext(), colorResource);
+    }
+
+
+    /**
+     * Konfiguriert die Achsen des Balkendiagramms.
+     */
+    private void configureExerciseChartAxes() {
+        XAxis xAxis = exerciseChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularity(1f);
+        xAxis.setDrawGridLines(false);
+        xAxis.setTextColor(Color.WHITE);
+        xAxis.setValueFormatter(new ValueFormatter() {
+            @Override public String getFormattedValue(float value) { return "KW" + ((int) value); }
+        });
+        exerciseChart.getAxisLeft().setEnabled(false);
+        exerciseChart.getAxisRight().setEnabled(false);
+    }
+
+    /**
+     * Deaktiviert die Legende des Balkendiagramms.
+     */
+    private void configureExerciseChartLegend() {
+        exerciseChart.getLegend().setEnabled(false);
+        Description description = new Description();
+        description.setText("");
+        exerciseChart.setDescription(description);
     }
 
     /**

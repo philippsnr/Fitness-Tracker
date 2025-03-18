@@ -19,8 +19,9 @@ public class Trainingday {
     public String getName() {
         return name;
     }
-
     public int getTrainingplanId() {
         return trainingplanId;
     }
+
+    public void setName(String name) { this.name = name; }
 }
