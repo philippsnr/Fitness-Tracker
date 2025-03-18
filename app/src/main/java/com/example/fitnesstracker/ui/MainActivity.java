@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.ui.nutrition.NutritionFragment;
-import com.example.fitnesstracker.ui.progress.ProgressionFragment;
+import com.example.fitnesstracker.ui.progression.ProgressionFragment;
 import com.example.fitnesstracker.ui.exercise.ExerciseFragment;
 import com.example.fitnesstracker.ui.training.TrainingFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
