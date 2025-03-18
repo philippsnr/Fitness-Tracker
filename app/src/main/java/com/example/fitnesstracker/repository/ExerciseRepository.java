@@ -63,4 +63,38 @@ public class ExerciseRepository {
         }
         return exercises;
     }
+
+    public List<Exercise> getExercisesByIds(List<Integer> ids) {
+        List<Exercise> exercises = new ArrayList<>();
+        if (ids.isEmpty()) return exercises;  // Falls keine IDs gefunden wurden
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        StringBuilder query = new StringBuilder("SELECT * FROM Exercise WHERE id IN (");
+
+        // Platzhalter für die IDs
+        String[] idArray = new String[ids.size()];
+        for (int i = 0; i < ids.size(); i++) {
+            query.append("?");
+            if (i < ids.size() - 1) query.append(", ");
+            idArray[i] = String.valueOf(ids.get(i));
+        }
+        query.append(")");
+
+        Cursor cursor = db.rawQuery(query.toString(), idArray);
+        if (cursor.moveToFirst()) {
+            do {
+                exercises.add(new Exercise(
+                        cursor.getInt(0),  // id
+                        cursor.getString(1),  // name
+                        cursor.getInt(2),  // difficulty
+                        cursor.getString(3),  // info
+                        cursor.getString(4)  // picture_path
+                ));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return exercises;
+    }
+
 }

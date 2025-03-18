@@ -17,10 +17,18 @@ public class TrainingdayViewModel extends AndroidViewModel {
         repository = new TrainingdayRepository(application);
     }
 
+    // Callback-Interface für asynchrone Operationen
+    public interface OnOperationCompleteListener {
+        void onComplete();
+        void onError(Exception exception);
+    }
+
+    // Callback-Interface für das Laden von Daten
     public interface OnDataLoadedListener {
         void onDataLoaded(List<Trainingday> trainingdays);
     }
 
+    // Lädt Trainingstage für einen bestimmten Plan
     public void getTrainingdaysForPlan(int trainingplanId, OnDataLoadedListener listener) {
         executorService.execute(() -> {
             List<Trainingday> trainingdays = repository.getTrainingdaysForPlan(trainingplanId);
@@ -28,15 +36,39 @@ public class TrainingdayViewModel extends AndroidViewModel {
         });
     }
 
-    public void createTrainingday(Trainingday trainingday) {
-        executorService.execute(() -> repository.createTrainingday(trainingday));
+    // Erstellt einen neuen Trainingstag
+    public void createTrainingday(Trainingday trainingday, OnOperationCompleteListener listener) {
+        executorService.execute(() -> {
+            try {
+                repository.createTrainingday(trainingday);
+                listener.onComplete();
+            } catch (Exception e) {
+                listener.onError(e);
+            }
+        });
     }
 
-    public void updateTrainingday(Trainingday trainingday) {
-        executorService.execute(() -> repository.updateTrainingday(trainingday));
+    // Aktualisiert einen bestehenden Trainingstag
+    public void updateTrainingday(Trainingday trainingday, OnOperationCompleteListener listener) {
+        executorService.execute(() -> {
+            try {
+                repository.updateTrainingday(trainingday);
+                listener.onComplete();
+            } catch (Exception e) {
+                listener.onError(e);
+            }
+        });
     }
 
-    public void deleteTrainingday(Trainingday trainingday) {
-        executorService.execute(() -> repository.deleteTrainingday(trainingday));
+    // Löscht einen Trainingstag
+    public void deleteTrainingday(Trainingday trainingday, OnOperationCompleteListener listener) {
+        executorService.execute(() -> {
+            try {
+                repository.deleteTrainingday(trainingday);
+                listener.onComplete();
+            } catch (Exception e) {
+                listener.onError(e);
+            }
+        });
     }
 }

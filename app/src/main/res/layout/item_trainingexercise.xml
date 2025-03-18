@@ -16,11 +16,11 @@
 
         <!-- Name des Trainingstags -->
         <TextView
-            android:id="@+id/textViewTrainingdayName"
+            android:id="@+id/textViewTrainingExerciseName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/name_day"
+            android:text="@string/name_exercise"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@android:color/white"
@@ -35,7 +35,7 @@
 
             <!-- Auge Icon (z.B. für Details ansehen) -->
             <ImageView
-                android:id="@+id/ivViewDay"
+                android:id="@+id/ivViewExercise"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:contentDescription="@string/view_day"
@@ -45,17 +45,17 @@
 
             <!-- Stift Icon (Bearbeiten) -->
             <ImageView
-                android:id="@+id/ivEditDay"
+                android:id="@+id/ivChangeExercise"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:contentDescription="@string/edit_day"
-                android:src="@drawable/ic_edit"
+                android:src="@drawable/ic_change"
                 app:tint="@android:color/white"
                 android:layout_marginStart="8dp"/>
 
             <!-- Mülleimer Icon (Löschen) -->
             <ImageView
-                android:id="@+id/ivDeleteDay"
+                android:id="@+id/ivDeleteExercise"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:contentDescription="@string/delete_day"
