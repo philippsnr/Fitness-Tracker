@@ -1,18 +1,17 @@
 package com.example.fitnesstracker.repository;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.example.fitnesstracker.database.DatabaseHelper;
-import com.example.fitnesstracker.model.ExerciseMuscleGroupAssignment;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExerciseMuscleGroupRepository {
+public class ExerciseMuscleGroupAssignmentRepository {
     private final DatabaseHelper dbHelper;
 
-    public ExerciseMuscleGroupRepository(Context context) {
+    public ExerciseMuscleGroupAssignmentRepository(Context context) {
         this.dbHelper = new DatabaseHelper(context);
     }
 
