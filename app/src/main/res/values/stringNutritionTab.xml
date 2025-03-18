@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="putInYourNutrition">Gib ein Lebensmittel ein</string>
-    <string name="nutrition">Lebensmittel</string>
-    <string name="search">Suchen</string>
-    <string name="noConnectionText">Keine Internetverbindung verfügbar</string>
-</resources>

@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/training_title"
+        android:text="@string/t_training_title"
         android:textAlignment="center"
         android:textColor="@color/background"
         android:textSize="34sp"
@@ -44,7 +44,7 @@
                     android:id="@+id/tvActivePlanHeading"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/activeListHeading"
+                    android:text="@string/t_activeListHeading"
                     android:textSize="25sp"
                     android:textColor="@android:color/white"
                     android:textStyle="bold"
@@ -63,7 +63,7 @@
                         android:id="@+id/tvActivePlan"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/activeListHeading"
+                        android:text="@string/t_activeListHeading"
                         android:textSize="20sp"
                         android:textColor="@android:color/white"
                         android:textStyle="bold"/>
@@ -72,7 +72,7 @@
                         android:id="@+id/ivChangeActivePlan"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:contentDescription="@string/edit_plan"
+                        android:contentDescription="@string/t_edit_plan"
                         android:src="@drawable/ic_change"
                         android:layout_marginStart="8dp"
                         app:tint="@android:color/white"/>
@@ -92,7 +92,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/allTrainingPlansHeading"
+                    android:text="@string/t_allTrainingPlansHeading"
                     android:textSize="25sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/white"

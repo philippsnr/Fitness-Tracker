@@ -36,34 +36,10 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-    implementation(libs.firebase.crashlytics.buildtools)
-    // MPAndroidChart für Diagramme
-    implementation(libs.mpandroidchart)
-    //implementation(libs.fragment.testing)
-    //implementation(libs.androidx.junit)
-    // Lokale Unit Tests (laufen auf der JVM)
     testImplementation(libs.junit)
-    testImplementation(libs.truth)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.core) // Aktualisierte Test Core Version für bessere Kompatibilität
-    testImplementation(libs.fragment.testing) // Neueste Version für FragmentScenario
-    testImplementation(libs.core.testing)
-    testImplementation(libs.mockito.core)
-
-
-    // Instrumented Tests (laufen auf Android-Gerät/Emulator)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation (libs.jackson.databind)
-    implementation (libs.jackson.databind)
-    implementation (libs.jackson.annotations)
-    androidTestImplementation(libs.runner)
-    androidTestImplementation(libs.rules)
-    androidTestImplementation(libs.junit.v121)
-    androidTestImplementation(libs.espresso.contrib)
-    androidTestImplementation(libs.espresso.core.v361)
-    androidTestImplementation(libs.fragment.testing.v162) // Für FragmentScenario
-    androidTestImplementation(libs.core.v150)
-    androidTestImplementation(libs.mockito.android)
-    androidTestImplementation(libs.core.testing) // Für Mocking (falls benötigt)
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.15.2")
 }
