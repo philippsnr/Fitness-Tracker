@@ -10,7 +10,7 @@
         android:id="@+id/tvTrainingdayTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/training_title"
+        android:text="@string/t_training_title"
         android:textAlignment="center"
         android:textColor="@color/background"
         android:textSize="34sp"

@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/name_day"
+            android:text="@string/t_name_day"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@android:color/white"
@@ -38,7 +38,7 @@
                 android:id="@+id/ivViewDay"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:contentDescription="@string/view_day"
+                android:contentDescription="@string/t_view_day"
                 android:src="@drawable/ic_eye"
                 app:tint="@android:color/white"
                 android:layout_marginStart="8dp"/>
@@ -48,7 +48,7 @@
                 android:id="@+id/ivEditDay"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:contentDescription="@string/edit_day"
+                android:contentDescription="@string/t_edit_day"
                 android:src="@drawable/ic_edit"
                 app:tint="@android:color/white"
                 android:layout_marginStart="8dp"/>
@@ -58,7 +58,7 @@
                 android:id="@+id/ivDeleteDay"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:contentDescription="@string/delete_day"
+                android:contentDescription="@string/t_delete_day"
                 android:src="@drawable/ic_delete"
                 app:tint="@android:color/white"
                 android:layout_marginStart="8dp"/>

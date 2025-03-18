@@ -32,38 +32,33 @@ android {
 }
 
 dependencies {
-    implementation(libs.appcompat)
-    implementation(libs.material)
-    implementation(libs.activity)
-    implementation(libs.constraintlayout)
-    implementation(libs.firebase.crashlytics.buildtools)
-    // MPAndroidChart für Diagramme
-    implementation(libs.mpandroidchart)
-    //implementation(libs.fragment.testing)
-    //implementation(libs.androidx.junit)
-    // Lokale Unit Tests (laufen auf der JVM)
-    testImplementation(libs.junit)
-    testImplementation(libs.truth)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.core) // Aktualisierte Test Core Version für bessere Kompatibilität
-    testImplementation(libs.fragment.testing) // Neueste Version für FragmentScenario
-    testImplementation(libs.core.testing)
-    testImplementation(libs.mockito.core)
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.9.0")
+    implementation("androidx.activity:activity-ktx:1.8.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("com.google.firebase:firebase-crashlytics-buildtools:2.9.9")
 
+    // MPAndroidChart für Diagramme
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    // Lokale Unit Tests (laufen auf der JVM)
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("com.google.truth:truth:1.1.3")
+    testImplementation("org.robolectric:robolectric:4.10.3")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation("androidx.fragment:fragment-testing:1.6.2")
+    testImplementation("org.mockito:mockito-core:4.8.0")
 
     // Instrumented Tests (laufen auf Android-Gerät/Emulator)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
-    implementation (libs.jackson.databind)
-    implementation (libs.jackson.databind)
-    implementation (libs.jackson.annotations)
-    androidTestImplementation(libs.runner)
-    androidTestImplementation(libs.rules)
-    androidTestImplementation(libs.junit.v121)
-    androidTestImplementation(libs.espresso.contrib)
-    androidTestImplementation(libs.espresso.core.v361)
-    androidTestImplementation(libs.fragment.testing.v162) // Für FragmentScenario
-    androidTestImplementation(libs.core.v150)
-    androidTestImplementation(libs.mockito.android)
-    androidTestImplementation(libs.core.testing) // Für Mocking (falls benötigt)
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation("androidx.fragment:fragment-testing:1.6.2") // Für FragmentScenario
+    androidTestImplementation("androidx.arch.core:core-testing:2.2.0")
+    androidTestImplementation("org.mockito:mockito-android:4.8.0")
+
+    // Jackson für JSON Verarbeitung
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.15.2")
 }

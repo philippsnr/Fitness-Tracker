@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/exercise_title"
+        android:text="@string/e_exercise_title"
         android:textAlignment="center"
         android:textColor="@color/background"
         android:textSize="34sp"
@@ -35,7 +35,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/welcomeMuscleMessage"
+                    android:text="@string/e_welcomeMuscleMessage"
                     android:textColor="@android:color/white"
                     android:textSize="20sp"
                     android:textStyle="bold"
