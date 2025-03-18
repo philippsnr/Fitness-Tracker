@@ -25,14 +25,14 @@ public class NutritiondayNutritionAssignmentRepository {
                     cursor.getInt(cursor.getColumnIndexOrThrow("id")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("nutritionday_id")),
                     cursor.getString(cursor.getColumnIndexOrThrow("time")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("nutrtion_name_english")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("nutrition_name_english")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("nutrition_mass")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("nutrition_cals")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("nutrition_carbs")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("nutrition_fats")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("nutrition_proteins"))
             );
-            nutritiondayNutritionAssignment.setNutritionNameGerman(cursor.getString(cursor.getColumnIndexOrThrow("nutrtion_name_german")));
+            nutritiondayNutritionAssignment.setNutritionNameGerman(cursor.getString(cursor.getColumnIndexOrThrow("nutrition_name_german")));
             nutritiondayNutritionAssignment.setNutritionPicturePath(cursor.getString(cursor.getColumnIndexOrThrow("nutrition_picture_path")));
             cursor.close();
             db.close();

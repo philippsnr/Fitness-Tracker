@@ -1,112 +1,102 @@
 package com.example.fitnesstracker.repository;
 
-import static org.junit.Assert.*;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.fitnesstracker.database.DatabaseHelper;
 import com.example.fitnesstracker.model.NutritiondayNutritionAssignment;
+import com.example.fitnesstracker.repository.NutritiondayNutritionAssignmentRepository;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.junit.Assert.*;
+
 @RunWith(AndroidJUnit4.class)
 public class NutritiondayNutritionAssignmentRepositoryTest {
 
     private NutritiondayNutritionAssignmentRepository repository;
+    private Context appContext;
     private DatabaseHelper dbHelper;
-    private static final int TEST_NUTRITIONDAY_ID = 100;
-    private static final String TEST_TIME = "10:00";
-    private static final String TEST_NAME_EN = "Oatmeal";
-    private static final String TEST_NAME_DE = "Haferbrei";
+
 
     @Before
     public void setUp() {
-        Context context = ApplicationProvider.getApplicationContext();
-        dbHelper = new DatabaseHelper(context);
-
-        // Clean and prepare database
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.execSQL("DELETE FROM NutritiondayNutritionAssignment");
-        db.execSQL("DELETE FROM Nutritionday");
-
-        // Insert test nutritionday
-        db.execSQL("INSERT INTO Nutritionday(id, date) VALUES (" + TEST_NUTRITIONDAY_ID + ", '2023-01-01')");
-
-        repository = new NutritiondayNutritionAssignmentRepository(context);
+        // Application Context holen
+        appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        // DatabaseHelper initialisieren
+        dbHelper = new DatabaseHelper(appContext);
+        // Repository initialisieren
+        repository = new NutritiondayNutritionAssignmentRepository(appContext);
+        // Säubere die Tabelle vor jedem Test
+        clearDatabaseTable();
     }
 
     @After
     public void tearDown() {
-        dbHelper.close();
+        // Säubere die Tabelle nach jedem Test
+        clearDatabaseTable();
     }
 
+    /**
+     * Hilfsmethode, um die Tabelle "NutritiondayNutritionAssignment" zu leeren.
+     */
+    private void clearDatabaseTable() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete("NutritiondayNutritionAssignment", null, null);
+        db.close();
+    }
+
+
     @Test
-    public void testSetAndGetNutritiondayAssignment() {
-        // Create test object
-        NutritiondayNutritionAssignment assignment = new NutritiondayNutritionAssignment(
-                0,  // id will be auto-generated
-                TEST_NUTRITIONDAY_ID,
-                TEST_TIME,
-                TEST_NAME_EN,
-                100,  // mass
-                350,  // cals
-                50,   // carbs
-                10,   // fats
-                15    // proteins
+    public void testInsertAndRetrieveNutritiondayNutritionAssignment() {
+        // Test-Daten erstellen
+        int testNutritiondayId = 80;
+        NutritiondayNutritionAssignment testAssignment = new NutritiondayNutritionAssignment(
+                500,
+                testNutritiondayId,
+                "08:00",
+                "Oatmeal",
+                250,
+                150,
+                30,
+                5,
+                10
         );
-        assignment.setNutritionNameGerman(TEST_NAME_DE);
-        assignment.setNutritionPicturePath("oatmeal.jpg");
+        testAssignment.setNutritionNameGerman("Haferbrei");
+        testAssignment.setNutritionPicturePath("/images/oatmeal.png");
 
-        // Save to database
-        repository.setNutritiondayNutritionAssignment(assignment);
+        // Datensatz einfügen
+        repository.setNutritiondayNutritionAssignment(testAssignment);
 
-        // Retrieve from database
-        NutritiondayNutritionAssignment result = repository.getNutritionday(TEST_NUTRITIONDAY_ID);
+        // Datensatz abrufen
+        NutritiondayNutritionAssignment retrievedAssignment = repository.getNutritionday(testNutritiondayId);
 
-        // Verify results
-        assertNotNull(result);
-        assertEquals(TEST_NUTRITIONDAY_ID, result.getNutritiondayId());
-        assertEquals(TEST_TIME, result.getTime());
-        assertEquals(TEST_NAME_EN, result.getNutritionNameEnglish());
-        assertEquals(TEST_NAME_DE, result.getNutritionNameGerman());
-        assertEquals("oatmeal.jpg", result.getNutritionPicturePath());
-        assertEquals(100, result.getNutritionMass());
-        assertEquals(350, result.getNutritionCals());
+        // Überprüfen, dass der abgerufene Datensatz nicht null ist
+        assertNotNull("Der abgerufene Datensatz sollte nicht null sein", retrievedAssignment);
+
+        // Überprüfen der einzelnen Felder
+        assertEquals("Die nutritiondayId sollte übereinstimmen", testNutritiondayId, retrievedAssignment.getNutritiondayId());
+        assertEquals("Die Zeit sollte übereinstimmen", "08:00", retrievedAssignment.getTime());
+        assertEquals("Der englische Name sollte übereinstimmen", "Oatmeal", retrievedAssignment.getNutritionNameEnglish());
+        assertEquals("Die Masse sollte übereinstimmen", 250, retrievedAssignment.getNutritionMass());
+        assertEquals("Die Kalorien sollten übereinstimmen", 150, retrievedAssignment.getNutritionCals());
+        assertEquals("Die Kohlenhydrate sollten übereinstimmen", 30, retrievedAssignment.getNutritionCarbs());
+        assertEquals("Die Fette sollten übereinstimmen", 5, retrievedAssignment.getNutritionFats());
+        assertEquals("Die Proteine sollten übereinstimmen", 10, retrievedAssignment.getNutritionProteins());
+        assertEquals("Der deutsche Name sollte übereinstimmen", "Haferbrei", retrievedAssignment.getNutritionNameGerman());
+        assertEquals("Der Bildpfad sollte übereinstimmen", "/images/oatmeal.png", retrievedAssignment.getNutritionPicturePath());
     }
 
     @Test
-    public void testGetNonExistingNutritionday() {
-        NutritiondayNutritionAssignment result = repository.getNutritionday(999);
-        assertNull(result);
-    }
-
-    @Test
-    public void testInsertWithOptionalFieldsNull() {
-        NutritiondayNutritionAssignment assignment = new NutritiondayNutritionAssignment(
-                0,
-                TEST_NUTRITIONDAY_ID,
-                TEST_TIME,
-                TEST_NAME_EN,
-                100,
-                350,
-                50,
-                10,
-                15
-        );
-        // Leave german name and picture path null
-
-        repository.setNutritiondayNutritionAssignment(assignment);
-
-        NutritiondayNutritionAssignment result = repository.getNutritionday(TEST_NUTRITIONDAY_ID);
-        assertNotNull(result);
-        assertNull(result.getNutritionNameGerman());
-        assertNull(result.getNutritionPicturePath());
+    public void testRetrieveNonExistentAssignmentReturnsNull() {
+        // Versuche, einen Datensatz mit einer nicht existierenden nutritiondayId abzurufen
+        NutritiondayNutritionAssignment assignment = repository.getNutritionday(9999);
+        assertNull("Beim Abruf eines nicht existierenden Datensatzes sollte null zurückgegeben werden", assignment);
     }
 }
