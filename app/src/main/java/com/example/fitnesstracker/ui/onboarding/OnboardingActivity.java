@@ -1,6 +1,5 @@
 package com.example.fitnesstracker.ui.onboarding;
 
-import com.example.fitnesstracker.ui.onboarding.OnboardingDataListener;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,7 +23,7 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
     private String userName;
     private double weight;
     private int height;
-    private int age;
+    private int birthYear;
     private int kfa;
 
     private UserInformationRepository userInformationRepository;
@@ -64,7 +63,7 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
                 height = (Integer) data;
                 break;
             case "birthYear":
-                age = (Integer) data;
+                birthYear = (Integer) data;
                 break;
             case "kfa":
                 kfa = (Integer) data;
@@ -96,7 +95,7 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean("onboarding_complete", true);
         editor.putString("user_name", userName);
-        editor.putInt("user_age", age);
+        editor.putInt("user_age", birthYear);
         editor.apply();
     }
 
