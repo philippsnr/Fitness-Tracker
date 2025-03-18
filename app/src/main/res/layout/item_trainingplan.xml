@@ -10,7 +10,7 @@
         android:id="@+id/tvPlanName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/name_plan"
+        android:text="@string/t_name_plan"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginBottom="8dp"
@@ -36,7 +36,7 @@
             android:id="@+id/ivView"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:contentDescription="@string/view_plan"
+            android:contentDescription="@string/t_view_plan"
             android:src="@drawable/ic_eye"
             app:tint="@android:color/white" ><!-- Korrektes Attribut 'android:tint' -->
         </ImageView>
@@ -46,7 +46,7 @@
             android:id="@+id/ivEdit"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:contentDescription="@string/edit_plan"
+            android:contentDescription="@string/t_edit_plan"
             android:src="@drawable/ic_edit"
             android:layout_marginStart="16dp"
             app:tint="@android:color/white"  ><!-- Korrektes Attribut 'android:tint' -->
@@ -57,7 +57,7 @@
             android:id="@+id/ivDelete"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:contentDescription="@string/delete_plan"
+            android:contentDescription="@string/t_delete_plan"
             android:src="@drawable/ic_delete"
             android:layout_marginStart="16dp"
             app:tint="@android:color/white"  ><!-- Korrektes Attribut 'android:tint' -->
