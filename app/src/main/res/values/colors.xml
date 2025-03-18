@@ -8,6 +8,7 @@
     <color name="text">#000000</color>
     <color name="blue">#184387</color>
     <color name="neon_blue">#00CBCC</color>
+    <color name="light_gray">#D3D3D3</color>
     <color name="bmi_underweight">#2196F3</color>  <!-- Blau -->
     <color name="bmi_normal">#4CAF50</color>       <!-- Grün -->
     <color name="bmi_overweight">#FFEB3B</color>   <!-- Gelb -->

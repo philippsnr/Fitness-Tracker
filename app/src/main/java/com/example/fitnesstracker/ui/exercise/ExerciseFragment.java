@@ -1,5 +1,6 @@
 package com.example.fitnesstracker.ui.exercise;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -52,6 +54,16 @@ public class ExerciseFragment extends Fragment {
         for (MuscleGroup mg : muscleGroups) {
             Button button = new Button(getContext());
             button.setText(mg.getName());
+            button.setBackground(ContextCompat.getDrawable(button.getContext(), R.drawable.rounded_border_gray));
+            button.setPadding(20, 0, 20, 0);
+
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            layoutParams.setMargins(10, 0, 10, 0); // Links, Oben, Rechts, Unten
+            button.setLayoutParams(layoutParams);
+
             button.setOnClickListener(v -> loadExercisesForMuscleGroup(mg.getId()));
             buttonContainer.addView(button);
         }
