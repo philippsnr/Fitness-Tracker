@@ -13,4 +13,8 @@
     <color name="bmi_normal">#4CAF50</color>       <!-- Grün -->
     <color name="bmi_overweight">#FFEB3B</color>   <!-- Gelb -->
     <color name="bmi_obese">#F44336</color>        <!-- Rot -->
+    <color name="optimal_exercise_sets">#2196F3</color>
+    <color name="good_exercise_sets">#4CAF50</color>
+    <color name="medium_exercise_sets">#FFEB3B</color>
+    <color name="low_exercise_sets">#F44336</color>
 </resources>

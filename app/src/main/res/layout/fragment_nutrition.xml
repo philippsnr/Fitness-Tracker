@@ -1,17 +1,63 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:orientation="vertical">
 
-    <!-- Ein einfacher Text -->
+    <!-- Header -->
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Nutrition Fragment"
-        android:textSize="24sp"
-        android:textColor="@color/text"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp" />
+        android:text="@string/nutrition_title"
+        android:textAlignment="center"
+        android:textColor="@color/background"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        android:background="@drawable/fragment_header"
+        android:padding="16dp" />
+
+    <!-- ScrollView für den restlichen Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+
+        <LinearLayout
+            android:id="@+id/mainLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/putInYourNutrition" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="430dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/nutritionNameInput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:text="" />
+
+                <Button
+                    android:id="@+id/btnSearch"
+                    android:layout_width="26dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/search" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

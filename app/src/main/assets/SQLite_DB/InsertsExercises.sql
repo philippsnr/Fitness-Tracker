@@ -85,7 +85,6 @@ INSERT INTO Exercise (id, name, difficulty, info, picture_path) VALUES
 (85, 'Rumpfseitheben', 1, 'Lege dich seitlich auf eine Bank oder auf die Matte. Hebe den Oberkörper seitlich nach oben, spanne die seitlichen Bauchmuskeln an, und senke ihn langsam zurück.', 'rumpfseitheben'),
 (86, 'Abs-Rotation', 1, 'Setze dich mit angewinkelten Beinen auf den Boden, halte ein Gewicht in den Händen. Drehe den Oberkörper abwechselnd nach links und rechts, während die Beine stabil bleiben.', 'abs_rotation');
 
-
 INSERT INTO MuscleGroup (id, name, picture_path) VALUES
 (1, 'Chest', 'chest'),
 (2, 'Latisimus', 'latisimus'),

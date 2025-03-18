@@ -10,6 +10,7 @@ import com.example.fitnesstracker.repository.ExerciseRepository;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 public class ExerciseViewModel extends AndroidViewModel {
     private final ExerciseRepository repository;
@@ -21,10 +22,6 @@ public class ExerciseViewModel extends AndroidViewModel {
         repository = new ExerciseRepository(application);
     }
 
-    public List<Exercise> getExercises() {
-        return exercises;
-    }
-
     public interface OnDataLoadedListener {
         void onDataLoaded(List<Exercise> exercises);
     }
@@ -33,6 +30,13 @@ public class ExerciseViewModel extends AndroidViewModel {
         executorService.execute(() -> {
             exercises = repository.getExercisesForMuscleGroup(muscleGroupId);
             listener.onDataLoaded(exercises); // Callback mit den geladenen Daten
+        });
+    }
+
+    public void loadExercisesByIds(List<Integer> exerciseIds, Consumer<List<Exercise>> callback) {
+        executorService.execute(() -> {
+            List<Exercise> exercises = repository.getExercisesByIds(exerciseIds);
+            callback.accept(exercises);
         });
     }
 }
