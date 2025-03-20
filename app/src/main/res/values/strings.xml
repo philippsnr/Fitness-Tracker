@@ -3,6 +3,17 @@
     <string name="e_welcomeMuscleMessage"> Wähle eine Muskelgruppe</string>
     <string name="e_waehle_eine_muskelgruppe">Wähle eine Muskelgruppe</string>
     <string name="p_progression_title">Fortschritt</string>
+    <string name="p_goal">Ziel :</string>
+    <string name="p_edit_goal">Ziel bearbeiten</string>
+    <string name="p_new_data_entry">Neuer Eintrag</string>
+    <string name="p_bmi">BMI</string>
+    <string name="p_finished_sets">Abgeschlossene Sätze</string>
+    <string name="p_dialog_gain_weight">Zunehmen</string>
+    <string name="p_dialog_maintain_weight">Gewicht halten</string>
+    <string name="p_dialog_lose_weight">Abnehmen</string>
+    <string name="p_dialog_weight">Gewicht (kg)</string>
+    <string name="p_dialog_height">Optional: Größe (cm)</string>
+    <string name="p_dialog_kfa">Optional: KFA (%)</string>
     <string name="e_exercise_title">Übungen</string>
     <string name="n_nutrition_title">Ernährung</string>
     <string name="n_putInYourNutrition">Gib ein Lebensmittel ein</string>
