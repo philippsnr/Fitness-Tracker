@@ -80,7 +80,7 @@ public class OnboardingBirthYearFragment extends Fragment {
 
         try {
             int birthYear = Integer.parseInt(birthYearStr);
-            dataListener.onDataCollected("birthYear", birthYear);
+            dataListener.onDataCollected("birthYear", birthYearStr);
         } catch (NumberFormatException e) {
             Toast.makeText(getContext(), "Invalid birth year", Toast.LENGTH_SHORT).show();
         }

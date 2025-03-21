@@ -8,11 +8,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 import com.example.fitnesstracker.R;
+import com.example.fitnesstracker.model.User;
 import com.example.fitnesstracker.model.UserInformation;
 import com.example.fitnesstracker.repository.UserInformationRepository;
+import com.example.fitnesstracker.repository.UserRepository;
 import com.example.fitnesstracker.ui.MainActivity;
 import java.util.Date;
-
 
 public class OnboardingActivity extends AppCompatActivity implements OnboardingDataListener {
 
@@ -23,17 +24,20 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
     private String userName;
     private double weight;
     private int height;
-    private int birthYear;
+    private String birthYear;
     private int kfa;
+    private String userGoal;
+    private int trainingDaysPerWeek;
 
     private UserInformationRepository userInformationRepository;
-
+    private UserRepository userRepository;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
 
         userInformationRepository = new UserInformationRepository(this);
+        userRepository = new UserRepository(this);
 
         viewPager = findViewById(R.id.onboardingViewPager);
         pagerAdapter = new OnboardingPagerAdapter(this);
@@ -63,10 +67,16 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
                 height = (Integer) data;
                 break;
             case "birthYear":
-                birthYear = (Integer) data;
+                birthYear = (String) data;
                 break;
             case "kfa":
                 kfa = (Integer) data;
+                break;
+            case "goal":
+                userGoal = (String) data;
+                break;
+            case "trainingDays":
+                trainingDaysPerWeek = (Integer) data;
                 break;
         }
     }
@@ -87,15 +97,16 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
 
     private void saveUserData() {
         UserInformation userInfo = new UserInformation(0, 1, new Date(), height, weight, kfa);
+        User user = new User(1, userName, birthYear, userGoal, trainingDaysPerWeek);
         userInformationRepository.writeUserInformation(userInfo);
+        userRepository.saveUser(user);
+
     }
 
     private void saveOnboardingStatus() {
         SharedPreferences prefs = getSharedPreferences("onboarding", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean("onboarding_complete", true);
-        editor.putString("user_name", userName);
-        editor.putInt("user_age", birthYear);
         editor.apply();
     }
 
@@ -105,9 +116,8 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
         finish();
     }
 
-
-    // Innerer Adapter für den ViewPager2
-    private class OnboardingPagerAdapter extends androidx.viewpager2.adapter.FragmentStateAdapter {
+    // Adapter für ViewPager2
+    private static class OnboardingPagerAdapter extends androidx.viewpager2.adapter.FragmentStateAdapter {
 
         public OnboardingPagerAdapter(@NonNull AppCompatActivity fragmentActivity) {
             super(fragmentActivity);
@@ -116,7 +126,7 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
         @NonNull
         @Override
         public androidx.fragment.app.Fragment createFragment(int position) {
-            switch(position) {
+            switch (position) {
                 case 0:
                     return new OnboardingNameFragment();
                 case 1:
@@ -127,14 +137,18 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
                     return new OnboardingBirthYearFragment();
                 case 4:
                     return new OnboardingKfaFragment();
+                case 5:
+                    return new OnboardingGoalFragment();
+                case 6:
+                    return new OnboardingTrainingDaysFragment();
                 default:
-                    return new OnboardingNameFragment();
+                    return new OnboardingNameFragment(); // Fallback
             }
         }
 
         @Override
         public int getItemCount() {
-            return 5;
+            return 7; // Anzahl der Fragmente muss mit createFragment() übereinstimmen
         }
     }
 }
