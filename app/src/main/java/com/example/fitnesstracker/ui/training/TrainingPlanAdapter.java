@@ -23,7 +23,6 @@ public class TrainingPlanAdapter extends RecyclerView.Adapter<TrainingPlanAdapte
         void onViewClick(int position);
         void onEditClick(int position);
         void onDeleteClick(int position);
-        void onChangeActiveClick(int position); // Wird hier nicht verwendet, da das Icon im Fragment liegt
     }
 
     public TrainingPlanAdapter(List<Trainingplan> trainingplans, OnItemClickListener listener) {

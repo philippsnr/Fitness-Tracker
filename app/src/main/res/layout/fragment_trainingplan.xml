@@ -50,7 +50,7 @@
                     android:textStyle="bold"
                     android:textAlignment="center"/>
 
-                <!-- Aktiver Trainingsplan-Name mit Stift-Icon -->
+                <!-- Aktiver Trainingsplan-Name mit Change-Icon -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -89,15 +89,34 @@
                 android:layout_marginTop="10dp"
                 android:padding="16dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/t_allTrainingPlansHeading"
-                    android:textSize="25sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"/>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp"
+                    android:paddingHorizontal="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/t_allTrainingPlansHeading"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"
+                        android:textAlignment="center"/>
+
+                    <ImageView
+                        android:id="@+id/addNewTrainingplan"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:contentDescription="@string/t_add_plan"
+                        android:src="@drawable/ic_add"
+                        app:tint="@android:color/white"/>
+                </LinearLayout>
+
+
 
                 <!-- RecyclerView für alle Trainingspläne -->
                 <androidx.recyclerview.widget.RecyclerView
