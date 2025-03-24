@@ -57,6 +57,8 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
 
     private void saveCollectedData(String key, Object data) {
         switch (key) {
+            case "start":
+                break;
             case "name":
                 userName = (String) data;
                 break;
@@ -128,18 +130,20 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
         public androidx.fragment.app.Fragment createFragment(int position) {
             switch (position) {
                 case 0:
-                    return new OnboardingNameFragment();
+                    return new OnboardingStartFragment();
                 case 1:
-                    return new OnboardingWeightFragment();
+                    return new OnboardingNameFragment();
                 case 2:
-                    return new OnboardingHeightFragment();
+                    return new OnboardingWeightFragment();
                 case 3:
-                    return new OnboardingBirthYearFragment();
+                    return new OnboardingHeightFragment();
                 case 4:
-                    return new OnboardingKfaFragment();
+                    return new OnboardingBirthYearFragment();
                 case 5:
-                    return new OnboardingGoalFragment();
+                    return new OnboardingKfaFragment();
                 case 6:
+                    return new OnboardingGoalFragment();
+                case 7:
                     return new OnboardingTrainingDaysFragment();
                 default:
                     return new OnboardingNameFragment(); // Fallback
@@ -148,7 +152,7 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
 
         @Override
         public int getItemCount() {
-            return 7; // Anzahl der Fragmente muss mit createFragment() übereinstimmen
+            return 8; // Anzahl der Fragmente muss mit createFragment() übereinstimmen
         }
     }
 }
