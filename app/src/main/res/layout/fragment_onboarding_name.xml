@@ -1,34 +1,39 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/primary"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <ImageView
-        android:id="@+id/imageViewPlaceholder"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/placeholder_image" />
 
     <TextView
         android:id="@+id/textViewQuestion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingTop="16dp"
-        android:text="What is your name?"
-        android:textSize="18sp" />
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="10dp"
+        android:text="Wie ist dein Name?"
+        android:textColor="@android:color/white"
+        android:textSize="30sp" />
 
     <EditText
         android:id="@+id/editTextName"
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:hint="Enter your name" />
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@android:color/white"
+        android:textColor="@android:color/white"/>
+
 
     <Button
         android:id="@+id/buttonNext"
-        android:layout_width="388dp"
-        android:layout_height="67dp"
-        android:layout_marginTop="16dp"
-        android:text="Next" />
+        android:layout_width="200dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/background"
+        android:text="Weiter"
+        android:textColor="@android:color/black" />
 </LinearLayout>

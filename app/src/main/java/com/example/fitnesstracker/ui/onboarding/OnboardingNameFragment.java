@@ -30,8 +30,6 @@ public class OnboardingNameFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_onboarding_name, container, false);
-        ImageView imageView = root.findViewById(R.id.imageViewPlaceholder);
-        imageView.setImageResource(R.drawable.placeholder_image);
 
         editTextName = root.findViewById(R.id.editTextName);
         buttonNext = root.findViewById(R.id.buttonNext);
@@ -39,7 +37,7 @@ public class OnboardingNameFragment extends Fragment {
         buttonNext.setOnClickListener(v -> {
             String name = editTextName.getText().toString().trim();
             if (TextUtils.isEmpty(name)) {
-                Toast.makeText(getContext(), "Please enter your name", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Bitte gebe deinen Namen ein.", Toast.LENGTH_SHORT).show();
             } else {
                 dataListener.onDataCollected("name", name);
             }
