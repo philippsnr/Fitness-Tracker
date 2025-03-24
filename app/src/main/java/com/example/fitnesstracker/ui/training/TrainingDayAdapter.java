@@ -5,13 +5,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.model.Trainingday;
-
 import java.util.List;
 
 public class TrainingDayAdapter extends RecyclerView.Adapter<TrainingDayAdapter.TrainingdayViewHolder> {
@@ -20,7 +18,7 @@ public class TrainingDayAdapter extends RecyclerView.Adapter<TrainingDayAdapter.
     private OnItemClickListener listener;
 
     /**
-     * Interface für Klick-Listener.
+     * Schnittstelle für Klick-Ereignisse.
      */
     public interface OnItemClickListener {
         void onViewClick(int position);
@@ -29,10 +27,10 @@ public class TrainingDayAdapter extends RecyclerView.Adapter<TrainingDayAdapter.
     }
 
     /**
-     * Konstruktor für den Adapter.
+     * Konstruktor.
      *
-     * @param trainingdays Die Liste der Trainingstage.
-     * @param listener     Der Listener für Klick-Ereignisse.
+     * @param trainingdays Liste der Trainingstage.
+     * @param listener     Klick-Listener.
      */
     public TrainingDayAdapter(List<Trainingday> trainingdays, OnItemClickListener listener) {
         this.trainingdays = trainingdays;
@@ -42,15 +40,13 @@ public class TrainingDayAdapter extends RecyclerView.Adapter<TrainingDayAdapter.
     @NonNull
     @Override
     public TrainingdayViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_trainingday, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_trainingday, parent, false);
         return new TrainingdayViewHolder(view, listener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TrainingdayViewHolder holder, int position) {
-        Trainingday trainingday = trainingdays.get(position);
-        holder.bind(trainingday);
+        holder.bind(trainingdays.get(position));
     }
 
     @Override
@@ -61,7 +57,7 @@ public class TrainingDayAdapter extends RecyclerView.Adapter<TrainingDayAdapter.
     /**
      * Aktualisiert die Daten des Adapters.
      *
-     * @param newTrainingdays Die neue Liste der Trainingstage.
+     * @param newTrainingdays Neue Liste der Trainingstage.
      */
     public void updateData(List<Trainingday> newTrainingdays) {
         this.trainingdays = newTrainingdays;
@@ -69,92 +65,51 @@ public class TrainingDayAdapter extends RecyclerView.Adapter<TrainingDayAdapter.
     }
 
     /**
-     * Gibt das Trainingday-Objekt an der angegebenen Position zurück.
+     * Gibt den Trainingday an der angegebenen Position zurück.
      *
-     * @param position Die Position des Trainingstags.
-     * @return Das Trainingday-Objekt.
+     * @param position Position des Trainingstags.
+     * @return Trainingday-Objekt.
      */
     public Trainingday getItem(int position) {
         return trainingdays.get(position);
     }
 
     /**
-     * ViewHolder für die Trainingstage.
+     * ViewHolder für einen Trainingstag.
      */
     static class TrainingdayViewHolder extends RecyclerView.ViewHolder {
         private TextView textViewName;
-        private ImageView ivView, ivEdit, ivDelete;
+        private ImageView ivEdit, ivDelete;
+        private CardView cardView;
 
         /**
          * Konstruktor für den ViewHolder.
          *
-         * @param itemView Die View des ViewHolders.
-         * @param listener Der Listener für Klick-Ereignisse.
+         * @param itemView Die Item-View.
+         * @param listener Klick-Listener.
          */
         public TrainingdayViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
-            initializeViews(itemView);
-            setupClickListeners(listener);
-        }
-
-        /**
-         * Initialisiert die Views.
-         *
-         * @param itemView Die View des ViewHolders.
-         */
-        private void initializeViews(View itemView) {
+            cardView = (CardView) itemView;
             textViewName = itemView.findViewById(R.id.textViewTrainingdayName);
-            ivView = itemView.findViewById(R.id.ivViewDay);
             ivEdit = itemView.findViewById(R.id.ivEditDay);
             ivDelete = itemView.findViewById(R.id.ivDeleteDay);
+            cardView.setOnClickListener(v -> {
+                if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION)
+                    listener.onViewClick(getAdapterPosition());
+            });
+            ivEdit.setOnClickListener(v -> {
+                if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION)
+                    listener.onEditClick(getAdapterPosition());
+            });
+            ivDelete.setOnClickListener(v -> {
+                if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION)
+                    listener.onDeleteClick(getAdapterPosition());
+            });
         }
 
         /**
-         * Setzt die Klick-Listener für die ImageViews.
-         *
-         * @param listener Der Listener für Klick-Ereignisse.
-         */
-        private void setupClickListeners(OnItemClickListener listener) {
-            ivView.setOnClickListener(v -> handleViewClick(listener));
-            ivEdit.setOnClickListener(v -> handleEditClick(listener));
-            ivDelete.setOnClickListener(v -> handleDeleteClick(listener));
-        }
-
-        /**
-         * Verarbeitet den Klick auf die "Anzeigen"-Schaltfläche.
-         *
-         * @param listener Der Listener für Klick-Ereignisse.
-         */
-        private void handleViewClick(OnItemClickListener listener) {
-            if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
-                listener.onViewClick(getAdapterPosition());
-            }
-        }
-
-        /**
-         * Verarbeitet den Klick auf die "Bearbeiten"-Schaltfläche.
-         *
-         * @param listener Der Listener für Klick-Ereignisse.
-         */
-        private void handleEditClick(OnItemClickListener listener) {
-            if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
-                listener.onEditClick(getAdapterPosition());
-            }
-        }
-
-        /**
-         * Verarbeitet den Klick auf die "Löschen"-Schaltfläche.
-         *
-         * @param listener Der Listener für Klick-Ereignisse.
-         */
-        private void handleDeleteClick(OnItemClickListener listener) {
-            if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
-                listener.onDeleteClick(getAdapterPosition());
-            }
-        }
-
-        /**
-         * Bindet die Daten an die Views.
+         * Bindet den Trainingstag an die Views.
          *
          * @param trainingday Das Trainingday-Objekt.
          */
