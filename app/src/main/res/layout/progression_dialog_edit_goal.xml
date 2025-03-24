@@ -14,19 +14,19 @@
             android:id="@+id/rbLoseWeight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Abnehmen" />
+            android:text="@string/p_dialog_lose_weight" />
 
         <RadioButton
             android:id="@+id/rbMaintainWeight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Gewicht halten" />
+            android:text="@string/p_dialog_maintain_weight" />
 
         <RadioButton
             android:id="@+id/rbGainWeight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Zunehmen" />
+            android:text="@string/p_dialog_gain_weight" />
     </RadioGroup>
 
 </LinearLayout>
