@@ -35,6 +35,17 @@ public class UserRepository {
         return goal;
     }
 
+    public void saveUser( User user){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("name", user.getName());
+        values.put("birthDate", user.getBirthDate());
+        values.put("goal", user.getGoal());
+        values.put("trainingDaysPerWeek", user.getTrainingDaysPerWeek());
+
+        db.insert("User", null, values);
+        db.close();
+    }
     public void updateUserGoal(String goal) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();

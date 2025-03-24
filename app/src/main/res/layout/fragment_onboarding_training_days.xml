@@ -22,30 +22,33 @@
             android:id="@+id/textViewQuestion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="What is your body fat percentage (KFA)?"
+            android:text="How many days per week do you want to train?"
             android:textSize="18sp"
             android:paddingTop="16dp"
             android:gravity="center" />
 
-        <EditText
-            android:id="@+id/editTextKfa"
+        <TextView
+            android:id="@+id/textViewTrainingDays"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3 days per week"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:gravity="center" />
+
+        <SeekBar
+            android:id="@+id/seekBarTrainingDays"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter your KFA"
-            android:inputType="number" />
+            android:max="7"
+            android:progress="3"
+            android:padding="8dp" />
 
         <Button
-            android:id="@+id/buttonShowPopup"
+            android:id="@+id/buttonNext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Show KFA Help"
-            android:layout_marginTop="16dp"/>
-
-        <Button
-            android:id="@+id/buttonFinish"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="next"
+            android:text="Beenden"
             android:layout_marginTop="16dp"/>
     </LinearLayout>
 </ScrollView>
