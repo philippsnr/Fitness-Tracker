@@ -25,12 +25,18 @@ import com.example.fitnesstracker.viewmodel.TrainingplanViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Fragment zur Verwaltung der Trainingspläne.
+ * Hier werden alle Trainingspläne geladen, angezeigt und
+ * es können neue Trainingspläne hinzugefügt werden.
+ */
 public class TrainingPlanFragment extends Fragment {
 
     private TrainingplanViewModel viewModel;
     private TrainingPlanAdapter adapter;
     private Trainingplan activePlan;
     private ImageView ivChangeActivePlan;
+    private ImageView ivAddNewTrainingPlan; // Plus-Icon
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,25 +52,31 @@ public class TrainingPlanFragment extends Fragment {
     }
 
     /**
-     * Initialisiert die UI-Elemente und setzt den Klick-Listener für das Icon.
+     * Initialisiert die UI-Elemente und setzt die Click-Listener.
+     *
+     * @param view Die Root-View des Fragments.
      */
     private void initUI(View view) {
         initViews(view);
         setupRecyclerView();
         ivChangeActivePlan.setOnClickListener(v -> showOtherTrainingplansDialog());
+        ivAddNewTrainingPlan.setOnClickListener(v -> showAddTrainingPlanDialog());
     }
 
     /**
-     * Initialisiert die Views anhand der übergebenen Root-View.
+     * Findet die Views im Layout.
+     *
+     * @param view Die Root-View des Fragments.
      */
     private void initViews(View view) {
         TextView tvActivePlan = view.findViewById(R.id.tvActivePlan);
         RecyclerView rvTrainingPlans = view.findViewById(R.id.rvTrainingPlans);
         ivChangeActivePlan = view.findViewById(R.id.ivChangeActivePlan);
+        ivAddNewTrainingPlan = view.findViewById(R.id.addNewTrainingplan);
     }
 
     /**
-     * Initialisiert das RecyclerView mit dem zugehörigen Adapter und Click-Listenern.
+     * Richtet das RecyclerView mit Adapter und LayoutManager ein.
      */
     private void setupRecyclerView() {
         RecyclerView rvTrainingPlans = requireView().findViewById(R.id.rvTrainingPlans);
@@ -74,108 +86,24 @@ public class TrainingPlanFragment extends Fragment {
     }
 
     /**
-     * Erstellt und gibt den OnItemClickListener für das RecyclerView zurück.
+     * Erzeugt den OnItemClickListener für den Adapter.
+     *
+     * @return Instance des OnItemClickListener.
      */
     private TrainingPlanAdapter.OnItemClickListener createItemClickListener() {
         return new TrainingPlanAdapter.OnItemClickListener() {
             @Override
-            public void onViewClick(int position) {
-                openTrainingPlanDetails(position);
-            }
-
+            public void onViewClick(int position) { openTrainingPlanDetails(position); }
             @Override
-            public void onEditClick(int position) {
-                showRenameDialog(adapter.getItem(position), position);
-            }
-
+            public void onEditClick(int position) { showRenameDialog(adapter.getItem(position), position); }
             @Override
-            public void onDeleteClick(int position) {
-                showDeleteConfirmationDialog(adapter.getItem(position));
-            }
+            public void onDeleteClick(int position) { showDeleteConfirmationDialog(adapter.getItem(position)); }
 
-            @Override
-            public void onChangeActiveClick(int position) {
-                showOtherTrainingplansDialog();
-            }
         };
     }
 
     /**
-     * Zeigt einen Dialog, in dem ein inaktiver Trainingsplan als aktiv ausgewählt werden kann.
-     */
-    private void showOtherTrainingplansDialog() {
-        List<Trainingplan> inactivePlans = getInactiveTrainingplans();
-        if (inactivePlans.isEmpty()) {
-            Toast.makeText(requireContext(), "Keine anderen Trainingspläne zum Aktivieren vorhanden", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        showTrainingplanSelectionDialog(inactivePlans);
-    }
-
-    /**
-     * Erstellt eine Liste aller inaktiven Trainingspläne.
-     */
-    private List<Trainingplan> getInactiveTrainingplans() {
-        List<Trainingplan> inactivePlans = new ArrayList<>();
-        for (int i = 0; i < adapter.getItemCount(); i++) {
-            Trainingplan plan = adapter.getItem(i);
-            if (activePlan != null && plan.getId() != activePlan.getId()) {
-                inactivePlans.add(plan);
-            }
-        }
-        return inactivePlans;
-    }
-
-    /**
-     * Zeigt einen Dialog zur Auswahl eines neuen aktiven Trainingsplans.
-     */
-    private void showTrainingplanSelectionDialog(List<Trainingplan> inactivePlans) {
-        String[] planNames = new String[inactivePlans.size()];
-        for (int i = 0; i < inactivePlans.size(); i++) {
-            planNames[i] = inactivePlans.get(i).getName();
-        }
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Wähle einen Trainingsplan als aktiv")
-                .setItems(planNames, (dialog, which) -> showConfirmationDialog(inactivePlans.get(which)))
-                .show();
-    }
-
-    /**
-     * Zeigt einen Bestätigungsdialog zur Aktivierung eines ausgewählten Trainingsplans.
-     */
-    private void showConfirmationDialog(Trainingplan selectedPlan) {
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Bestätigung")
-                .setMessage("Möchten Sie den Trainingsplan \"" + selectedPlan.getName() + "\" als aktiv setzen?")
-                .setPositiveButton("Ja", (confirmDialog, whichButton) -> activateTrainingplan(selectedPlan))
-                .setNegativeButton("Nein", (confirmDialog, whichButton) -> confirmDialog.dismiss())
-                .show();
-    }
-
-    /**
-     * Aktiviert den ausgewählten Trainingsplan und lädt die Daten neu.
-     */
-    private void activateTrainingplan(Trainingplan selectedPlan) {
-        viewModel.setActiveTrainingplan(selectedPlan.getId(),
-                () -> requireActivity().runOnUiThread(() -> {
-                    Toast.makeText(requireContext(), "Aktiver Trainingsplan geändert", Toast.LENGTH_SHORT).show();
-                    loadTrainingPlans();
-                }),
-                error -> requireActivity().runOnUiThread(() ->
-                        Toast.makeText(requireContext(), "Fehler beim Aktivieren des Trainingsplans", Toast.LENGTH_SHORT).show()
-                )
-        );
-    }
-
-    /**
-     * Initialisiert das ViewModel.
-     */
-    private void initViewModel() {
-        viewModel = new ViewModelProvider(requireActivity()).get(TrainingplanViewModel.class);
-    }
-
-    /**
-     * Lädt alle Trainingspläne und den aktiven Plan.
+     * Lädt alle Trainingspläne und den aktiven Trainingsplan.
      */
     private void loadTrainingPlans() {
         viewModel.loadActiveTrainingplan(
@@ -190,6 +118,8 @@ public class TrainingPlanFragment extends Fragment {
 
     /**
      * Aktualisiert die Anzeige des aktiven Trainingsplans.
+     *
+     * @param plan Der aktive Trainingsplan.
      */
     private void updateActivePlan(Trainingplan plan) {
         activePlan = plan;
@@ -198,14 +128,13 @@ public class TrainingPlanFragment extends Fragment {
     }
 
     /**
-     * Öffnet die Detailansicht eines Trainingsplans.
-     * Hier wird das TrainingDayFragment in den fragment_container geladen,
-     * sodass die Bottom Navigation sichtbar bleibt.
+     * Öffnet die Detailansicht eines ausgewählten Trainingsplans.
+     *
+     * @param position Position des Plans im Adapter.
      */
     private void openTrainingPlanDetails(int position) {
         Trainingplan plan = adapter.getItem(position);
         Log.d("TrainingPlanFragment", "Klick auf Plan: " + plan.getName());
-
         TrainingDayFragment detailsFragment = TrainingDayFragment.newInstance(plan.getId(), plan.getName());
         getParentFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, detailsFragment)
@@ -214,24 +143,28 @@ public class TrainingPlanFragment extends Fragment {
     }
 
     /**
-     * Zeigt einen Dialog zum Umbenennen eines Trainingsplans an.
+     * Zeigt einen Dialog zum Umbenennen eines Trainingsplans.
+     *
+     * @param plan     Der Trainingsplan, der umbenannt werden soll.
+     * @param position Position im Adapter.
      */
     private void showRenameDialog(Trainingplan plan, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Trainingplan umbenennen");
-
         final EditText input = new EditText(requireContext());
         input.setText(plan.getName());
         builder.setView(input);
-
         builder.setPositiveButton("Speichern", (dialog, which) -> saveNewName(plan, input, position));
         builder.setNegativeButton("Abbrechen", (dialog, which) -> dialog.cancel());
-
         builder.show();
     }
 
     /**
-     * Speichert den neuen Namen des Trainingsplans und aktualisiert die Ansicht.
+     * Speichert den neuen Namen des Trainingsplans.
+     *
+     * @param plan     Der zu ändernde Trainingsplan.
+     * @param input    Das Eingabefeld mit dem neuen Namen.
+     * @param position Position im Adapter.
      */
     private void saveNewName(Trainingplan plan, EditText input, int position) {
         String newName = input.getText().toString().trim();
@@ -252,7 +185,9 @@ public class TrainingPlanFragment extends Fragment {
     }
 
     /**
-     * Zeigt eine Fehlermeldung an, falls das Speichern fehlschlägt.
+     * Zeigt eine Fehlermeldung an.
+     *
+     * @param exception Die aufgetretene Exception.
      */
     private void showError(Exception exception) {
         requireActivity().runOnUiThread(() -> {
@@ -262,7 +197,9 @@ public class TrainingPlanFragment extends Fragment {
     }
 
     /**
-     * Zeigt einen Bestätigungsdialog zum Löschen eines Trainingsplans an.
+     * Zeigt einen Bestätigungsdialog zum Löschen eines Trainingsplans.
+     *
+     * @param plan Der zu löschende Trainingsplan.
      */
     private void showDeleteConfirmationDialog(Trainingplan plan) {
         new AlertDialog.Builder(requireContext())
@@ -275,7 +212,9 @@ public class TrainingPlanFragment extends Fragment {
     }
 
     /**
-     * Löscht den Trainingsplan und aktualisiert die Liste.
+     * Löscht den angegebenen Trainingsplan.
+     *
+     * @param plan Der zu löschende Trainingsplan.
      */
     private void deleteTrainingplan(Trainingplan plan) {
         viewModel.deleteTrainingplan(plan,
@@ -288,7 +227,7 @@ public class TrainingPlanFragment extends Fragment {
     }
 
     /**
-     * Lädt alle Trainingspläne neu und aktualisiert die Anzeige.
+     * Lädt die Trainingspläne neu.
      */
     private void reloadTrainingplans() {
         viewModel.loadAllTrainingplans(
@@ -298,12 +237,135 @@ public class TrainingPlanFragment extends Fragment {
     }
 
     /**
-     * Zeigt eine Fehlermeldung, falls das Löschen fehlschlägt.
+     * Zeigt einen Fehler beim Löschen an.
+     *
+     * @param error Die aufgetretene Exception.
      */
     private void showDeleteError(Exception error) {
         requireActivity().runOnUiThread(() -> {
             Toast.makeText(requireContext(), "Fehler beim Löschen des Plans", Toast.LENGTH_SHORT).show();
             Log.e("Trainingplan", "Löschfehler", error);
         });
+    }
+
+    /**
+     * Zeigt einen Dialog an, um einen neuen Trainingsplan hinzuzufügen.
+     * Enthält ein EditText-Feld für den Namen.
+     */
+    private void showAddTrainingPlanDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Neuen Trainingsplan hinzufügen");
+        final EditText input = new EditText(requireContext());
+        input.setHint("Name des Trainingsplans");
+        builder.setView(input);
+        builder.setPositiveButton("Hinzufügen", (dialog, which) ->
+                addNewTrainingPlan(input.getText().toString().trim())
+        );
+        builder.setNegativeButton("Abbrechen", (dialog, which) -> dialog.cancel());
+        builder.show();
+    }
+
+    /**
+     * Fügt einen neuen Trainingsplan hinzu.
+     *
+     * @param name Der Name des neuen Trainingsplans.
+     */
+    private void addNewTrainingPlan(String name) {
+        if (name.isEmpty()) {
+            Toast.makeText(requireContext(), "Name darf nicht leer sein", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Trainingplan newPlan = new Trainingplan(name, false);
+        viewModel.addTrainingplan(newPlan,
+                () -> requireActivity().runOnUiThread(() -> {
+                    Toast.makeText(requireContext(), "Trainingsplan hinzugefügt", Toast.LENGTH_SHORT).show();
+                    reloadTrainingplans();
+                }),
+                error -> requireActivity().runOnUiThread(() ->
+                        Toast.makeText(requireContext(), "Fehler beim Hinzufügen", Toast.LENGTH_SHORT).show()
+                )
+        );
+    }
+
+    /**
+     * Initialisiert das ViewModel.
+     */
+    private void initViewModel() {
+        viewModel = new ViewModelProvider(requireActivity()).get(TrainingplanViewModel.class);
+    }
+
+    /**
+     * Zeigt einen Dialog, in dem ein inaktiver Trainingsplan als aktiv ausgewählt werden kann.
+     */
+    private void showOtherTrainingplansDialog() {
+        List<Trainingplan> inactivePlans = getInactiveTrainingplans();
+        if (inactivePlans.isEmpty()) {
+            Toast.makeText(requireContext(), "Keine anderen Trainingspläne zum Aktivieren vorhanden", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        showTrainingplanSelectionDialog(inactivePlans);
+    }
+
+    /**
+     * Erzeugt eine Liste aller inaktiven Trainingspläne.
+     *
+     * @return Liste der inaktiven Trainingspläne.
+     */
+    private List<Trainingplan> getInactiveTrainingplans() {
+        List<Trainingplan> inactivePlans = new ArrayList<>();
+        for (int i = 0; i < adapter.getItemCount(); i++) {
+            Trainingplan plan = adapter.getItem(i);
+            if (activePlan != null && plan.getId() != activePlan.getId()) {
+                inactivePlans.add(plan);
+            }
+        }
+        return inactivePlans;
+    }
+
+    /**
+     * Zeigt einen Dialog zur Auswahl eines neuen aktiven Trainingsplans.
+     *
+     * @param inactivePlans Liste der inaktiven Trainingspläne.
+     */
+    private void showTrainingplanSelectionDialog(List<Trainingplan> inactivePlans) {
+        String[] planNames = new String[inactivePlans.size()];
+        for (int i = 0; i < inactivePlans.size(); i++) {
+            planNames[i] = inactivePlans.get(i).getName();
+        }
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Wähle einen Trainingsplan als aktiv")
+                .setItems(planNames, (dialog, which) -> showConfirmationDialog(inactivePlans.get(which)))
+                .show();
+    }
+
+    /**
+     * Zeigt einen Bestätigungsdialog, um einen Trainingsplan als aktiv zu setzen.
+     *
+     * @param selectedPlan Der ausgewählte Trainingsplan.
+     */
+    private void showConfirmationDialog(Trainingplan selectedPlan) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Bestätigung")
+                .setMessage("Möchten Sie den Trainingsplan \"" + selectedPlan.getName() + "\" als aktiv setzen?")
+                .setPositiveButton("Ja", (confirmDialog, whichButton) -> activateTrainingplan(selectedPlan))
+                .setNegativeButton("Nein", (confirmDialog, whichButton) -> confirmDialog.dismiss())
+                .show();
+    }
+
+    /**
+     * Setzt den angegebenen Trainingsplan als aktiv.
+     *
+     * @param selectedPlan Der zu aktivierende Trainingsplan.
+     */
+    private void activateTrainingplan(Trainingplan selectedPlan) {
+        viewModel.setActiveTrainingplan(selectedPlan.getId(),
+                () -> requireActivity().runOnUiThread(() -> {
+                    Toast.makeText(requireContext(), "Aktiver Trainingsplan geändert", Toast.LENGTH_SHORT).show();
+                    loadTrainingPlans();
+                }),
+                error -> requireActivity().runOnUiThread(() ->
+                        Toast.makeText(requireContext(), "Fehler beim Aktivieren des Trainingsplans", Toast.LENGTH_SHORT).show()
+                )
+        );
     }
 }

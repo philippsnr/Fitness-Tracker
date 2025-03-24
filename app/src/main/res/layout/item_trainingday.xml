@@ -1,8 +1,11 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardViewTrainingday"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
+    android:clickable="true"
+    android:focusable="true"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp"
     app:cardBackgroundColor="@color/primary">
@@ -25,25 +28,15 @@
             android:textStyle="bold"
             android:textColor="@android:color/white"
             android:ellipsize="end"
-            android:maxLines="1"/>
+            android:maxLines="1" />
 
-        <!-- Container für die Icons -->
+        <!-- Container für die Aktionen -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- Auge Icon (z.B. für Details ansehen) -->
-            <ImageView
-                android:id="@+id/ivViewDay"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:contentDescription="@string/t_view_day"
-                android:src="@drawable/ic_eye"
-                app:tint="@android:color/white"
-                android:layout_marginStart="8dp"/>
-
-            <!-- Stift Icon (Bearbeiten) -->
+            <!-- Bearbeiten Icon -->
             <ImageView
                 android:id="@+id/ivEditDay"
                 android:layout_width="24dp"
@@ -51,9 +44,9 @@
                 android:contentDescription="@string/t_edit_day"
                 android:src="@drawable/ic_edit"
                 app:tint="@android:color/white"
-                android:layout_marginStart="8dp"/>
+                android:layout_marginStart="8dp" />
 
-            <!-- Mülleimer Icon (Löschen) -->
+            <!-- Löschen Icon -->
             <ImageView
                 android:id="@+id/ivDeleteDay"
                 android:layout_width="24dp"
@@ -61,7 +54,7 @@
                 android:contentDescription="@string/t_delete_day"
                 android:src="@drawable/ic_delete"
                 app:tint="@android:color/white"
-                android:layout_marginStart="8dp"/>
+                android:layout_marginStart="8dp" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
