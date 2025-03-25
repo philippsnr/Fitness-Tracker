@@ -24,7 +24,7 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
     private String userName;
     private double weight;
     private int height;
-    private String birthYear;
+    private String birthday;
     private int kfa;
     private String userGoal;
     private int trainingDaysPerWeek;
@@ -68,8 +68,8 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
             case "height":
                 height = (Integer) data;
                 break;
-            case "birthYear":
-                birthYear = (String) data;
+            case "birthday":
+                birthday = (String) data;
                 break;
             case "kfa":
                 kfa = (Integer) data;
@@ -99,7 +99,7 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
 
     private void saveUserData() {
         UserInformation userInfo = new UserInformation(0, 1, new Date(), height, weight, kfa);
-        User user = new User(1, userName, birthYear, userGoal, trainingDaysPerWeek);
+        User user = new User(1, userName, birthday, userGoal, trainingDaysPerWeek);
         userInformationRepository.writeUserInformation(userInfo);
         userRepository.saveUser(user);
 
@@ -138,7 +138,7 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
                 case 3:
                     return new OnboardingHeightFragment();
                 case 4:
-                    return new OnboardingBirthYearFragment();
+                    return new OnboardingBirthdayFragment();
                 case 5:
                     return new OnboardingKfaFragment();
                 case 6:
