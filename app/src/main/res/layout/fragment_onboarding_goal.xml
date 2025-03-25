@@ -1,62 +1,63 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/primary"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/textViewQuestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="10dp"
+        android:text="Was ist dein Ziel?"
+        android:textColor="@android:color/white"
+        android:textSize="30sp" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupGoal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:gravity="center_horizontal">
+        android:padding="8dp"
+        android:gravity="center">
 
-        <ImageView
-            android:id="@+id/imageViewPlaceholder"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/placeholder_image" />
-
-        <TextView
-            android:id="@+id/textViewQuestion"
-            android:layout_width="wrap_content"
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/radioLoseWeight"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="What is your goal?"
-            android:textSize="18sp"
-            android:paddingTop="16dp"
-            android:gravity="center" />
+            android:text="Abnehmen"
+            android:textColor="@android:color/white"
+            app:buttonTint="@android:color/white" />
 
-        <RadioGroup
-            android:id="@+id/radioGroupGoal"
-            android:layout_width="match_parent"
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/radioMaintainWeight"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:padding="8dp">
+            android:text="Gewicht halten"
+            android:textColor="@android:color/white"
+            app:buttonTint="@android:color/white" />
 
-            <RadioButton
-                android:id="@+id/radioLoseWeight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Lose Weight" />
-
-            <RadioButton
-                android:id="@+id/radioMaintainWeight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Maintain Weight" />
-
-            <RadioButton
-                android:id="@+id/radioGainWeight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Gain Weight" />
-        </RadioGroup>
-
-        <Button
-            android:id="@+id/buttonNext"
-            android:layout_width="match_parent"
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/radioGainWeight"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="Next"
-            android:layout_marginTop="16dp"/>
-    </LinearLayout>
-</ScrollView>
+            android:text="Zunehmen"
+            android:textColor="@android:color/white"
+            app:buttonTint="@android:color/white" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/buttonNext"
+        android:layout_width="200dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/background"
+        android:text="Weiter"
+        android:textColor="@android:color/black" />
+
+</LinearLayout>

@@ -83,14 +83,14 @@ public class OnboardingBirthdayFragment extends Fragment {
     private void handleNextButtonClick() {
         String birthdayStr = buttonSelectDate.getText().toString().trim();
         if (birthdayStr.isEmpty() || birthdayStr.equals("Geburtsdatum auswählen")) {
-            Toast.makeText(getContext(), "Please select your birth year", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Bitte wähle dein Geburtsdatum aus.", Toast.LENGTH_SHORT).show();
             return;
         }
 
         try {
             dataListener.onDataCollected("birthday", birthdayStr);
         } catch (NumberFormatException e) {
-            Toast.makeText(getContext(), "Invalid birth year", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Ungültige Eingabe.", Toast.LENGTH_SHORT).show();
         }
     }
 

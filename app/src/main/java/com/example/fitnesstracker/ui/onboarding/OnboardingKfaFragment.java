@@ -72,13 +72,13 @@ public class OnboardingKfaFragment extends Fragment {
         buttonNext.setOnClickListener(v -> {
             String kfaStr = editTextKfa.getText().toString().trim();
             if (TextUtils.isEmpty(kfaStr)) {
-                Toast.makeText(getContext(), "Please enter your body fat percentage", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Bitte gebe deinen KFA an.", Toast.LENGTH_SHORT).show();
             } else {
                 try {
                     int kfa = Integer.parseInt(kfaStr);
                     dataListener.onDataCollected("kfa", kfa);
                 } catch (NumberFormatException e) {
-                    Toast.makeText(getContext(), "Invalid format", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Ungültige KFA-Eingabe", Toast.LENGTH_SHORT).show();
                 }
             }
         });
