@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:layout_marginBottom="10dp"
-        android:text="Wie viel wiegtst du?"
+        android:text="Wie viel wiegtst du? (in kg)"
         android:textColor="@android:color/white"
         android:textSize="30sp" />
 
