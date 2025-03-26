@@ -10,14 +10,12 @@
     app:cardElevation="4dp"
     app:cardBackgroundColor="@color/primary">
 
-    <!-- Container für Datum-Header und die Liste der Sets -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Datum als Header, unterstrichen -->
         <TextView
             android:id="@+id/tvDateHeader"
             android:layout_width="wrap_content"
@@ -26,8 +24,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@android:color/white"
-            android:paddingBottom="8dp"
-            android:paintFlags="underline" />
+            android:paddingBottom="8dp" />
 
         <LinearLayout
             android:id="@+id/llExerciseSets"

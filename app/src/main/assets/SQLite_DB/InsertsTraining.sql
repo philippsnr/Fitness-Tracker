@@ -1,192 +1,178 @@
--- Erstelle den Trainingsplan
-INSERT INTO Trainingplan (name, isActive) VALUES ("Ganzkörper Anfänger", 0);
+-- ===============================
+-- SAMPLE DATA FÜR TRAININGSPLÄNE
+-- ===============================
 
--- IDs der Trainingstage speichern
-INSERT INTO Trainingday (name, Trainingplan_id) VALUES
-("Ganzkörper Tag 1", 1),
-("Ganzkörper Tag 2", 1),
-("Ganzkörper Tag 3", 1);
+-- Trainingsplan "Ganzkörper Anfänger"
+-- Trainingstag 1 (Ganzkörper Tag 1) verwendet:
+--   - Squats - Barbell (exercise_id = 39)
+--   - Benchpress (exercise_id = 1)
+--   - Pullups (exercise_id = 10)
 
--- Beispiel-Übungszuweisungen für Ganzkörper Tag 1
-INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
-(1, 39), -- Kniebeugen
-(1, 1), -- Bankdrücken
-(1, 10); -- Klimmzüge
+-- Für Week 1 (2025-02-26)
+-- Benchpress
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(1, 1, 10, 60, "2025-02-26"),
+(1, 2, 8, 65, "2025-02-26"),
+(1, 3, 6, 70, "2025-02-26");
 
--- Beispiel-Übungszuweisungen für Ganzkörper Tag 2
-INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
-(2, 11), -- LatPulldown
-(2, 75), -- Schulterdrücken
-(2, 19); -- Rudern
+-- Squats - Barbell
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(39, 1, 10, 100, "2025-02-26"),
+(39, 2, 8, 110, "2025-02-26"),
+(39, 3, 6, 120, "2025-02-26");
 
--- Beispiel-Übungszuweisungen für Ganzkörper Tag 3
-INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
-(3, 43), -- Beinpresse
-(3, 9), -- Dips
-(3, 74); -- Face Pulls
+-- Pullups
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(10, 1, 10, 0, "2025-02-26"),
+(10, 2, 8, 0, "2025-02-26"),
+(10, 3, 6, 0, "2025-02-26");
+
+-- Trainingstag 2 (Ganzkörper Tag 2) verwendet:
+--   - Lat-Pulldown (exercise_id = 11)
+--   - Shoulderpress-Machine (exercise_id = 75)
+--   - Wide T-Bar Row (exercise_id = 19)
+
+-- Lat-Pulldown
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(11, 1, 10, 50, "2025-02-26"),
+(11, 2, 8, 55, "2025-02-26"),
+(11, 3, 6, 60, "2025-02-26");
+
+-- Shoulderpress-Machine
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(75, 1, 10, 40, "2025-02-26"),
+(75, 2, 8, 45, "2025-02-26"),
+(75, 3, 6, 50, "2025-02-26");
+
+-- Wide T-Bar Row
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(19, 1, 10, 70, "2025-02-26"),
+(19, 2, 8, 75, "2025-02-26"),
+(19, 3, 6, 80, "2025-02-26");
+
+-- Trainingstag 3 (Ganzkörper Tag 3) verwendet:
+--   - Leg-Press (exercise_id = 43)
+--   - Dips (exercise_id = 9)
+--   - Face-Pulls (exercise_id = 74)
+
+-- Leg-Press
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(43, 1, 12, 200, "2025-02-26"),
+(43, 2, 10, 210, "2025-02-26"),
+(43, 3, 8, 220, "2025-02-26");
+
+-- Dips
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(9, 1, 10, 0, "2025-02-26"),
+(9, 2, 8, 0, "2025-02-26"),
+(9, 3, 6, 0, "2025-02-26");
+
+-- Face-Pulls
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(74, 1, 12, 20, "2025-02-26"),
+(74, 2, 10, 25, "2025-02-26"),
+(74, 3, 8, 30, "2025-02-26");
 
 
--- Erstelle den Trainingsplan
-INSERT INTO Trainingplan (name, isActive) VALUES ("Push Pull Beine", 1);
+-- Trainingsplan "Push Pull Beine"
+-- Trainingstag 4 (Push 1) verwendet:
+--   - Benchpress (exercise_id = 1)
+--   - Shoulderpress-Machine (exercise_id = 75)
+--   - Dips (exercise_id = 9)
 
--- IDs der Trainingstage speichern
-INSERT INTO Trainingday (name, Trainingplan_id) VALUES
-("Push 1", 2),
-("Pull 1", 2),
-("Beine 1", 2),
-("Push 2", 2),
-("Pull 2", 2),
-("Beine 2", 2);
+-- (Benchpress und Shoulderpress-Machine & Dips wurden bereits eingefügt, hier kannst du alternative Sätze oder weitere Wochen ergänzen)
+-- Beispiel: Für Week 1 (2025-02-26) nochmal für Push 1:
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(1, 1, 10, 60, "2025-02-26"),
+(1, 2, 8, 65, "2025-02-26"),
+(75, 1, 10, 40, "2025-02-26"),
+(75, 2, 8, 45, "2025-02-26"),
+(9, 1, 10, 0, "2025-02-26"),
+(9, 2, 8, 0, "2025-02-26");
 
--- Push 1
-INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
-(4, 1), -- Bankdrücken
-(4, 75), -- Schulterdrücken
-(4, 9); -- Dips
+-- Trainingstag 5 (Pull 1) verwendet:
+--   - Pullups (exercise_id = 10)
+--   - Wide T-Bar Row (exercise_id = 19)
+--   - Face-Pulls (exercise_id = 74)
+-- (Auch hier wurden bereits Sätze für Pullups, Wide T-Bar Row und Face-Pulls eingefügt)
 
--- Pull 1
-INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
-(5, 10), -- Klimmzüge
-(5, 19), -- Rudern
-(5, 74); -- Face Pulls
+-- Trainingstag 6 (Beine 1) verwendet:
+--   - Squats - Barbell (exercise_id = 39)
+--   - Pullups (exercise_id = 10)
+--   - Leg-Press (exercise_id = 43)
+-- (Für Beine 1 sind Sätze für Squats, Pullups und Leg-Press bereits vorhanden)
 
--- Beine 1
-INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
-(6, 39), -- Kniebeugen
-(6, 10), -- pullups
-(6, 43); -- Beinpresse
+-- Trainingstag 7 (Push 2) verwendet:
+--   - Benchpress (exercise_id = 1)
+--   - Shoulderpress-Machine (exercise_id = 75)
+--   - Dips (exercise_id = 9)
+-- Trainingstag 8 (Pull 2) verwendet:
+--   - Pullups (exercise_id = 10)
+--   - Wide T-Bar Row (exercise_id = 19)
+--   - Face-Pulls (exercise_id = 74)
+-- Trainingstag 9 (Beine 2) verwendet:
+--   - Squats - Barbell (exercise_id = 39)
+--   - Romanian Deadlift (exercise_id = 35)
+--   - Leg-Press (exercise_id = 43)
 
--- Push 2
-INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
-(7, 1), -- Bankdrücken
-(7, 75), -- Schulterdrücken
-(7, 9); -- Dips
+-- Für den Trainingsplan "Push Pull Beine" fügen wir für Week 2 (2025-03-05) alternative Sätze ein:
 
--- Pull 2
-INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
-(8, 10), -- Klimmzüge
-(8, 19), -- Rudern
-(8, 74); -- Face Pulls
+-- Benchpress (exercise_id = 1) Week 2
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(1, 1, 10, 62, "2025-03-05"),
+(1, 2, 8, 67, "2025-03-05"),
+(1, 3, 6, 72, "2025-03-05");
 
--- Beine 2
-INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
-(9, 39), -- Kniebeugen
-(9, 35), -- rumanian deadlift
-(9, 43); -- Beinpresse
+-- Squats - Barbell (exercise_id = 39) Week 2
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(39, 1, 10, 102, "2025-03-05"),
+(39, 2, 8, 112, "2025-03-05"),
+(39, 3, 6, 122, "2025-03-05");
 
--- Week 1 (26-02-2025)
--- Bankdrücken (Bench Press) - 3 Sets
-INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
-(4, 1, 10, 60, "26-02-2025"),
-(4, 2, 8, 65, "26-02-2025"),
-(4, 3, 6, 70, "26-02-2025"),
-(4, 2, 8, 65, "26-02-2025"),
-(4, 3, 6, 70, "26-02-2025");
+-- Pullups (exercise_id = 10) Week 2
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(10, 1, 10, 0, "2025-03-05"),
+(10, 2, 8, 0, "2025-03-05"),
+(10, 3, 6, 0, "2025-03-05");
 
--- Klimmzüge (Pull-Ups) - 3 Sets
-INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
-(5, 1, 10, 0, "26-02-2025"),
-(5, 2, 8, 5, "26-02-2025"),
-(5, 3, 6, 10, "26-02-2025"),
-(5, 3, 6, 10, "26-02-2025");
+-- Lat-Pulldown (exercise_id = 11) Week 2
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(11, 1, 10, 52, "2025-03-05"),
+(11, 2, 8, 57, "2025-03-05"),
+(11, 3, 6, 62, "2025-03-05");
 
--- Beinpresse (Leg Press) - 3 Sets
-INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
-(9, 1, 12, 100, "26-02-2025"),
-(9, 2, 10, 110, "26-02-2025"),
-(9, 3, 8, 120, "26-02-2025");
+-- Shoulderpress-Machine (exercise_id = 75) Week 2
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(75, 1, 10, 42, "2025-03-05"),
+(75, 2, 8, 47, "2025-03-05"),
+(75, 3, 6, 52, "2025-03-05");
 
---------------------------------------------------
+-- Wide T-Bar Row (exercise_id = 19) Week 2
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(19, 1, 10, 72, "2025-03-05"),
+(19, 2, 8, 77, "2025-03-05"),
+(19, 3, 6, 82, "2025-03-05");
 
--- Week 2 (05-03-2025)
--- Bankdrücken (Bench Press) - 3 Sets
-INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
-(4, 1, 10, 62, "05-03-2025"),
-(4, 2, 8, 67, "05-03-2025"),
-(4, 3, 6, 72, "05-03-2025");
+-- Leg-Press (exercise_id = 43) Week 2
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(43, 1, 12, 202, "2025-03-05"),
+(43, 2, 10, 212, "2025-03-05"),
+(43, 3, 8, 222, "2025-03-05");
 
--- Klimmzüge (Pull-Ups) - 3 Sets
-INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
-(5, 1, 10, 0, "05-03-2025"),
-(5, 3, 6, 10, "05-03-2025");
+-- Dips (exercise_id = 9) Week 2
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(9, 1, 10, 0, "2025-03-05"),
+(9, 2, 8, 0, "2025-03-05"),
+(9, 3, 6, 0, "2025-03-05");
 
--- Beinpresse (Leg Press) - 3 Sets
-INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
-(9, 1, 12, 105, "05-03-2025"),
-(9, 2, 10, 115, "05-03-2025");
+-- Face-Pulls (exercise_id = 74) Week 2
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(74, 1, 12, 22, "2025-03-05"),
+(74, 2, 10, 27, "2025-03-05"),
+(74, 3, 8, 32, "2025-03-05");
 
---------------------------------------------------
-
--- Week 3 (12-03-2025)
--- Bankdrücken (Bench Press) - 3 Sets
-INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
-(4, 1, 10, 64, "12-03-2025"),
-(4, 2, 8, 69, "12-03-2025"),
-(4, 3, 6, 74, "12-03-2025"),
-(4, 1, 10, 64, "12-03-2025"),
-(4, 2, 8, 69, "12-03-2025"),
-(4, 2, 8, 69, "12-03-2025"),
-(4, 3, 6, 74, "12-03-2025");
-
--- Klimmzüge (Pull-Ups) - 3 Sets
-INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
-(5, 1, 10, 0, "12-03-2025"),
-(5, 2, 8, 5, "12-03-2025"),
-(5, 3, 6, 10, "12-03-2025"),
-(5, 1, 10, 0, "12-03-2025"),
-(5, 2, 8, 5, "12-03-2025"),
-(5, 3, 6, 10, "12-03-2025");
-
--- Beinpresse (Leg Press) - 3 Sets
-INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
-(9, 1, 12, 110, "12-03-2025"),
-(9, 2, 10, 120, "12-03-2025"),
-(9, 3, 8, 130, "12-03-2025");
-
---------------------------------------------------
-
--- Week 4 (19-03-2025)
--- Bankdrücken (Bench Press) - 3 Sets
-INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
-(4, 1, 10, 66, "19-03-2025"),
-(4, 2, 8, 71, "19-03-2025"),
-(4, 3, 6, 76, "19-03-2025"),
-(4, 2, 8, 71, "19-03-2025"),
-(4, 3, 6, 76, "19-03-2025");
-
--- Klimmzüge (Pull-Ups) - 3 Sets
-INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
-(5, 1, 10, 0, "19-03-2025"),
-(5, 2, 8, 5, "19-03-2025"),
-(5, 3, 6, 10, "19-03-2025"),
-(5, 2, 8, 5, "19-03-2025"),
-(5, 3, 6, 10, "19-03-2025");
-
--- Beinpresse (Leg Press) - 3 Sets
-INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
-(9, 1, 12, 115, "19-03-2025"),
-(9, 2, 10, 125, "19-03-2025"),
-(9, 3, 8, 135, "19-03-2025");
-
---------------------------------------------------
-
--- Week 5 (26-03-2025)
--- Bankdrücken (Bench Press) - 3 Sets
-INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
-(4, 1, 10, 68, "26-03-2025"),
-(4, 2, 8, 73, "26-03-2025"),
-(4, 3, 6, 78, "26-03-2025"),
-(4, 2, 8, 73, "26-03-2025"),
-(4, 3, 6, 78, "26-03-2025");
-
--- Klimmzüge (Pull-Ups) - 3 Sets
-INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
-(5, 1, 10, 0, "26-03-2025"),
-(5, 3, 6, 10, "26-03-2025");
-
--- Beinpresse (Leg Press) - 3 Sets
-INSERT INTO ExerciseSet (TrainingdayExerciseAssignment_id, set_number, repetitions, weight, date) VALUES
-(9, 1, 12, 120, "26-03-2025"),
-(9, 2, 10, 130, "26-03-2025"),
-(9, 3, 8, 140, "26-03-2025"),
-(9, 3, 8, 140, "26-03-2025");
+-- Romanian Deadlift (exercise_id = 35) Week 2
+INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
+(35, 1, 10, 82, "2025-03-05"),
+(35, 2, 8, 87, "2025-03-05"),
+(35, 3, 6, 92, "2025-03-05");

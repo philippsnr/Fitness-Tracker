@@ -76,7 +76,7 @@ public class TrainingExerciseFragment extends Fragment {
         adapter = new TrainingExerciseAdapter(new TrainingExerciseAdapter.OnItemClickListener() {
             @Override
             public void onCardClick(int position) {
-                showExerciseSetsDialog(position);
+                showExerciseSets(position);
             }
 
             @Override
@@ -92,8 +92,20 @@ public class TrainingExerciseFragment extends Fragment {
         fab.setOnClickListener(v -> showAddExerciseDialog());
     }
 
-    private void showExerciseSetsDialog(int position) {
-
+    /**
+     * Zeigt das TrainingSetsFragment für die ausgewählte Übung an.
+     *
+     * @param position Position der ausgewählten Übung im RecyclerView.
+     */
+    private void showExerciseSets(int position) {
+        if (position < 0 || position >= assignmentIds.size()) return;
+        int assignmentId = assignmentIds.get(position);
+        TrainingSetsFragment fragment = TrainingSetsFragment.newInstance(assignmentId);
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     /**

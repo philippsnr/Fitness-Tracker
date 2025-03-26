@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- Header -->
     <TextView
         android:id="@+id/tvTrainingDayNameHeading"
         android:layout_width="match_parent"

@@ -43,12 +43,12 @@ CREATE TABLE IF NOT EXISTS TrainingdayExerciseAssignment (
 
 CREATE TABLE IF NOT EXISTS ExerciseSet (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    TrainingdayExerciseAssignment_id INTEGER NOT NULL,
+    exercise_id INTEGER NOT NULL,
     set_number INTEGER NOT NULL,
     repetitions INTEGER NOT NULL,
     weight INTEGER NOT NULL,
-    date TEXT NOT NULL,
-    FOREIGN KEY (TrainingdayExerciseAssignment_id) REFERENCES TrainingdayExerciseAssignment (id) ON DELETE CASCADE
+    date TEXT NOT NULL, -- Format: "YYYY-MM-DD"
+    FOREIGN KEY (exercise_id) REFERENCES Exercise (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS User (
