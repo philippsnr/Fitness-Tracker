@@ -36,4 +36,8 @@
     <string name="t_name_day">Trainingstag Name</string>
     <string name="t_name_exercise">Trainingsübung Name</string>
     <string name="t_exercises">Übungen des Trainingtags</string>
+    <string name="t_date_placeholder">01–01–2025</string>
+    <string name="t_setnumber_placeholder">Set 1: </string>
+    <string name="t_weight_placeholder">100 kg</string>
+    <string name="t_reps_placeholder">10 reps</string>
 </resources>

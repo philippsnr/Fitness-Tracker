@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.fitnesstracker.R;
-import com.example.fitnesstracker.model.Exercise;
 import com.example.fitnesstracker.viewmodel.ExerciseViewModel;
 import com.example.fitnesstracker.viewmodel.TrainingdayExerciseAssignmentViewModel;
 import java.util.ArrayList;
@@ -70,7 +68,7 @@ public class TrainingExerciseFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Setzt den Titel des Fragments
-        ((TextView) view.findViewById(R.id.tvTrainingExerciseTitle)).setText(trainingdayName);
+        ((TextView) view.findViewById(R.id.tvTrainingDayNameHeading)).setText(trainingdayName);
 
         recyclerView = view.findViewById(R.id.recyclerViewTrainingdayExercises);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -78,7 +76,7 @@ public class TrainingExerciseFragment extends Fragment {
         adapter = new TrainingExerciseAdapter(new TrainingExerciseAdapter.OnItemClickListener() {
             @Override
             public void onCardClick(int position) {
-                Toast.makeText(getContext(), "Karte geklickt: " + position, Toast.LENGTH_SHORT).show();
+                showExerciseSetsDialog(position);
             }
 
             @Override
@@ -92,6 +90,10 @@ public class TrainingExerciseFragment extends Fragment {
 
         ImageView fab = getActivity().findViewById(R.id.addNewTrainingExercise);
         fab.setOnClickListener(v -> showAddExerciseDialog());
+    }
+
+    private void showExerciseSetsDialog(int position) {
+
     }
 
     /**
@@ -144,7 +146,7 @@ public class TrainingExerciseFragment extends Fragment {
     private void showAddExerciseDialog() {
         new AlertDialog.Builder(getContext())
                 .setTitle("Neue Übung hinzufügen")
-                .setMessage("Hier Dialog implementieren")
+                .setMessage("Wähle die hinzuzufügende Übung aus")
                 .setPositiveButton("OK", (dialog, which) -> {
                     // Hier Backend-Logik einfügen
                 })

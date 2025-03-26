@@ -7,7 +7,7 @@
 
     <!-- Header -->
     <TextView
-        android:id="@+id/tvTrainingExerciseTitle"
+        android:id="@+id/tvTrainingDayNameHeading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/t_training_title"
