@@ -100,4 +100,19 @@ public class TrainingdayExerciseAssignmentRepositoryTest {
         List<Integer> result = repository.getExerciseIdsForTrainingday(TEST_TRAININGDAY_ID);
         assertEquals(2, result.stream().filter(id -> id == TEST_EXERCISE_ID).count());
     }
+
+    @Test
+    public void testDeleteTrainingdayExerciseAssignment() {
+        // Sicherstellen, dass der Eintrag existiert
+        TrainingdayExerciseAssignment assignment = repository.getTrainingdayExcerciseAssignments(TEST_TRAININGDAY_ID);
+        assertNotNull(assignment);
+
+        // Eintrag löschen
+        repository.deleteTrainingdayExerciseAssignment(assignment.getId());
+
+        // Sicherstellen, dass der Eintrag nicht mehr existiert
+        TrainingdayExerciseAssignment deletedAssignment = repository.getTrainingdayExcerciseAssignments(TEST_TRAININGDAY_ID);
+        assertNull(deletedAssignment);
+    }
+
 }

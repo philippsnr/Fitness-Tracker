@@ -38,19 +38,26 @@ public class TrainingdayExerciseAssignmentRepository {
     }
 
     public List<Integer> getExerciseIdsForTrainingday(int trainingdayId) {
-        List<Integer> exerciseIds = new ArrayList<>();
+        List<Integer> assignmentIds = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT Exercise_id FROM TrainingdayExerciseAssignment WHERE Trainingday_id = ?",
+        Cursor cursor = db.rawQuery("SELECT id FROM TrainingdayExerciseAssignment WHERE Trainingday_id = ?",
                 new String[]{String.valueOf(trainingdayId)});
 
         if (cursor.moveToFirst()) {
             do {
-                exerciseIds.add(cursor.getInt(0));
+                assignmentIds.add(cursor.getInt(0));
             } while (cursor.moveToNext());
         }
         cursor.close();
         db.close();
-        return exerciseIds;
+        return assignmentIds;
+    }
+
+
+    public void deleteTrainingdayExerciseAssignment(int assignmentId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete("TrainingdayExerciseAssignment", "id = ?", new String[]{String.valueOf(assignmentId)});
+        db.close();
     }
 
 }

@@ -18,12 +18,9 @@ import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.model.Exercise;
 import com.example.fitnesstracker.viewmodel.ExerciseViewModel;
 import com.example.fitnesstracker.viewmodel.TrainingdayExerciseAssignmentViewModel;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Fragment zur Anzeige und Verwaltung der Übungen eines Trainingstags.
- */
 public class TrainingExerciseFragment extends Fragment {
 
     private int trainingdayId;
@@ -32,9 +29,15 @@ public class TrainingExerciseFragment extends Fragment {
     private TrainingExerciseAdapter adapter;
     private ExerciseViewModel exerciseViewModel;
     private TrainingdayExerciseAssignmentViewModel assignmentViewModel;
+    // Mapping-Liste für die Assignment-IDs
+    private List<Integer> assignmentIds = new ArrayList<>();
 
     /**
-     * Erzeugt eine neue Instanz des Fragments.
+     * Erstellt eine neue Instanz des Fragments.
+     *
+     * @param trainingdayId   ID des Trainingstags.
+     * @param trainingdayName Name des Trainingstags.
+     * @return Neue Instanz von TrainingExerciseFragment.
      */
     public static TrainingExerciseFragment newInstance(int trainingdayId, String trainingdayName) {
         TrainingExerciseFragment fragment = new TrainingExerciseFragment();
@@ -52,10 +55,8 @@ public class TrainingExerciseFragment extends Fragment {
             trainingdayId = getArguments().getInt("trainingdayId");
             trainingdayName = getArguments().getString("trainingdayName");
         }
-        if (exerciseViewModel == null)
-            exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
-        if (assignmentViewModel == null)
-            assignmentViewModel = new ViewModelProvider(this).get(TrainingdayExerciseAssignmentViewModel.class);
+        exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
+        assignmentViewModel = new ViewModelProvider(this).get(TrainingdayExerciseAssignmentViewModel.class);
     }
 
     @Nullable
@@ -68,45 +69,84 @@ public class TrainingExerciseFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Setzt den Titel des Fragments
         ((TextView) view.findViewById(R.id.tvTrainingExerciseTitle)).setText(trainingdayName);
+
         recyclerView = view.findViewById(R.id.recyclerViewTrainingdayExercises);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         adapter = new TrainingExerciseAdapter(new TrainingExerciseAdapter.OnItemClickListener() {
             @Override
             public void onCardClick(int position) {
-                // Hier Backend-Logik für Detailansicht implementieren
                 Toast.makeText(getContext(), "Karte geklickt: " + position, Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onDeleteClick(int position) {
-                // Hier Backend-Logik zum Löschen implementieren
-                Toast.makeText(getContext(), "Löschen angeklickt: " + position, Toast.LENGTH_SHORT).show();
+                showRemoveConfirmationDialog(position);
             }
         });
         recyclerView.setAdapter(adapter);
+
         loadExercises();
-        // Plus-Button (zum Hinzufügen) vorbereiten
+
         ImageView fab = getActivity().findViewById(R.id.addNewTrainingExercise);
-        fab.setOnClickListener(v -> {
-            // Hier Backend-Logik für das Hinzufügen implementieren
-            showAddExerciseDialog();
+        fab.setOnClickListener(v -> showAddExerciseDialog());
+    }
+
+    /**
+     * Entfernt eine Übung anhand der übergebenen Position.
+     *
+     * @param position Position in der Liste der Übungszuweisungen.
+     */
+    private void removeTrainingExercise(int position) {
+        if (position >= 0 && position < assignmentIds.size()) {
+            int assignmentId = assignmentIds.get(position);
+            assignmentViewModel.deleteTrainingdayExerciseAssignment(assignmentId, () ->
+                    requireActivity().runOnUiThread(this::loadExercises)
+            );
+        }
+    }
+
+    /**
+     * Zeigt einen Bestätigungsdialog an, um das Entfernen einer Übung zu bestätigen.
+     *
+     * @param position Position der Übung, die entfernt werden soll.
+     */
+    private void showRemoveConfirmationDialog(int position) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Löschen bestätigen")
+                .setMessage("Möchten Sie diese Übung wirklich entfernen?")
+                .setPositiveButton("Ja", (dialog, which) -> removeTrainingExercise(position))
+                .setNegativeButton("Nein", (dialog, which) -> dialog.dismiss())
+                .setCancelable(false)
+                .show();
+    }
+
+    /**
+     * Lädt die Übungen für den aktuellen Trainingstag und aktualisiert die Ansicht.
+     */
+    private void loadExercises() {
+        assignmentViewModel.getExerciseIdsForTrainingday(trainingdayId, exerciseIds -> {
+            assignmentIds.clear();
+            assignmentIds.addAll(exerciseIds);
+            exerciseViewModel.loadExercisesByIds(exerciseIds, exercises -> {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> adapter.setExercises(exercises));
+                }
+            });
         });
     }
 
-    /** Lädt Übungen für den Trainingstag. */
-    private void loadExercises() {
-        assignmentViewModel.getExerciseIdsForTrainingday(trainingdayId, exerciseIds ->
-                exerciseViewModel.loadExercisesByIds(exerciseIds, exercises ->
-                        getActivity().runOnUiThread(() -> adapter.setExercises(exercises))));
-    }
-
-    /** Zeigt einen Dialog zum Hinzufügen einer neuen Übung an. */
+    /**
+     * Zeigt einen Dialog zum Hinzufügen einer neuen Übung an.
+     */
     private void showAddExerciseDialog() {
         new AlertDialog.Builder(getContext())
                 .setTitle("Neue Übung hinzufügen")
                 .setMessage("Hier Dialog implementieren")
                 .setPositiveButton("OK", (dialog, which) -> {
-                    // Backend-Logik hier einfügen
+                    // Hier Backend-Logik einfügen
                 })
                 .setNegativeButton("Abbrechen", (dialog, which) -> dialog.dismiss())
                 .show();

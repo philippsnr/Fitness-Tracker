@@ -35,4 +35,10 @@ public class TrainingdayExerciseAssignmentViewModel extends AndroidViewModel {
             callback.accept(exerciseIds);
         });
     }
+    public void deleteTrainingdayExerciseAssignment(int assignmentId, Runnable callback) {
+        executorService.execute(() -> {
+            repository.deleteTrainingdayExerciseAssignment(assignmentId);
+            callback.run();
+        });
+    }
 }

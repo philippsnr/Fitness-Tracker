@@ -15,5 +15,5 @@ public class TrainingdayExerciseAssignment {
     public int getTrainingdayId() { return trainingdayId; }
     public int getExerciseId() { return exerciseId; }
     public void setTrainingdayId( int trainingdayId ) { this.trainingdayId = trainingdayId; }
-    public void setExcerciseId ( int exerciseId) { this.exerciseId = this.exerciseId; }
+    public void setExerciseId(int exerciseId) { this.exerciseId = this.exerciseId; }
 }
