@@ -14,9 +14,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.fitnesstracker.R;
+import com.example.fitnesstracker.model.Exercise;
 import com.example.fitnesstracker.viewmodel.ExerciseViewModel;
 import com.example.fitnesstracker.viewmodel.TrainingdayExerciseAssignmentViewModel;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TrainingExerciseFragment extends Fragment {
@@ -99,13 +101,20 @@ public class TrainingExerciseFragment extends Fragment {
      */
     private void showExerciseSets(int position) {
         if (position < 0 || position >= assignmentIds.size()) return;
+
         int assignmentId = assignmentIds.get(position);
-        TrainingSetsFragment fragment = TrainingSetsFragment.newInstance(assignmentId);
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
+
+        exerciseViewModel.loadExercisesByIds(Collections.singletonList(assignmentId), exercises -> {
+            if (!exercises.isEmpty()) {
+                String exerciseName = exercises.get(0).getName(); // Name der Übung holen
+                TrainingSetsFragment fragment = TrainingSetsFragment.newInstance(assignmentId, exerciseName);
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
     }
 
     /**

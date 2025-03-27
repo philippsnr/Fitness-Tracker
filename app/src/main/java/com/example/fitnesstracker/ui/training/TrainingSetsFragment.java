@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -21,8 +22,13 @@ import java.util.List;
  */
 public class TrainingSetsFragment extends Fragment {
     private static final String ARG_ASSIGNMENT_ID = "assignment_id";
+    private static final String ARG_EXERCISE_NAME = "exercise_name";
+
     private int assignmentId;
+    private String exerciseName;
+
     private RecyclerView recyclerView;
+    private TextView tvTrainingDayNameHeading;
     private TrainingSetsAdapter adapter;
     private ExerciseSetViewModel setViewModel;
 
@@ -30,12 +36,14 @@ public class TrainingSetsFragment extends Fragment {
      * Erzeugt eine neue Instanz des Fragments.
      *
      * @param assignmentId Die ID der TrainingdayExerciseAssignment.
+     * @param exerciseName Der Name der Übung.
      * @return Neue Instanz von TrainingSetsFragment.
      */
-    public static TrainingSetsFragment newInstance(int assignmentId) {
+    public static TrainingSetsFragment newInstance(int assignmentId, String exerciseName) {
         TrainingSetsFragment fragment = new TrainingSetsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_ASSIGNMENT_ID, assignmentId);
+        args.putString(ARG_EXERCISE_NAME, exerciseName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,6 +53,7 @@ public class TrainingSetsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             assignmentId = getArguments().getInt(ARG_ASSIGNMENT_ID);
+            exerciseName = getArguments().getString(ARG_EXERCISE_NAME);
         }
         setViewModel = new ViewModelProvider(this).get(ExerciseSetViewModel.class);
     }
@@ -58,10 +67,15 @@ public class TrainingSetsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        // TextView für die Überschrift finden
+        tvTrainingDayNameHeading = view.findViewById(R.id.tvTrainingDayNameHeading);
+        tvTrainingDayNameHeading.setText(exerciseName); // Übungsnamen als Titel setzen
+
         recyclerView = view.findViewById(R.id.recyclerViewTrainingExerciseSets);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new TrainingSetsAdapter(new ArrayList<>());
         recyclerView.setAdapter(adapter);
+
         loadSets();
     }
 

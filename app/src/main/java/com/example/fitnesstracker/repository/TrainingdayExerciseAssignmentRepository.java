@@ -53,7 +53,6 @@ public class TrainingdayExerciseAssignmentRepository {
         return assignmentIds;
     }
 
-
     public void deleteTrainingdayExerciseAssignment(int assignmentId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.delete("TrainingdayExerciseAssignment", "id = ?", new String[]{String.valueOf(assignmentId)});
