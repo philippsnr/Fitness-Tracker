@@ -31,6 +31,7 @@ public class TrainingdayExerciseAssignmentViewModel extends AndroidViewModel {
 
     public void getExerciseIdsForTrainingday(int trainingdayId, Consumer<List<Integer>> callback) {
         executorService.execute(() -> {
+            // Hole Exercise-IDs statt Assignment-IDs
             List<Integer> exerciseIds = repository.getExerciseIdsForTrainingday(trainingdayId);
             callback.accept(exerciseIds);
         });
@@ -39,6 +40,13 @@ public class TrainingdayExerciseAssignmentViewModel extends AndroidViewModel {
         executorService.execute(() -> {
             repository.deleteTrainingdayExerciseAssignment(assignmentId);
             callback.run();
+        });
+    }
+
+    public void addTrainingExerciseAssignment(int trainingdayId, int exerciseId, Consumer<Long> callback) {
+        executorService.execute(() -> {
+            long newId = repository.addTrainingExerciseAssignment(trainingdayId, exerciseId);
+            callback.accept(newId); // Korrekte Consumer-Methode
         });
     }
 }

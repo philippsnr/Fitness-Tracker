@@ -1,8 +1,11 @@
 package com.example.fitnesstracker.repository;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.fitnesstracker.database.DatabaseHelper;
 import com.example.fitnesstracker.model.TrainingdayExerciseAssignment;
@@ -38,19 +41,20 @@ public class TrainingdayExerciseAssignmentRepository {
     }
 
     public List<Integer> getExerciseIdsForTrainingday(int trainingdayId) {
-        List<Integer> assignmentIds = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT id FROM TrainingdayExerciseAssignment WHERE Trainingday_id = ?",
-                new String[]{String.valueOf(trainingdayId)});
+        List<Integer> ids = new ArrayList<>();
 
-        if (cursor.moveToFirst()) {
-            do {
-                assignmentIds.add(cursor.getInt(0));
-            } while (cursor.moveToNext());
+        Cursor cursor = db.rawQuery(
+                "SELECT Exercise_id FROM TrainingdayExerciseAssignment WHERE Trainingday_id = ?",
+                new String[]{String.valueOf(trainingdayId)}
+        );
+
+        while (cursor.moveToNext()) {
+            ids.add(cursor.getInt(cursor.getColumnIndexOrThrow("Exercise_id"))); // Exercise-ID statt Assignment-ID
         }
         cursor.close();
         db.close();
-        return assignmentIds;
+        return ids;
     }
 
     public void deleteTrainingdayExerciseAssignment(int assignmentId) {
@@ -59,4 +63,36 @@ public class TrainingdayExerciseAssignmentRepository {
         db.close();
     }
 
+    public long addTrainingExerciseAssignment(int trainingdayId, int exerciseId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            // Prüfung ob Exercise existiert
+            if (!exerciseExists(db, exerciseId)) {
+                throw new RuntimeException("Exercise existiert nicht");
+            }
+
+            ContentValues values = new ContentValues();
+            values.put("Trainingday_id", trainingdayId);
+            values.put("Exercise_id", exerciseId);
+
+            long newId = db.insertOrThrow("TrainingdayExerciseAssignment", null, values);
+            db.setTransactionSuccessful();
+            return newId;
+        } catch (SQLiteConstraintException e) {
+            Log.e("DB", "Constraint Error: " + e.getMessage());
+            return -1;
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+    }
+
+    private boolean exerciseExists(SQLiteDatabase db, int exerciseId) {
+        Cursor c = db.rawQuery("SELECT 1 FROM Exercise WHERE id = ?",
+                new String[]{String.valueOf(exerciseId)});
+        boolean exists = c.moveToFirst();
+        c.close();
+        return exists;
+    }
 }

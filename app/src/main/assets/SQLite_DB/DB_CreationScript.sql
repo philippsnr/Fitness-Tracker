@@ -38,7 +38,8 @@ CREATE TABLE IF NOT EXISTS TrainingdayExerciseAssignment (
     Trainingday_id INTEGER NOT NULL,
     Exercise_id INTEGER NOT NULL,
     FOREIGN KEY (Trainingday_id) REFERENCES Trainingday (id) ON DELETE CASCADE,
-    FOREIGN KEY (Exercise_id) REFERENCES Exercise (id) ON DELETE CASCADE
+    FOREIGN KEY (Exercise_id) REFERENCES Exercise (id) ON DELETE CASCADE,
+    UNIQUE(Trainingday_id, Exercise_id) ON CONFLICT REPLACE
 );
 
 CREATE TABLE IF NOT EXISTS ExerciseSet (
@@ -55,7 +56,7 @@ CREATE TABLE IF NOT EXISTS User (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     birth_date TEXT, -- "DD-MM-YYYY"
-    goal TEXT NOT NULL CHECK (goal IN ("Abnehmen", "Gewicht halten", "Zunehmen")),
+    goal TEXT NOT NULL CHECK (goal IN ('Abnehmen', 'Gewicht halten', 'Zunehmen')),
     trainingdaysPerWeek INTEGER NOT NULL CHECK (trainingdaysPerWeek BETWEEN 0 AND 7)
 );
 
