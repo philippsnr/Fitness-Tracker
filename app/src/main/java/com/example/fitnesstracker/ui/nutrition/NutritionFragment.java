@@ -14,8 +14,10 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.example.fitnesstracker.R;
+import com.example.fitnesstracker.model.OpenFoodFactsResponseModel;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -105,8 +107,20 @@ public class NutritionFragment extends Fragment {
     private void showNutritionNamesFromOFFApi(EditText nutritionNameInput) {
         String nutritionName = nutritionNameInput.getText().toString();
         if (!nutritionName.isEmpty()) {
-            CallOpenFoodFactsApi apiCall = new CallOpenFoodFactsApi();
-            apiCall.callOpenFoodFactsApiForNutritionNames(nutritionName);
+            CallOpenFoodFactsApi.callOpenFoodFactsApiForNutritionNames(nutritionName, new CallOpenFoodFactsApi.Callback() {
+                @Override
+                public void onSuccess(List<OpenFoodFactsResponseModel.Product> result) {
+                    showApiCallbackOnUi();
+                }
+                @Override
+                public void onFailure(Exception e) {
+                    Log.e("Nutrition", "Fehler beim laden der Daten", e);
+                }
+            });
         }
+    }
+
+    private void showApiCallbackOnUi() {
+
     }
 }
