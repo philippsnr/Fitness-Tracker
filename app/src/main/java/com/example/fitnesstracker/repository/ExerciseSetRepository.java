@@ -37,12 +37,11 @@ public class ExerciseSetRepository {
                 new String[]{String.valueOf(exerciseId)});
         if (cursor.moveToFirst()) {
             do {
-                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
                 int setNumber = cursor.getInt(cursor.getColumnIndexOrThrow("set_number"));
                 int repetition = cursor.getInt(cursor.getColumnIndexOrThrow("repetitions"));
-                int weight = cursor.getInt(cursor.getColumnIndexOrThrow("weight"));
+                double weight = cursor.getInt(cursor.getColumnIndexOrThrow("weight"));
                 String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
-                lastSets.add(new ExerciseSet(id, exerciseId, setNumber, repetition, weight, date));
+                lastSets.add(new ExerciseSet(exerciseId, setNumber, repetition, weight, date));
             } while (cursor.moveToNext());
         }
         cursor.close();

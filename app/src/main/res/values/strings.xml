@@ -40,4 +40,5 @@
     <string name="t_setnumber_placeholder">Set 1: </string>
     <string name="t_weight_placeholder">100 kg</string>
     <string name="t_reps_placeholder">10 reps</string>
+    <string name="t_add_set">Satz hinzufügen</string>
 </resources>

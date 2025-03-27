@@ -34,7 +34,7 @@ public class ExerciseSetRepositoryTest {
     @Test
     public void testSaveAndGetLastSets() {
         Context context = ApplicationProvider.getApplicationContext();
-        ExerciseSet set = new ExerciseSet(0, 1, 1, 12, 50, "2023-01-01");
+        ExerciseSet set = new ExerciseSet(1, 1, 12, 50.50, "2023-01-01");
         repository = new ExerciseSetRepository(context);
 
         repository.saveNewSet(set);

@@ -1,12 +1,20 @@
 package com.example.fitnesstracker.ui.training;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,6 +22,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.model.ExerciseSet;
 import com.example.fitnesstracker.viewmodel.ExerciseSetViewModel;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +43,8 @@ public class TrainingSetsFragment extends Fragment {
     private TextView tvTrainingDayNameHeading;
     private TrainingSetsAdapter adapter;
     private ExerciseSetViewModel setViewModel;
+    private CardView cardAddSet;
+    private List<ExerciseSet> allSets = new ArrayList<>();
 
     /**
      * Erzeugt eine neue Instanz des Fragments.
@@ -75,17 +89,139 @@ public class TrainingSetsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new TrainingSetsAdapter(new ArrayList<>());
         recyclerView.setAdapter(adapter);
-
+        cardAddSet = view.findViewById(R.id.cardAddSet);
+        setupClickListeners();
         loadSets();
+    }
+
+    /**
+     * Setzt die Click-Listener für interaktive Elemente
+     */
+    private void setupClickListeners() {
+        cardAddSet.setOnClickListener(v -> handleAddSetClick());
+    }
+
+    private void handleAddSetClick() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Neuen Satz hinzufügen");
+
+        View dialogView = LayoutInflater.from(requireContext())
+                .inflate(R.layout.dialog_add_set, null);
+
+        TextInputEditText etReps = dialogView.findViewById(R.id.etReps);
+        TextInputEditText etWeight = dialogView.findViewById(R.id.etWeight);
+        TextInputLayout tilReps = dialogView.findViewById(R.id.tilReps);
+        TextInputLayout tilWeight = dialogView.findViewById(R.id.tilWeight);
+
+        builder.setView(dialogView)
+                .setPositiveButton("Hinzufügen", (dialog, which) -> {
+                    String repsStr = etReps.getText().toString().trim();
+                    String weightStr = etWeight.getText().toString().trim();
+
+                    if (validateInput(tilReps, tilWeight, repsStr, weightStr)) {
+                        try {
+                            ExerciseSet newSet = createExerciseSet(repsStr, weightStr);
+                            saveSetToViewModel(newSet);
+                        } catch (NumberFormatException e) {
+                            showNumberFormatError();
+                        }
+                    }
+                })
+                .setNegativeButton("Abbrechen", null);
+
+        showDialogWithInputValidation(builder, etReps, etWeight);
+    }
+
+    private boolean validateInput(TextInputLayout tilReps,
+                                  TextInputLayout tilWeight,
+                                  String repsStr,
+                                  String weightStr) {
+        boolean isValid = true;
+
+        // Reset errors
+        tilReps.setError(null);
+        tilWeight.setError(null);
+
+        // Validate reps
+        if (repsStr.isEmpty()) {
+            tilReps.setError("Bitte Anzahl eingeben");
+            isValid = false;
+        }
+
+        // Validate weight
+        if (weightStr.isEmpty()) {
+            tilWeight.setError("Bitte Gewicht eingeben");
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    private ExerciseSet createExerciseSet(String repsStr, String weightStr) {
+        LocalDate currentDate = LocalDate.now();
+        String today = currentDate.toString();
+
+        // Find max set number for today
+        int maxSetNumber = 0;
+        for (ExerciseSet set : allSets) {
+            if (today.equals(set.getDate()) && set.getSetNumber() > maxSetNumber) {
+                maxSetNumber = set.getSetNumber();
+            }
+        }
+
+        return new ExerciseSet(
+                assignmentId,
+                maxSetNumber + 1, // Auto-incremented set number
+                Integer.parseInt(repsStr),
+                Double.parseDouble(weightStr),
+                today
+        );
+    }
+    private void saveSetToViewModel(ExerciseSet newSet) {
+        setViewModel.saveNewSet(newSet);
+        loadSets(); // Annahme: Lädt die aktualisierte Liste
+    }
+
+    private void showNumberFormatError() {
+        Toast.makeText(requireContext(),
+                "Ungültige Zahlenangaben",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    private void showDialogWithInputValidation(AlertDialog.Builder builder,
+                                               TextInputEditText etReps,
+                                               TextInputEditText etWeight) {
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                boolean repsValid = !etReps.getText().toString().trim().isEmpty();
+                boolean weightValid = !etWeight.getText().toString().trim().isEmpty();
+                positiveButton.setEnabled(repsValid && weightValid);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        };
+
+        etReps.addTextChangedListener(textWatcher);
+        etWeight.addTextChangedListener(textWatcher);
     }
 
     /**
      * Lädt die letzten Sets für die gegebene Assignment-ID und aktualisiert den Adapter.
      */
     private void loadSets() {
-        setViewModel.loadLastSets(assignmentId, sets ->
-                requireActivity().runOnUiThread(() -> adapter.setData(groupByDate(sets)))
-        );
+        setViewModel.loadLastSets(assignmentId, sets -> {
+            allSets = sets; // Gespeicherte Sets aktualisieren
+            requireActivity().runOnUiThread(() -> adapter.setData(groupByDate(sets)));
+        });
     }
 
     /**
