@@ -4,23 +4,23 @@ import java.time.LocalDate;
 
 public class ExerciseSet {
     private final int id;
-    private final int TrainingdayExerciseAssignment_id;
+    private final int exerciseId;
     private int setNumber;
     private int repetition;
     private int weight;
     private final LocalDate date;
 
-    public ExerciseSet(int id, int trainingdayExerciseAssignment_id, int setNumber, int repetition, int weight, LocalDate date) {
+    public ExerciseSet(int id, int exerciseId, int setNumber, int repetition, int weight, LocalDate date) {
         this.id = id;
-        this.TrainingdayExerciseAssignment_id = trainingdayExerciseAssignment_id;
+        this.exerciseId = exerciseId;
         this.setNumber = setNumber;
         this.repetition = repetition;
         this.weight = weight;
         this.date = date;
     }
-    public ExerciseSet(int id, int trainingdayExerciseAssignment_id, int setNumber, int repetition, int weight, String date) {
+    public ExerciseSet(int id, int exerciseId, int setNumber, int repetition, int weight, String date) {
         this.id = id;
-        this.TrainingdayExerciseAssignment_id = trainingdayExerciseAssignment_id;
+        this.exerciseId = exerciseId;
         this.setNumber = setNumber;
         this.repetition = repetition;
         this.weight = weight;
@@ -28,7 +28,7 @@ public class ExerciseSet {
     }
     //Getter
     public int getId() { return id; }
-    public int getTrainingdayExerciseAssignmentId() { return TrainingdayExerciseAssignment_id; }
+    public int getExerciseId() { return exerciseId; }
     public int getSetNumber() { return setNumber; }
     public int getRepetition() { return repetition; }
     public int getWeight() { return weight; }

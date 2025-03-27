@@ -1,30 +1,40 @@
 package com.example.fitnesstracker.repository;
 
 import com.example.fitnesstracker.model.ExerciseSet;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
 import com.example.fitnesstracker.database.DatabaseHelper;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ExerciseSetRepository
-{
+public class ExerciseSetRepository {
     private final DatabaseHelper dbHelper;
 
-    public ExerciseSetRepository(Context context) { this.dbHelper = new DatabaseHelper(context); }
+    /**
+     * Konstruktor für das ExerciseSetRepository.
+     *
+     * @param context Der Anwendungs-Kontext.
+     */
+    public ExerciseSetRepository(Context context) {
+        this.dbHelper = new DatabaseHelper(context);
+    }
 
-    public List<ExerciseSet> getLastSets(int trainingdayExerciseAssignmentId)
-    {
-        List<ExerciseSet> lastSets = new ArrayList<ExerciseSet>();
+    /**
+     * Holt die letzten Sätze für eine gegebene Übungs-ID.
+     *
+     * @param exerciseId Die ID der Übung.
+     * @return Eine Liste von ExerciseSet-Objekten.
+     */
+    public List<ExerciseSet> getLastSets(int exerciseId) {
+        List<ExerciseSet> lastSets = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM ExerciseSet WHERE trainingdayExerciseAssignment_id = ? ORDER BY date DESC LIMIT 3", new String[]{String.valueOf(trainingdayExerciseAssignmentId)});
+        Cursor cursor = db.rawQuery("SELECT * FROM ExerciseSet WHERE exercise_id = ? ORDER BY date DESC LIMIT 5",
+                new String[]{String.valueOf(exerciseId)});
         if (cursor.moveToFirst()) {
             do {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
@@ -32,7 +42,7 @@ public class ExerciseSetRepository
                 int repetition = cursor.getInt(cursor.getColumnIndexOrThrow("repetitions"));
                 int weight = cursor.getInt(cursor.getColumnIndexOrThrow("weight"));
                 String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
-                lastSets.add(new ExerciseSet(id, trainingdayExerciseAssignmentId, setNumber, repetition, weight, date));
+                lastSets.add(new ExerciseSet(id, exerciseId, setNumber, repetition, weight, date));
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -40,11 +50,17 @@ public class ExerciseSetRepository
         Log.d("DB_QUERY", "Total sets loaded: " + lastSets.size());
         return lastSets;
     }
-    public void saveNewSet(ExerciseSet newSet)
-    {
+
+    /**
+     * Speichert einen neuen Satz für eine Übung.
+     *
+     * @param newSet Das zu speichernde ExerciseSet-Objekt.
+     */
+    public void saveNewSet(ExerciseSet newSet) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("TrainingdayExerciseAssignment_id", newSet.getTrainingdayExerciseAssignmentId());
+        // Hier wird nun direkt die exercise_id verwendet
+        values.put("exercise_id", newSet.getExerciseId());
         values.put("set_number", newSet.getSetNumber());
         values.put("repetitions", newSet.getRepetition());
         values.put("weight", newSet.getWeight());
@@ -53,10 +69,15 @@ public class ExerciseSetRepository
         db.close();
     }
 
+    /**
+     * Ermittelt die Anzahl der Sätze pro Kalenderwoche.
+     *
+     * @return Eine Map, die für jede Woche die Anzahl der Sätze enthält.
+     */
     public Map<Integer, Integer> getSetsPerWeek() {
         Map<Integer, Integer> setsPerWeek = new HashMap<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String query = "SELECT CAST(strftime('%W', substr(date,7,4) || '-' || substr(date,4,2) || '-' || substr(date,1,2)) AS INTEGER) AS week, COUNT(*) AS count " +
+        String query = "SELECT CAST(strftime('%W', date) AS INTEGER) AS week, COUNT(*) AS count " +
                 "FROM ExerciseSet GROUP BY week ORDER BY week";
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
