@@ -92,11 +92,15 @@ public class TrainingdayExerciseAssignmentRepository {
 
         try {
             validateExerciseExists(db, exerciseId);
+            validateTrainingdayExists(db, trainingdayId); // New validation
             long newId = insertAssignment(db, trainingdayId, exerciseId);
             db.setTransactionSuccessful();
             return newId;
         } catch (SQLiteConstraintException e) {
             Log.e("DB", "Constraint Error: " + e.getMessage());
+            return -1;
+        } catch (RuntimeException e) {
+            Log.e("DB", "Validation Error: " + e.getMessage());
             return -1;
         } finally {
             db.endTransaction();
@@ -159,5 +163,43 @@ public class TrainingdayExerciseAssignmentRepository {
         boolean exists = c.moveToFirst();
         c.close();
         return exists;
+    }
+
+
+    /**
+     * Überprüft, ob ein Trainingstag mit der angegebenen ID existiert.
+     *
+     * @param db Die Datenbankverbindung
+     * @param trainingdayId Die ID des zu überprüfenden Trainingstags
+     * @throws RuntimeException Wenn der Trainingstag nicht existiert
+     */
+    private void validateTrainingdayExists(SQLiteDatabase db, int trainingdayId) {
+        if (!trainingdayExists(db, trainingdayId)) {
+            throw new RuntimeException("Trainingday does not exist");
+        }
+    }
+
+    /**
+     * Prüft die Existenz eines Trainingstags in der Datenbank.
+     *
+     * @param db Die Datenbankverbindung
+     * @param trainingdayId Die ID des zu prüfenden Trainingstags
+     * @return true wenn der Trainingstag existiert, false wenn nicht
+     */
+    private boolean trainingdayExists(SQLiteDatabase db, int trainingdayId) {
+        Cursor c = db.rawQuery("SELECT 1 FROM Trainingday WHERE id = ?",
+                new String[]{String.valueOf(trainingdayId)});
+        boolean exists = c.moveToFirst();
+        c.close();
+        return exists;
+    }
+
+    /**
+     * Gibt die DatabaseHelper-Instanz zurück, die für den Datenbankzugriff verwendet wird.
+     *
+     * @return Die DatabaseHelper-Instanz
+     */
+    protected DatabaseHelper getDbHelper() {
+        return dbHelper;
     }
 }
