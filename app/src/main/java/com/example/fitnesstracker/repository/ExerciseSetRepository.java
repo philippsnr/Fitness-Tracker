@@ -33,7 +33,7 @@ public class ExerciseSetRepository {
     public List<ExerciseSet> getLastSets(int exerciseId) {
         List<ExerciseSet> lastSets = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM ExerciseSet WHERE exercise_id = ? ORDER BY date DESC LIMIT 5",
+        Cursor cursor = db.rawQuery("SELECT * FROM ExerciseSet WHERE exercise_id = ? ORDER BY date DESC",
                 new String[]{String.valueOf(exerciseId)});
         if (cursor.moveToFirst()) {
             do {
