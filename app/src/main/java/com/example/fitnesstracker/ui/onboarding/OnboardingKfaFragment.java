@@ -22,12 +22,21 @@ import com.example.fitnesstracker.R;
 
 import java.util.Objects;
 
+/**
+ * Fragment zur Erfassung des Körperfettanteils (KFA) im Onboarding-Prozess.
+ */
 public class OnboardingKfaFragment extends Fragment {
     private EditText editTextKfa;
     private Button buttonShowPopup;
     private Button buttonNext;
     private OnboardingDataListener dataListener;
 
+    /**
+     * Bindet das Fragment an die Activity und überprüft, ob sie das Interface {@link OnboardingDataListener} implementiert.
+     *
+     * @param context Der Kontext der aufrufenden Activity.
+     * @throws RuntimeException Falls die Activity das Interface nicht implementiert.
+     */
     @Override
     public void onAttach(@NonNull android.content.Context context) {
         super.onAttach(context);
@@ -38,6 +47,14 @@ public class OnboardingKfaFragment extends Fragment {
         }
     }
 
+    /**
+     * Erstellt die View für das Fragment und initialisiert die UI-Elemente.
+     *
+     * @param inflater  LayoutInflater zum Erstellen der View.
+     * @param container Eltern-Container der View.
+     * @param savedInstanceState Falls vorhanden, gespeicherter Zustand des Fragments.
+     * @return Die erstellte View.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_onboarding_kfa, container, false);
@@ -49,16 +66,27 @@ public class OnboardingKfaFragment extends Fragment {
         return root;
     }
 
+    /**
+     * Initialisiert die UI-Elemente des Fragments.
+     *
+     * @param root Die Haupt-View des Fragments.
+     */
     private void initializeViews(View root) {
         editTextKfa = root.findViewById(R.id.editTextKfa);
         buttonShowPopup = root.findViewById(R.id.buttonShowPopup);
         buttonNext = root.findViewById(R.id.buttonNext);
     }
 
+    /**
+     * Richtet den OnClickListener für den Hilfe-Button ein.
+     */
     private void setupPopupButton() {
         buttonShowPopup.setOnClickListener(v -> showKfaHelpPopup());
     }
 
+    /**
+     * Zeigt ein Popup-Fenster mit einer Erklärung zum KFA.
+     */
     private void showKfaHelpPopup() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
@@ -82,10 +110,16 @@ public class OnboardingKfaFragment extends Fragment {
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.BLACK));
     }
 
+    /**
+     * Richtet den OnClickListener für den "Weiter"-Button ein.
+     */
     private void setupNextButton() {
         buttonNext.setOnClickListener(v -> handleNextButtonClick());
     }
 
+    /**
+     * Verarbeitet den Klick auf den "Weiter"-Button, überprüft die Eingabe und sendet die Daten.
+     */
     private void handleNextButtonClick() {
         String kfaStr = editTextKfa.getText().toString().trim();
         if (TextUtils.isEmpty(kfaStr)) {
@@ -100,6 +134,11 @@ public class OnboardingKfaFragment extends Fragment {
         }
     }
 
+    /**
+     * Zeigt eine Toast-Nachricht an.
+     *
+     * @param message Die anzuzeigende Nachricht.
+     */
     private void showToast(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
