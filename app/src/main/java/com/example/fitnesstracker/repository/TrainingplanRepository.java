@@ -15,18 +15,30 @@ import java.util.List;
 public class TrainingplanRepository {
     private final DatabaseHelper dbHelper;
 
-    public TrainingplanRepository(Context context) { this.dbHelper = new DatabaseHelper(context); }
-    public List<Trainingplan> getAllTrainingplans()
-    {
+    /**
+     * Initializes a new repository instance for managing training plans.
+     *
+     * @param context The application context for database access
+     */
+    public TrainingplanRepository(Context context) {
+        this.dbHelper = new DatabaseHelper(context);
+    }
 
-        List<Trainingplan> trainingplans = new ArrayList<Trainingplan>();
-        try (SQLiteDatabase db = dbHelper.getReadableDatabase(); Cursor cursor = db.rawQuery("SELECT * FROM Trainingplan", null)) {
+    /**
+     * Retrieves all training plans from the database.
+     *
+     * @return List of all stored Trainingplan objects
+     */
+    public List<Trainingplan> getAllTrainingplans() {
+        List<Trainingplan> trainingplans = new ArrayList<>();
+        try (SQLiteDatabase db = dbHelper.getReadableDatabase();
+             Cursor cursor = db.rawQuery("SELECT * FROM Trainingplan", null)) {
+
             if (cursor.moveToFirst()) {
                 do {
                     int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
                     String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
-                    int isActiveInt = cursor.getInt(cursor.getColumnIndexOrThrow("isActive"));
-                    boolean isActive = (isActiveInt == 1);
+                    boolean isActive = cursor.getInt(cursor.getColumnIndexOrThrow("isActive")) == 1;
                     trainingplans.add(new Trainingplan(id, name, isActive));
                 } while (cursor.moveToNext());
             }
@@ -36,14 +48,19 @@ public class TrainingplanRepository {
         return trainingplans;
     }
 
-    public Trainingplan getActiveTrainingplan()
-    {
-        try (SQLiteDatabase db = dbHelper.getReadableDatabase(); Cursor cursor = db.rawQuery("SELECT * FROM Trainingplan WHERE isActive = 1", null)) {
+    /**
+     * Retrieves the currently active training plan.
+     *
+     * @return Active Trainingplan object or null if none exists
+     */
+    public Trainingplan getActiveTrainingplan() {
+        try (SQLiteDatabase db = dbHelper.getReadableDatabase();
+             Cursor cursor = db.rawQuery("SELECT * FROM Trainingplan WHERE isActive = 1", null)) {
+
             if (cursor.moveToFirst()) {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
-                int isActiveInt = cursor.getInt(cursor.getColumnIndexOrThrow("isActive"));
-                boolean isActive = (isActiveInt == 1);
+                boolean isActive = cursor.getInt(cursor.getColumnIndexOrThrow("isActive")) == 1;
                 return new Trainingplan(id, name, isActive);
             }
         } catch (Exception e) {
@@ -52,10 +69,13 @@ public class TrainingplanRepository {
         return null;
     }
 
-    public void addTrainingplan(Trainingplan trainingplan)
-    {
-        try (SQLiteDatabase db = dbHelper.getWritableDatabase())
-        {
+    /**
+     * Adds a new training plan to the database.
+     *
+     * @param trainingplan The Trainingplan object to add (ID will be auto-generated)
+     */
+    public void addTrainingplan(Trainingplan trainingplan) {
+        try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
             ContentValues values = new ContentValues();
             values.put("name", trainingplan.getName());
             values.put("isActive", trainingplan.getIsActiveAsInt());
@@ -65,36 +85,44 @@ public class TrainingplanRepository {
             Log.e("TrainingplanRepository", "Error adding training plan", e);
         }
     }
-    public void updateTrainingplanName(Trainingplan trainingplan)
-    {
-        try (SQLiteDatabase db = dbHelper.getWritableDatabase())
-        {
+
+    /**
+     * Updates the name of an existing training plan.
+     *
+     * @param trainingplan The Trainingplan object with updated name and original ID
+     */
+    public void updateTrainingplanName(Trainingplan trainingplan) {
+        try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
             ContentValues values = new ContentValues();
             values.put("name", trainingplan.getName());
-            String whereClause = "id = ?";
-            String[] whereArgs = {String.valueOf(trainingplan.getId())};
-            db.update("Trainingplan", values, whereClause, whereArgs);
+            db.update("Trainingplan", values, "id = ?", new String[]{String.valueOf(trainingplan.getId())});
         } catch (Exception e) {
             Log.e("TrainingplanRepository", "Error updating training plan", e);
         }
     }
-    public void deleteTrainingplan(Trainingplan trainingplan)
-    {
-        try (SQLiteDatabase db = dbHelper.getWritableDatabase())
-        {
-            String whereClause = "id = ?";
-            String[] whereArgs = {String.valueOf(trainingplan.getId())};
-            db.delete("Trainingplan", whereClause, whereArgs);
+
+    /**
+     * Deletes a specific training plan from the database.
+     *
+     * @param trainingplan The Trainingplan object to delete
+     */
+    public void deleteTrainingplan(Trainingplan trainingplan) {
+        try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
+            db.delete("Trainingplan", "id = ?", new String[]{String.valueOf(trainingplan.getId())});
         } catch (Exception e) {
             Log.e("TrainingplanRepository", "Error deleting training plan", e);
         }
     }
-    public void setNewActiveTrainingPlan(int newActiveTrainingPlanId)
-    {
+
+    /**
+     * Sets a new active training plan and deactivates all others.
+     *
+     * @param newActiveTrainingPlanId The ID of the training plan to activate
+     */
+    public void setNewActiveTrainingPlan(int newActiveTrainingPlanId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
-        try
-        {
+        try {
             db.execSQL("UPDATE Trainingplan SET isActive = 0");
             ContentValues values = new ContentValues();
             values.put("isActive", 1);

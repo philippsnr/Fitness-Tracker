@@ -91,6 +91,13 @@ public class ExerciseSetRepository {
         return setsPerWeek;
     }
 
+    /**
+     * Gibt die Nummer des letzten Satzes zurück
+     *
+     * @param date Datum, an dem die lastSetNumber ermittelt werden soll
+     * @param exerciseId Übung bei der die lastSetNumber ermittelt werden soll
+     * @return setNumber. Die Nummer des letzten Satzes, um den nächsten Satz dann korrekt zu erstellen
+     */
     public int getLastSetNumber(String date, int exerciseId) {
         int setNumber = 0;
         SQLiteDatabase db = dbHelper.getReadableDatabase();

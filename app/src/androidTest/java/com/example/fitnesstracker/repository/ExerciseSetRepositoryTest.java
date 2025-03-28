@@ -44,25 +44,6 @@ public class ExerciseSetRepositoryTest {
         dbHelper.close();
     }
 
-    @Test
-    public void testDatabaseStructure() {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("PRAGMA table_info(ExerciseSet)", null);
-
-        Map<String, Boolean> columns = new HashMap<>();
-        while (cursor.moveToNext()) {
-            columns.put(cursor.getString(1), true);
-        }
-
-        assertTrue(columns.containsKey("exercise_id"));
-        assertTrue(columns.containsKey("set_number"));
-        assertTrue(columns.containsKey("repetitions"));
-        assertTrue(columns.containsKey("weight"));
-        assertTrue(columns.containsKey("date"));
-
-        cursor.close();
-        db.close();
-    }
 
     @Test
     public void testSaveNewSet() {

@@ -115,4 +115,18 @@ public class TrainingdayExerciseAssignmentRepositoryTest {
         assertNull(deletedAssignment);
     }
 
+    @Test
+    public void testAddTrainingExerciseAssignment() {
+        // Test mit existierender Übung
+        long result = repository.addTrainingExerciseAssignment(TEST_TRAININGDAY_ID, TEST_EXERCISE_ID);
+        assertTrue("Insert sollte erfolgreich sein", result > 0);
+
+        // Test mit nicht existierender Übung
+        long invalidResult = repository.addTrainingExerciseAssignment(TEST_TRAININGDAY_ID, NON_EXISTENT_ID);
+        assertEquals("Insert sollte fehlschlagen", -1, invalidResult);
+
+        // Überprüfung der Datenkonsistenz
+        List<Integer> exercises = repository.getExerciseIdsForTrainingday(TEST_TRAININGDAY_ID);
+        assertTrue("Neue Übung sollte hinzugefügt sein", exercises.contains(TEST_EXERCISE_ID));
+    }
 }
