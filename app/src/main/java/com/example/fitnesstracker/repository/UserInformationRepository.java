@@ -12,15 +12,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Repository-Klasse zur Verwaltung von Benutzerinformationen in einer SQLite-Datenbank.
+ */
 public class UserInformationRepository {
     private final DatabaseHelper dbHelper;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
+    /**
+     * Konstruktor, der eine Instanz der {@link UserInformationRepository} erstellt.
+     *
+     * @param context Der Kontext der Anwendung, der für den Zugriff auf die Datenbank erforderlich ist.
+     */
     public UserInformationRepository(Context context) {
         this.dbHelper = new DatabaseHelper(context);
     }
 
-    // Alle gespeicherten User-Informationen abrufen
+    /**
+     * Ruft alle gespeicherten Benutzerinformationen aus der Datenbank ab.
+     *
+     * @return Eine Liste von {@link UserInformation}, die alle Benutzerinformationen enthält.
+     */
     public List<UserInformation> getAllUserInformation() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM UserInformation ORDER BY date ASC", null);
@@ -32,6 +44,12 @@ public class UserInformationRepository {
         return userInfoList;
     }
 
+    /**
+     * Konvertiert die Ergebnisse des Cursors in eine Liste von {@link UserInformation}.
+     *
+     * @param cursor Der Cursor, der die Datenbankergebnisse enthält.
+     * @return Eine Liste von {@link UserInformation}.
+     */
     private List<UserInformation> getUserInfoList(Cursor cursor) {
         List<UserInformation> userInfoList = new ArrayList<>();
         if (cursor.moveToFirst()) {
@@ -50,7 +68,11 @@ public class UserInformationRepository {
         return userInfoList;
     }
 
-    // **Letzte gespeicherte User-Information abrufen**
+    /**
+     * Ruft die zuletzt gespeicherten Benutzerinformationen aus der Datenbank ab.
+     *
+     * @return Das neueste {@link UserInformation} oder {@code null}, wenn keine Daten vorhanden sind.
+     */
     public UserInformation getLatestUserInformation() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM UserInformation ORDER BY date DESC, id DESC LIMIT 1", null);
@@ -72,7 +94,11 @@ public class UserInformationRepository {
         return null; // Falls keine Daten vorhanden sind
     }
 
-    // **Neue User-Information speichern oder aktualisieren**
+    /**
+     * Speichert oder aktualisiert die Benutzerinformationen in der Datenbank.
+     *
+     * @param userInfo Die Benutzerinformationen, die gespeichert oder aktualisiert werden sollen.
+     */
     public void writeUserInformation(UserInformation userInfo) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
