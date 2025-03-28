@@ -76,8 +76,8 @@ public class ExerciseSetRepository {
     public Map<Integer, Integer> getSetsPerWeek() {
         Map<Integer, Integer> setsPerWeek = new HashMap<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String query = "SELECT CAST(strftime('%W', date) AS INTEGER) AS week, COUNT(*) AS count " +
-                "FROM ExerciseSet GROUP BY week ORDER BY week";
+        String query = "SELECT (strftime('%W', date)) AS week, COUNT(*) AS count "
+                + "FROM ExerciseSet GROUP BY week ORDER BY week";
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {

@@ -15,19 +15,19 @@ public class TrainingdayRepository {
     private final DatabaseHelper dbHelper;
 
     /**
-     * Initializes a new repository instance with the application context.
+     * Initialisiert eine neue Repository-Instanz mit dem Anwendungskontext.
      *
-     * @param context The application context for database access
+     * @param context Der Anwendungskontext für den Datenbankzugriff
      */
     public TrainingdayRepository(Context context) {
         dbHelper = new DatabaseHelper(context);
     }
 
     /**
-     * Retrieves all training days associated with a specific training plan.
+     * Ruft alle Trainingstage ab, die mit einem bestimmten Trainingsplan verknüpft sind.
      *
-     * @param trainingplanId The ID of the training plan to query
-     * @return List of Trainingday objects belonging to the specified plan
+     * @param trainingplanId Die ID des Trainingsplans, für den die Trainingstage abgefragt werden sollen
+     * @return Liste von Trainingday-Objekten, die zu dem angegebenen Plan gehören
      */
     public List<Trainingday> getTrainingdaysForPlan(int trainingplanId) {
         List<Trainingday> trainingdays = new ArrayList<>();
@@ -52,9 +52,9 @@ public class TrainingdayRepository {
     }
 
     /**
-     * Creates a new training day entry in the database.
+     * Erstellt einen neuen Trainingstag in der Datenbank.
      *
-     * @param trainingday The Trainingday object containing the data to insert
+     * @param trainingday Das Trainingday-Objekt mit den einzufügenden Daten
      */
     public void createTrainingday(Trainingday trainingday) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -68,10 +68,10 @@ public class TrainingdayRepository {
     }
 
     /**
-     * Updates an existing training day entry in the database.
+     * Aktualisiert einen bestehenden Trainingstag in der Datenbank.
      *
-     * @param trainingday The Trainingday object with updated values.
-     *                    Uses the object's ID to identify the database entry.
+     * @param trainingday Das Trainingday-Objekt mit aktualisierten Werten.
+     *                    Die ID des Objekts wird zur Identifikation des Datenbankeintrags verwendet.
      */
     public void updateTrainingday(Trainingday trainingday) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -85,10 +85,10 @@ public class TrainingdayRepository {
     }
 
     /**
-     * Deletes a specific training day from the database.
+     * Löscht einen bestimmten Trainingstag aus der Datenbank.
      *
-     * @param trainingday The Trainingday object to delete.
-     *                    Uses the object's ID to identify the database entry.
+     * @param trainingday Das zu löschende Trainingday-Objekt.
+     *                    Die ID des Objekts wird zur Identifikation des Datenbankeintrags verwendet.
      */
     public void deleteTrainingday(Trainingday trainingday) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();

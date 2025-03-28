@@ -35,7 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private void copyDatabaseIfNeeded() {
         File dbFile = new File(DB_PATH);
-        if (!dbFile.exists()) {
+        if (true) {
             try {
                 InputStream input = context.getAssets().open("SQLite_DB/" + DATABASE_NAME);
                 OutputStream output = new FileOutputStream(DB_PATH);

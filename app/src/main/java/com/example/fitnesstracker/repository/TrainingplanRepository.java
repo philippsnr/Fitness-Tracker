@@ -16,18 +16,18 @@ public class TrainingplanRepository {
     private final DatabaseHelper dbHelper;
 
     /**
-     * Initializes a new repository instance for managing training plans.
+     * Initialisiert eine neue Repository-Instanz zur Verwaltung von Trainingsplänen.
      *
-     * @param context The application context for database access
+     * @param context Der Anwendungskontext für den Datenbankzugriff
      */
     public TrainingplanRepository(Context context) {
         this.dbHelper = new DatabaseHelper(context);
     }
 
     /**
-     * Retrieves all training plans from the database.
+     * Ruft alle Trainingspläne aus der Datenbank ab.
      *
-     * @return List of all stored Trainingplan objects
+     * @return Liste aller gespeicherten Trainingplan-Objekte
      */
     public List<Trainingplan> getAllTrainingplans() {
         List<Trainingplan> trainingplans = new ArrayList<>();
@@ -43,15 +43,15 @@ public class TrainingplanRepository {
                 } while (cursor.moveToNext());
             }
         } catch (Exception e) {
-            Log.e("TrainingplanRepository", "Error getting all training plan", e);
+            Log.e("TrainingplanRepository", "Fehler beim Abrufen aller Trainingspläne", e);
         }
         return trainingplans;
     }
 
     /**
-     * Retrieves the currently active training plan.
+     * Ruft den aktuell aktiven Trainingsplan ab.
      *
-     * @return Active Trainingplan object or null if none exists
+     * @return Aktives Trainingplan-Objekt oder null, falls keiner existiert
      */
     public Trainingplan getActiveTrainingplan() {
         try (SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -64,15 +64,15 @@ public class TrainingplanRepository {
                 return new Trainingplan(id, name, isActive);
             }
         } catch (Exception e) {
-            Log.e("TrainingplanRepository", "Error get active training plan", e);
+            Log.e("TrainingplanRepository", "Fehler beim Abrufen des aktiven Trainingsplans", e);
         }
         return null;
     }
 
     /**
-     * Adds a new training plan to the database.
+     * Fügt einen neuen Trainingsplan zur Datenbank hinzu.
      *
-     * @param trainingplan The Trainingplan object to add (ID will be auto-generated)
+     * @param trainingplan Das hinzuzufügende Trainingplan-Objekt (ID wird automatisch generiert)
      */
     public void addTrainingplan(Trainingplan trainingplan) {
         try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
@@ -82,14 +82,14 @@ public class TrainingplanRepository {
             long id = db.insert("Trainingplan", null, values);
             trainingplan.setId(id);
         } catch (Exception e) {
-            Log.e("TrainingplanRepository", "Error adding training plan", e);
+            Log.e("TrainingplanRepository", "Fehler beim Hinzufügen des Trainingsplans", e);
         }
     }
 
     /**
-     * Updates the name of an existing training plan.
+     * Aktualisiert den Namen eines bestehenden Trainingsplans.
      *
-     * @param trainingplan The Trainingplan object with updated name and original ID
+     * @param trainingplan Das Trainingplan-Objekt mit aktualisiertem Namen und ursprünglicher ID
      */
     public void updateTrainingplanName(Trainingplan trainingplan) {
         try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
@@ -97,27 +97,27 @@ public class TrainingplanRepository {
             values.put("name", trainingplan.getName());
             db.update("Trainingplan", values, "id = ?", new String[]{String.valueOf(trainingplan.getId())});
         } catch (Exception e) {
-            Log.e("TrainingplanRepository", "Error updating training plan", e);
+            Log.e("TrainingplanRepository", "Fehler beim Aktualisieren des Trainingsplans", e);
         }
     }
 
     /**
-     * Deletes a specific training plan from the database.
+     * Löscht einen bestimmten Trainingsplan aus der Datenbank.
      *
-     * @param trainingplan The Trainingplan object to delete
+     * @param trainingplan Das zu löschende Trainingplan-Objekt
      */
     public void deleteTrainingplan(Trainingplan trainingplan) {
         try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
             db.delete("Trainingplan", "id = ?", new String[]{String.valueOf(trainingplan.getId())});
         } catch (Exception e) {
-            Log.e("TrainingplanRepository", "Error deleting training plan", e);
+            Log.e("TrainingplanRepository", "Fehler beim Löschen des Trainingsplans", e);
         }
     }
 
     /**
-     * Sets a new active training plan and deactivates all others.
+     * Setzt einen neuen aktiven Trainingsplan und deaktiviert alle anderen.
      *
-     * @param newActiveTrainingPlanId The ID of the training plan to activate
+     * @param newActiveTrainingPlanId Die ID des zu aktivierenden Trainingsplans
      */
     public void setNewActiveTrainingPlan(int newActiveTrainingPlanId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -129,7 +129,7 @@ public class TrainingplanRepository {
             db.update("Trainingplan", values, "id = ?", new String[]{String.valueOf(newActiveTrainingPlanId)});
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e("TrainingplanRepository", "Error setting active training plan", e);
+            Log.e("TrainingplanRepository", "Fehler beim Setzen des aktiven Trainingsplans", e);
         } finally {
             db.endTransaction();
         }

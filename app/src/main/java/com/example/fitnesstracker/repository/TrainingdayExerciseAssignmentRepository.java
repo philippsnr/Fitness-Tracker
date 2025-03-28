@@ -22,10 +22,10 @@ public class TrainingdayExerciseAssignmentRepository {
     }
 
     /**
-     * Retrieves the first TrainingdayExerciseAssignment found for the specified trainingday ID.
+     * Gibt die erste TrainingdayExerciseAssignment für die angegebene Trainingday-ID zurück.
      *
-     * @param trainingdayId The ID of the trainingday to search for.
-     * @return The matching TrainingdayExerciseAssignment or null if none found.
+     * @param trainingdayId Die ID des Trainingdays nach dem gesucht werden soll.
+     * @return Die passende TrainingdayExerciseAssignment oder null, falls keine gefunden wurde.
      */
     public TrainingdayExerciseAssignment getTrainingdayExcerciseAssignments(int trainingdayId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -45,10 +45,10 @@ public class TrainingdayExerciseAssignmentRepository {
     }
 
     /**
-     * Fetches all exercise IDs associated with a specific trainingday.
+     * Liefert alle Exercise-IDs, die mit einem bestimmten Trainingday verknüpft sind.
      *
-     * @param trainingdayId The ID of the trainingday to query.
-     * @return List of exercise IDs linked to the trainingday.
+     * @param trainingdayId Die ID des Trainingdays, für das die Übungen abgefragt werden sollen.
+     * @return Liste der Exercise-IDs, die mit dem Trainingday verknüpft sind.
      */
     public List<Integer> getExerciseIdsForTrainingday(int trainingdayId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -69,9 +69,9 @@ public class TrainingdayExerciseAssignmentRepository {
     }
 
     /**
-     * Deletes a specific TrainingdayExerciseAssignment by its ID.
+     * Löscht eine bestimmte TrainingdayExerciseAssignment anhand ihrer ID.
      *
-     * @param assignmentId The ID of the assignment to delete.
+     * @param assignmentId Die ID der Zuordnung, die gelöscht werden soll.
      */
     public void deleteTrainingdayExerciseAssignment(int assignmentId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -80,11 +80,11 @@ public class TrainingdayExerciseAssignmentRepository {
     }
 
     /**
-     * Creates a new assignment between a trainingday and an exercise.
+     * Erstellt eine neue Zuordnung zwischen einem Trainingday und einer Übung.
      *
-     * @param trainingdayId The ID of the trainingday.
-     * @param exerciseId    The ID of the exercise.
-     * @return The row ID of the newly inserted assignment, or -1 on error.
+     * @param trainingdayId Die ID des Trainingdays.
+     * @param exerciseId    Die ID der Übung.
+     * @return Die Zeilen-ID der neu eingefügten Zuordnung oder -1 bei einem Fehler.
      */
     public long addTrainingExerciseAssignment(int trainingdayId, int exerciseId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -104,6 +104,12 @@ public class TrainingdayExerciseAssignmentRepository {
         }
     }
 
+    /**
+     * Wandelt einen Cursor in ein TrainingdayExerciseAssignment-Objekt um.
+     *
+     * @param cursor Der Cursor mit den Daten.
+     * @return Das erstellte TrainingdayExerciseAssignment-Objekt.
+     */
     private TrainingdayExerciseAssignment mapCursorToAssignment(Cursor cursor) {
         return new TrainingdayExerciseAssignment(
                 cursor.getInt(cursor.getColumnIndexOrThrow("id")),
@@ -112,12 +118,27 @@ public class TrainingdayExerciseAssignmentRepository {
         );
     }
 
+    /**
+     * Überprüft, ob eine Übung mit der angegebenen ID existiert.
+     *
+     * @param db Die Datenbankverbindung.
+     * @param exerciseId Die zu überprüfende Übungs-ID.
+     * @throws RuntimeException Wenn die Übung nicht existiert.
+     */
     private void validateExerciseExists(SQLiteDatabase db, int exerciseId) {
         if (!exerciseExists(db, exerciseId)) {
             throw new RuntimeException("Exercise does not exist");
         }
     }
 
+    /**
+     * Fügt eine neue Zuordnung in die Datenbank ein.
+     *
+     * @param db Die Datenbankverbindung.
+     * @param trainingdayId Die ID des Trainingdays.
+     * @param exerciseId Die ID der Übung.
+     * @return Die ID der neu eingefügten Zeile.
+     */
     private long insertAssignment(SQLiteDatabase db, int trainingdayId, int exerciseId) {
         ContentValues values = new ContentValues();
         values.put("Trainingday_id", trainingdayId);
@@ -125,6 +146,13 @@ public class TrainingdayExerciseAssignmentRepository {
         return db.insertOrThrow("TrainingdayExerciseAssignment", null, values);
     }
 
+    /**
+     * Prüft, ob eine Übung mit der angegebenen ID in der Datenbank existiert.
+     *
+     * @param db Die Datenbankverbindung.
+     * @param exerciseId Die zu prüfende Übungs-ID.
+     * @return true, wenn die Übung existiert, sonst false.
+     */
     private boolean exerciseExists(SQLiteDatabase db, int exerciseId) {
         Cursor c = db.rawQuery("SELECT 1 FROM Exercise WHERE id = ?",
                 new String[]{String.valueOf(exerciseId)});
