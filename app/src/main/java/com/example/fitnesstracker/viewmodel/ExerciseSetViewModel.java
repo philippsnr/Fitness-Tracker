@@ -57,4 +57,14 @@ public class ExerciseSetViewModel extends AndroidViewModel
         void onSetsPerWeekLoaded(Map<Integer, Integer> setsPerWeek);
     }
 
+    public void getLastSetNumber(String date, int exerciseId, OnLastSetNumberLoadedListener listener) {
+        executorService.execute(() -> {
+            int lastSetNumber = repository.getLastSetNumber(date, exerciseId);
+            listener.onLastSetNumberLoaded(lastSetNumber);
+        });
+    }
+
+    public interface OnLastSetNumberLoadedListener {
+        void onLastSetNumberLoaded(int lastSetNumber);
+    }
 }

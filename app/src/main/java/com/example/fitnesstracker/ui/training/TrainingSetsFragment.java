@@ -59,7 +59,13 @@ public class TrainingSetsFragment extends Fragment {
         args.putInt(ARG_ASSIGNMENT_ID, assignmentId);
         args.putString(ARG_EXERCISE_NAME, exerciseName);
         fragment.setArguments(args);
+
+
         return fragment;
+    }
+
+    public interface OnExerciseSetCreatedListener {
+        void onExerciseSetCreated(ExerciseSet exerciseSet);
     }
 
     @Override
@@ -120,8 +126,13 @@ public class TrainingSetsFragment extends Fragment {
 
                     if (validateInput(tilReps, tilWeight, repsStr, weightStr)) {
                         try {
-                            ExerciseSet newSet = createExerciseSet(repsStr, weightStr);
-                            saveSetToViewModel(newSet);
+                            createExerciseSet(repsStr, weightStr, new OnExerciseSetCreatedListener() {
+                                @Override
+                                public void onExerciseSetCreated(ExerciseSet newSet) {
+                                    saveSetToViewModel(newSet);
+                                    loadSets(); // Liste neu laden nach dem Speichern
+                                }
+                            });
                         } catch (NumberFormatException e) {
                             showNumberFormatError();
                         }
@@ -157,26 +168,27 @@ public class TrainingSetsFragment extends Fragment {
         return isValid;
     }
 
-    private ExerciseSet createExerciseSet(String repsStr, String weightStr) {
+    private void createExerciseSet(String repsStr, String weightStr, OnExerciseSetCreatedListener listener) {
         LocalDate currentDate = LocalDate.now();
         String today = currentDate.toString();
 
-        // Find max set number for today
-        int maxSetNumber = 0;
-        for (ExerciseSet set : allSets) {
-            if (today.equals(set.getDate()) && set.getSetNumber() > maxSetNumber) {
-                maxSetNumber = set.getSetNumber();
+        setViewModel.getLastSetNumber(today, assignmentId, new ExerciseSetViewModel.OnLastSetNumberLoadedListener() {
+            @Override
+            public void onLastSetNumberLoaded(int lastSetNumber) {
+                ExerciseSet newSet = new ExerciseSet(
+                        assignmentId,
+                        lastSetNumber + 1,
+                        Integer.parseInt(repsStr),
+                        Double.parseDouble(weightStr),
+                        today
+                );
+                listener.onExerciseSetCreated(newSet);
             }
-        }
-
-        return new ExerciseSet(
-                assignmentId,
-                maxSetNumber + 1, // Auto-incremented set number
-                Integer.parseInt(repsStr),
-                Double.parseDouble(weightStr),
-                today
-        );
+        });
     }
+
+
+
     private void saveSetToViewModel(ExerciseSet newSet) {
         setViewModel.saveNewSet(newSet);
         loadSets(); // Annahme: Lädt die aktualisierte Liste

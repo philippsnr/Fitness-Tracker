@@ -90,4 +90,18 @@ public class ExerciseSetRepository {
         db.close();
         return setsPerWeek;
     }
+
+    public int getLastSetNumber(String date, int exerciseId) {
+        int setNumber = 0;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT set_number FROM ExerciseSet WHERE date = ? AND exercise_id = ? ORDER BY set_number DESC LIMIT 1", new String[]{date, String.valueOf(exerciseId)});
+
+        if (cursor.moveToFirst()) {
+            setNumber = cursor.getInt(0);
+        }
+
+        cursor.close();
+        db.close();
+        return setNumber;
+    }
 }
