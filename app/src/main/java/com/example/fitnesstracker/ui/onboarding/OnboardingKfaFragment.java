@@ -15,8 +15,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.example.fitnesstracker.R;
+
+import java.util.Objects;
 
 public class OnboardingKfaFragment extends Fragment {
     private EditText editTextKfa;
@@ -25,7 +29,7 @@ public class OnboardingKfaFragment extends Fragment {
     private OnboardingDataListener dataListener;
 
     @Override
-    public void onAttach(android.content.Context context) {
+    public void onAttach(@NonNull android.content.Context context) {
         super.onAttach(context);
         if (context instanceof OnboardingDataListener) {
             dataListener = (OnboardingDataListener) context;
@@ -38,51 +42,65 @@ public class OnboardingKfaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_onboarding_kfa, container, false);
 
+        initializeViews(root);
+        setupPopupButton();
+        setupNextButton();
+
+        return root;
+    }
+
+    private void initializeViews(View root) {
         editTextKfa = root.findViewById(R.id.editTextKfa);
         buttonShowPopup = root.findViewById(R.id.buttonShowPopup);
         buttonNext = root.findViewById(R.id.buttonNext);
+    }
 
-        buttonShowPopup.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+    private void setupPopupButton() {
+        buttonShowPopup.setOnClickListener(v -> showKfaHelpPopup());
+    }
 
-            // Erstelle einen benutzerdefinierten weißen Titel
-            TextView title = new TextView(getContext());
-            title.setText("KFA Hilfe");
-            title.setPadding(20, 20, 20, 20);
-            title.setTextSize(20);
-            title.setTextColor(Color.WHITE);
-            title.setTypeface(null, Typeface.BOLD);
-            title.setGravity(Gravity.CENTER);
+    private void showKfaHelpPopup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-            builder.setCustomTitle(title);
+        TextView title = new TextView(getContext());
+        title.setText("KFA Hilfe");
+        title.setPadding(20, 20, 20, 20);
+        title.setTextSize(20);
+        title.setTextColor(Color.WHITE);
+        title.setTypeface(null, Typeface.BOLD);
+        title.setGravity(Gravity.CENTER);
+        builder.setCustomTitle(title);
 
-            ImageView popupImage = new ImageView(getContext());
-            popupImage.setImageResource(R.drawable.kfa_help);
-            builder.setView(popupImage);
+        ImageView popupImage = new ImageView(getContext());
+        popupImage.setImageResource(R.drawable.kfa_help);
+        builder.setView(popupImage);
 
-            builder.setPositiveButton("Close", (dialog, which) -> dialog.dismiss());
+        builder.setPositiveButton("Close", (dialog, which) -> dialog.dismiss());
 
-            AlertDialog dialog = builder.create();
-            dialog.show();
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+    }
 
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
-        });
+    private void setupNextButton() {
+        buttonNext.setOnClickListener(v -> handleNextButtonClick());
+    }
 
-
-        buttonNext.setOnClickListener(v -> {
-            String kfaStr = editTextKfa.getText().toString().trim();
-            if (TextUtils.isEmpty(kfaStr)) {
-                Toast.makeText(getContext(), "Bitte gebe deinen KFA an.", Toast.LENGTH_SHORT).show();
-            } else {
-                try {
-                    int kfa = Integer.parseInt(kfaStr);
-                    dataListener.onDataCollected("kfa", kfa);
-                } catch (NumberFormatException e) {
-                    Toast.makeText(getContext(), "Ungültige KFA-Eingabe", Toast.LENGTH_SHORT).show();
-                }
+    private void handleNextButtonClick() {
+        String kfaStr = editTextKfa.getText().toString().trim();
+        if (TextUtils.isEmpty(kfaStr)) {
+            showToast("Bitte gebe deinen KFA an.");
+        } else {
+            try {
+                int kfa = Integer.parseInt(kfaStr);
+                dataListener.onDataCollected("kfa", kfa);
+            } catch (NumberFormatException e) {
+                showToast("Ungültige KFA-Eingabe");
             }
-        });
+        }
+    }
 
-        return root;
+    private void showToast(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 }
