@@ -70,28 +70,72 @@ public class UserInformationRepository {
 
     /**
      * Ruft die zuletzt gespeicherten Benutzerinformationen aus der Datenbank ab.
+     * Falls in der neuesten Zeile die Werte für Höhe oder KFA nicht gesetzt sind (0),
+     * werden die zuletzt gültigen Werte aus vorherigen Einträgen ermittelt.
      *
-     * @return Das neueste {@link UserInformation} oder {@code null}, wenn keine Daten vorhanden sind.
+     * @return Das neueste {@link UserInformation} mit vollständigen Werten oder {@code null}, wenn keine Daten vorhanden sind.
      */
     public UserInformation getLatestUserInformation() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM UserInformation ORDER BY date DESC, id DESC LIMIT 1", null);
+        UserInformation userInfo = null;
         if (cursor.moveToFirst()) {
-            UserInformation userInfo = new UserInformation(
-                    cursor.getInt(0),
-                    cursor.getInt(1),
-                    cursor.getString(2),
-                    cursor.getInt(3),
-                    cursor.getDouble(4),
-                    cursor.getInt(5)
-            );
-            cursor.close();
-            db.close();
-            return userInfo;
+            int id = cursor.getInt(0);
+            int userId = cursor.getInt(1);
+            String dateStr = cursor.getString(2);
+            int height = cursor.getInt(3);
+            double weight = cursor.getDouble(4);
+            int kfa = cursor.getInt(5);
+
+            // Falls Höhe oder KFA nicht angegeben wurden (0), versuche den zuletzt gültigen Wert zu ermitteln.
+            if (height == 0) {
+                height = getLatestNonZeroHeight(db);
+            }
+            if (kfa == 0) {
+                kfa = getLatestNonZeroKfa(db);
+            }
+
+            userInfo = new UserInformation(id, userId, dateStr, height, weight, kfa);
         }
         cursor.close();
         db.close();
-        return null; // Falls keine Daten vorhanden sind
+        return userInfo;
+    }
+
+    /**
+     * Ermittelt die zuletzt eingegebene, gültige (nicht 0) Höhe.
+     *
+     * @param db Die geöffnete Datenbankinstanz.
+     * @return Die zuletzt gültige Höhe oder 0, falls kein gültiger Eintrag gefunden wurde.
+     */
+    private int getLatestNonZeroHeight(SQLiteDatabase db) {
+        int height = 0;
+        Cursor c = db.rawQuery("SELECT height FROM UserInformation WHERE height != 0 ORDER BY date DESC, id DESC LIMIT 1", null);
+        if (c != null && c.moveToFirst()) {
+            height = c.getInt(0);
+        }
+        if (c != null) {
+            c.close();
+        }
+        return height;
+    }
+
+    /**
+     * Ermittelt den zuletzt eingegebenen, gültigen (nicht 0) KFA.
+     *
+     * @param db Die geöffnete Datenbankinstanz.
+     * @return Den zuletzt gültigen KFA oder 0, falls kein gültiger Eintrag gefunden wurde.
+     */
+    private int getLatestNonZeroKfa(SQLiteDatabase db) {
+        int kfa = 0;
+        Cursor c = db.rawQuery("SELECT KFA FROM UserInformation WHERE KFA != 0 ORDER BY date DESC, id DESC LIMIT 1", null);
+        if (c != null && c.moveToFirst()) {
+            kfa = c.getInt(0);
+        }
+        if (c != null) {
+            c.close();
+        }
+        return kfa;
     }
 
     /**
