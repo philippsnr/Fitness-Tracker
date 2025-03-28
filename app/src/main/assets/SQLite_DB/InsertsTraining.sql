@@ -1,82 +1,82 @@
--- Insert Trainingplans
-INSERT INTO Trainingplan (id, name) VALUES
-(1, 'Full Body (2x pro Woche)'),
-(2, 'Upper/Lower, Fullbody (3x pro Woche)'),
-(3, 'Upper/Lower (4x pro Woche)'),
-(4, 'Push, Pull, Legs, Upper, Lower (5x pro Woche)'),
-(5, 'Push, Pull, Legs (6x pro Woche)'),
-(6, 'Full Body (1x pro Woche)'),;
+-- Insert Trainingplans in neuer Reihenfolge
+INSERT INTO Trainingplan (id, name, isActive) VALUES
+(1, 'Full Body (1x pro Woche)', 0),      -- Ehemals Plan 6
+(2, 'Full Body (2x pro Woche)', 0),      -- Ehemals Plan 1
+(3, 'Upper/Lower, Fullbody (3x pro Woche)', 0), -- Ehemals Plan 2
+(4, 'Upper/Lower (4x pro Woche)', 1),    -- Ehemals Plan 3
+(5, 'Push, Pull, Legs, Upper, Lower (5x pro Woche)', 0), -- Ehemals Plan 4
+(6, 'Push, Pull, Legs (6x pro Woche)', 0); -- Ehemals Plan 5
 
--- Insert Trainingdays
+-- Insert Trainingdays mit neuen IDs
 INSERT INTO Trainingday (id, name, Trainingplan_id) VALUES
--- Plan 1
-(1, 'Full Body A', 1),
-(2, 'Full Body B', 1),
+-- Plan 1 (ehemals 6)
+(1, 'Full Body', 1),
 
--- Plan 2
-(3, 'Upper Body', 2),
-(4, 'Lower Body', 2),
-(5, 'Full Body', 2),
+-- Plan 2 (ehemals 1)
+(2, 'Full Body A', 2),
+(3, 'Full Body B', 2),
 
--- Plan 3
-(6, 'Upper Body A', 3),
-(7, 'Lower Body A', 3),
-(8, 'Upper Body B', 3),
-(9, 'Lower Body B', 3),
+-- Plan 3 (ehemals 2)
+(4, 'Upper Body', 3),
+(5, 'Lower Body', 3),
+(6, 'Full Body', 3),
 
--- Plan 4
-(10, 'Push Day', 4),
-(11, 'Pull Day', 4),
-(12, 'Leg Day', 4),
-(13, 'Upper Body', 4),
-(14, 'Lower Body', 4),
+-- Plan 4 (ehemals 3)
+(7, 'Upper Body A', 4),
+(8, 'Lower Body A', 4),
+(9, 'Upper Body B', 4),
+(10, 'Lower Body B', 4),
 
--- Plan 5
-(15, 'Push Day A', 5),
-(16, 'Pull Day A', 5),
-(17, 'Leg Day A', 5),
-(18, 'Push Day B', 5),
-(19, 'Pull Day B', 5),
-(20, 'Leg Day B', 5),
+-- Plan 5 (ehemals 4)
+(11, 'Push Day', 5),
+(12, 'Pull Day', 5),
+(13, 'Leg Day', 5),
+(14, 'Upper Body', 5),
+(15, 'Lower Body', 5),
 
---Plan 6
-(1, 'Full Body', 6);
+-- Plan 6 (ehemals 5)
+(16, 'Push Day A', 6),
+(17, 'Pull Day A', 6),
+(18, 'Leg Day A', 6),
+(19, 'Push Day B', 6),
+(20, 'Pull Day B', 6),
+(21, 'Leg Day B', 6);
 
-
--- Insert Exercise Assignments
+-- Insert Exercise Assignments mit neuen IDs
 INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES
--- Plan 1
-(1, 35), (1, 3), (1, 10), (1, 42), (1, 82),  -- Full Body A
-(2, 37), (2, 39), (2, 5), (2, 19), (2, 86),  -- Full Body B
+-- Plan 1 (Full Body 1x)
+(1, 35), (1, 3), (1, 10), (1, 42), (1, 82),
 
--- Plan 2
-(3, 1), (3, 5), (3, 11), (3, 20), (3, 71), (3, 67), (3, 44), (3, 53),  -- Upper Body
-(4, 36), (4, 39), (4, 35), (4, 42), (4, 32), (4, 23), (4, 82),         -- Lower Body
-(5, 37), (5, 29), (5, 4), (5, 19), (5, 86),                           -- Full Body
+-- Plan 2 (Full Body 2x)
+(2, 35), (2, 3), (2, 10), (2, 42), (2, 82),  -- Full Body A
+(3, 37), (3, 39), (3, 5), (3, 19), (3, 86),  -- Full Body B
 
--- Plan 3
-(6, 1), (6, 5), (6, 11), (6, 20), (6, 71), (6, 67), (6, 44), (6, 53),  -- Upper A
-(7, 36), (7, 39), (7, 35), (7, 42), (7, 32), (7, 23), (7, 82),         -- Lower A
-(8, 1), (8, 5), (8, 11), (8, 19), (8, 71), (8, 67), (8, 79), (8, 56),  -- Upper B
-(9, 37), (9, 29), (9, 35), (9, 42), (9, 32), (9, 26), (9, 27),         -- Lower B
+-- Plan 3 (Upper/Lower 3x)
+(4, 1), (4, 5), (4, 11), (4, 20), (4, 71), (4, 67), (4, 44), (4, 53),  -- Upper Body
+(5, 36), (5, 39), (5, 35), (5, 42), (5, 32), (5, 23), (5, 82),         -- Lower Body
+(6, 37), (6, 29), (6, 4), (6, 19), (6, 86),                           -- Full Body
 
--- Plan 4
-(10, 5), (10, 3), (10, 8), (10, 67), (10, 44), (10, 79), (10, 83),     -- Push Day
-(11, 10), (11, 18), (11, 23), (11, 71), (11, 56), (11, 49), (11, 82),  -- Pull Day
-(12, 37), (12, 40), (12, 35), (12, 42), (12, 32), (12, 26), (12, 27),  -- Leg Day
-(13, 1), (13, 5), (13, 11), (13, 20), (13, 71), (13, 67), (13, 44), (13, 53),  -- Upper
-(14, 36), (14, 39), (14, 35), (14, 42), (14, 32), (14, 23), (14, 82),          -- Lower
+-- Plan 4 (Upper/Lower 4x)
+(7, 1), (7, 5), (7, 11), (7, 20), (7, 71), (7, 67), (7, 44), (7, 53),  -- Upper A
+(8, 36), (8, 39), (8, 35), (8, 42), (8, 32), (8, 23), (8, 82),         -- Lower A
+(9, 1), (9, 5), (9, 11), (9, 19), (9, 71), (9, 67), (9, 79), (9, 56),  -- Upper B
+(10, 37), (10, 29), (10, 35), (10, 42), (10, 32), (10, 26), (10, 27),  -- Lower B
 
--- Plan 5
-(15, 5), (15, 3), (15, 2), (15, 67), (15, 44), (15, 79), (15, 83),     -- Push A
-(16, 10), (16, 18), (16, 23), (16, 71), (16, 56), (16, 49), (16, 82),  -- Pull A
-(17, 37), (17, 40), (17, 35), (17, 42), (17, 32), (17, 26), (17, 27),  -- Leg A
-(18, 5), (18, 4), (18, 8), (18, 67), (18, 44), (18, 79), (18, 83),     -- Push B
-(19, 11), (19, 20), (19, 18), (19, 71), (19, 56), (19, 49), (19, 86),  -- Pull B
-(20, 38), (20, 29), (20, 35), (20, 42), (20, 32), (20, 26), (20, 27), -- Leg B
+-- Plan 5 (Push/Pull 5x)
+(11, 5), (11, 3), (11, 8), (11, 67), (11, 44), (11, 79), (11, 83),     -- Push Day
+(12, 10), (12, 18), (12, 23), (12, 71), (12, 56), (12, 49), (12, 82),  -- Pull Day
+(13, 37), (13, 40), (13, 35), (13, 42), (13, 32), (13, 26), (13, 27),  -- Leg Day
+(14, 1), (14, 5), (14, 11), (14, 20), (14, 71), (14, 67), (14, 44), (14, 53),  -- Upper
+(15, 36), (15, 39), (15, 35), (15, 42), (15, 32), (15, 23), (15, 82),          -- Lower
 
--- Plan 6
-(6, 35), (6, 3), (6, 10), (6, 42), (6, 82);  -- Full Body
+-- Plan 6 (Push/Pull 6x)
+(16, 5), (16, 3), (16, 2), (16, 67), (16, 44), (16, 79), (16, 83),     -- Push A
+(17, 10), (17, 18), (17, 23), (17, 71), (17, 56), (17, 49), (17, 82),  -- Pull A
+(18, 37), (18, 40), (18, 35), (18, 42), (18, 32), (18, 26), (18, 27),  -- Leg A
+(19, 5), (19, 4), (19, 8), (19, 67), (19, 44), (19, 79), (19, 83),     -- Push B
+(20, 11), (20, 20), (20, 18), (20, 71), (20, 56), (20, 49), (20, 86),  -- Pull B
+(21, 38), (21, 29), (21, 35), (21, 42), (21, 32), (21, 26), (21, 27); -- Leg B
+
 
 INSERT INTO ExerciseSet (exercise_id, set_number, repetitions, weight, date) VALUES
 -- Trainingsplan 1 (Januar 2024)
