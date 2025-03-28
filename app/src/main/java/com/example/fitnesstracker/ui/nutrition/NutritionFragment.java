@@ -8,96 +8,56 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.model.OpenFoodFactsResponseModel;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class NutritionFragment extends Fragment {
 
+    private TextView apiFailureText;
+    private RecyclerView recyclerView;
+
     /**
+     * Wird ausgeführt wenn UI erstellt wird
      *Erstellt und initialisiert das Fragment
      */
-    @SuppressLint("SetTextI18n")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Layout für das Fragment laden
         View view = inflater.inflate(R.layout.fragment_nutrition, container, false);
-
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        boolean internetConnectionAvailable = checkInternetConnection(executor);
-        if (internetConnectionAvailable) {
-            EditText nutritionNameInput = view.findViewById(R.id.nutritionNameInput);
-            Button searchButton = view.findViewById(R.id.btnSearch);
-            searchButton.setOnClickListener(v -> showNutritionNamesFromOFFApi(nutritionNameInput));
-        } else {
-            createNoConnectionText(view);
-        }
+        apiFailureText = view.findViewById(R.id.connectionText);
         return view;
     }
 
     /**
-     * Erstellt Text, falls keine Internetverbindung verfügbar
-     * @param view betreffende View
+     * wird ausgeführt nachdem UI erstellt wurde
+     *
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
      */
-    private void createNoConnectionText(View view) {
-        LinearLayout mainLinearLayout = view.findViewById(R.id.mainLinearLayout);
-        TextView noConnectionText = new TextView(requireContext());
-        noConnectionText.setText("Keine Internetverbindung verfügbar");
-        noConnectionText.setTextSize(18);
-        noConnectionText.setPadding(10, 10, 10, 10);
-        mainLinearLayout.addView(noConnectionText);
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+            EditText nutritionNameInput = view.findViewById(R.id.nutritionNameInput);
+            Button searchButton = view.findViewById(R.id.btnSearch);
+            searchButton.setOnClickListener(v -> showNutritionNamesFromOFFApi(nutritionNameInput));
+            recyclerView = view.findViewById(R.id.NutritionsReyclerView);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     /**
-     * Überprüft über einen Ping, ob Internetverbindung verfügbar ist
-     * @return gibt zurück, ob verfügbar oder nicht
+     * wird ausgeführt, wenn Fragment sichtbar wird
      */
-    private boolean checkInternetConnection(ExecutorService executor) {
-        Callable<Boolean> task = () -> {
-            boolean result;
-            try {
-                Runtime.getRuntime().exec("ping -c 1 8.8.8.8");
-                Log.d("Nutrition", "Internetconnection available");
-                result = true;
-            } catch (IOException e) {
-                result = false;
-                Log.e("Nutrition", "Internetconnection Request not possible");
-            }
-            return result;
-        };
-        Future<Boolean> future = executor.submit(task);
-        return getReturnValue(future, executor);
-    }
+    public void onStart() {
+        super.onStart();
 
-    /**
-     * generiert den Rückgabewert für die Funktion checkInternetConnection()
-     * @param future
-     * @param executor
-     * @return
-     */
-    private boolean getReturnValue(Future<Boolean> future, ExecutorService executor) {
-        boolean result = false;
-        try {
-            result = future.get();
-            return result;
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            executor.shutdown();
-        }
-        return result;
     }
 
     /**
@@ -105,22 +65,28 @@ public class NutritionFragment extends Fragment {
      * @param nutritionNameInput eingegebener Suchbegriff
      */
     private void showNutritionNamesFromOFFApi(EditText nutritionNameInput) {
+        Log.d("Nutrition", "Test 1");
         String nutritionName = nutritionNameInput.getText().toString();
+        Log.d("Nutrition", "Test 2");
         if (!nutritionName.isEmpty()) {
             CallOpenFoodFactsApi.callOpenFoodFactsApiForNutritionNames(nutritionName, new CallOpenFoodFactsApi.Callback() {
                 @Override
-                public void onSuccess(List<OpenFoodFactsResponseModel.Product> result) {
-                    showApiCallbackOnUi();
+                public void onSuccess(List<OpenFoodFactsResponseModel.Product> listOfProductsSearchedByNames) {
+                    Log.d("Nutrition", "Anfrage hat funktioniert und kann dargestellt werden");
+                    showApiCallbackOnUi(listOfProductsSearchedByNames);
                 }
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onFailure(Exception e) {
+                    apiFailureText.setText("@string/n_apiFailure");
                     Log.e("Nutrition", "Fehler beim laden der Daten", e);
                 }
             });
         }
     }
 
-    private void showApiCallbackOnUi() {
-
+    private void showApiCallbackOnUi(List<OpenFoodFactsResponseModel.Product> listOfProductsSearchedByNames) {
+        NutritionListAdapter nutritionListAdapter = new NutritionListAdapter(listOfProductsSearchedByNames);
+        recyclerView.setAdapter(nutritionListAdapter);
     }
 }

@@ -18,8 +18,6 @@ import java.util.concurrent.Executors;
 
 
 public class CallOpenFoodFactsApi {
-
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
     private static final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     public interface Callback {
@@ -47,19 +45,19 @@ public class CallOpenFoodFactsApi {
      * @param apiUrl URL des API-Endpunktes
      */
     private static void executeApiCall(String apiUrl, Callback callback) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             List<OpenFoodFactsResponseModel.Product> productList;
             try {
                     String jsonResponse = apiCall(apiUrl);
+                    Log.d("Nutrition", "API wurde angefragt");
                     if ( jsonResponse != null ) {
                         OpenFoodFactsResponseModel products = parseJsonResponseToObject(jsonResponse);
                         Log.d("Nutrition", "Json erfolgreich in Objekt umgewandelt");
                         productList = extractProductDetailsFromApiResponse(products);
 
                         //nur zum debuggen, muss später raus
-                        for (OpenFoodFactsResponseModel.Product product : productList) {
-                            Log.d("Nutrition", "Name: " + product.product_name + "Code: " + product.code + "Bild: " + product.image_url);
-                        }
+                        for (OpenFoodFactsResponseModel.Product product : productList) {Log.d("Nutrition", "Name: " + product.product_name + "Code: " + product.code + "Bild: " + product.image_url);}
 
                         mainHandler.post(() -> callback.onSuccess(productList));
                     }
