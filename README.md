@@ -56,7 +56,7 @@ Diese App wurde als gemeinsames Softwareprojekt entwickelt, um eine benutzerfreu
 1. **Repository klonen:**  
    Öffne ein Terminal und führe folgenden Befehl aus:
    ```bash
-   git clone https://github.com/dein-benutzername/fitness-tracker-app.git
+   git clone https://github.com/philippsnr/Fitness-Tracker.git
 	```
 	
 2. **Projekt öffnen:**
