@@ -55,8 +55,9 @@ public class UserRepository {
     public void saveUser(User user) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put("id", user.getId());
         values.put("name", user.getName());
-        values.put("birthDate", user.getBirthDate());
+        values.put("birth_date", user.getBirthDate());
         values.put("goal", user.getGoal());
         values.put("trainingDaysPerWeek", user.getTrainingDaysPerWeek());
 
