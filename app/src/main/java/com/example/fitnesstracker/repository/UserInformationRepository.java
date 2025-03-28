@@ -69,37 +69,43 @@ public class UserInformationRepository {
     }
 
     /**
-     * Ruft die zuletzt gespeicherten Benutzerinformationen aus der Datenbank ab.
-     * Falls in der neuesten Zeile die Werte für Höhe oder KFA nicht gesetzt sind (0),
-     * werden die zuletzt gültigen Werte aus vorherigen Einträgen ermittelt.
+     * Ruft die zuletzt gespeicherten Benutzerinformationen ab.
+     * Falls in der neuesten Zeile Höhe oder KFA 0 sind, werden die zuletzt gültigen Werte aus vorherigen Einträgen ermittelt.
      *
-     * @return Das neueste {@link UserInformation} mit vollständigen Werten oder {@code null}, wenn keine Daten vorhanden sind.
+     * @return Das neueste {@link UserInformation} oder {@code null}, wenn keine Daten vorhanden sind.
      */
     public UserInformation getLatestUserInformation() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM UserInformation ORDER BY date DESC, id DESC LIMIT 1", null);
-        UserInformation userInfo = null;
-        if (cursor.moveToFirst()) {
-            int id = cursor.getInt(0);
-            int userId = cursor.getInt(1);
-            String dateStr = cursor.getString(2);
-            int height = cursor.getInt(3);
-            double weight = cursor.getDouble(4);
-            int kfa = cursor.getInt(5);
-
-            // Falls Höhe oder KFA nicht angegeben wurden (0), versuche den zuletzt gültigen Wert zu ermitteln.
-            if (height == 0) {
-                height = getLatestNonZeroHeight(db);
-            }
-            if (kfa == 0) {
-                kfa = getLatestNonZeroKfa(db);
-            }
-
-            userInfo = new UserInformation(id, userId, dateStr, height, weight, kfa);
-        }
+        UserInformation userInfo = cursor.moveToFirst() ? createUserInformationFromCursor(cursor, db) : null;
         cursor.close();
         db.close();
         return userInfo;
+    }
+
+    /**
+     * Erzeugt ein {@link UserInformation}-Objekt aus der aktuellen Cursor-Zeile.
+     * Falls in der Zeile optionale Werte (Höhe oder KFA) mit 0 eingetragen sind,
+     * werden die jeweils zuletzt gültigen Werte aus der Datenbank ermittelt.
+     *
+     * @param cursor Der Cursor, der auf die aktuelle Zeile zeigt.
+     * @param db     Die geöffnete Datenbankinstanz, die für weitere Abfragen benötigt wird.
+     * @return Das erstellte {@link UserInformation}-Objekt.
+     */
+    private UserInformation createUserInformationFromCursor(Cursor cursor, SQLiteDatabase db) {
+        int id = cursor.getInt(0);
+        int userId = cursor.getInt(1);
+        String dateStr = cursor.getString(2);
+        int height = cursor.getInt(3);
+        double weight = cursor.getDouble(4);
+        int kfa = cursor.getInt(5);
+        if (height == 0) {
+            height = getLatestNonZeroHeight(db);
+        }
+        if (kfa == 0) {
+            kfa = getLatestNonZeroKfa(db);
+        }
+        return new UserInformation(id, userId, dateStr, height, weight, kfa);
     }
 
     /**
@@ -111,12 +117,10 @@ public class UserInformationRepository {
     private int getLatestNonZeroHeight(SQLiteDatabase db) {
         int height = 0;
         Cursor c = db.rawQuery("SELECT height FROM UserInformation WHERE height != 0 ORDER BY date DESC, id DESC LIMIT 1", null);
-        if (c != null && c.moveToFirst()) {
+        if (c.moveToFirst()) {
             height = c.getInt(0);
         }
-        if (c != null) {
-            c.close();
-        }
+        c.close();
         return height;
     }
 
@@ -129,12 +133,10 @@ public class UserInformationRepository {
     private int getLatestNonZeroKfa(SQLiteDatabase db) {
         int kfa = 0;
         Cursor c = db.rawQuery("SELECT KFA FROM UserInformation WHERE KFA != 0 ORDER BY date DESC, id DESC LIMIT 1", null);
-        if (c != null && c.moveToFirst()) {
+        if (c.moveToFirst()) {
             kfa = c.getInt(0);
         }
-        if (c != null) {
-            c.close();
-        }
+        c.close();
         return kfa;
     }
 
