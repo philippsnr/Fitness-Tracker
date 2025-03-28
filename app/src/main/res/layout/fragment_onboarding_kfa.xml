@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:layout_marginBottom="10dp"
-        android:text="Wie hoch ist dein Körperfettanteil (KFA)"
+        android:text="@string/o_kfa_question"
         android:textAlignment="center"
         android:textColor="@android:color/white"
         android:textSize="30sp" />
@@ -33,7 +33,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/background"
-        android:text="KFA Hilfe"
+        android:text="@string/o_kfa_help"
         android:textColor="@android:color/black" />
 
     <Button
@@ -43,6 +43,6 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/background"
-        android:text="Weiter"
+        android:text="@string/o_next"
         android:textColor="@android:color/black" />
 </LinearLayout>

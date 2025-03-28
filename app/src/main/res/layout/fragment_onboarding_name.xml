@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:layout_marginBottom="10dp"
-        android:text="Wie ist dein Name?"
+        android:text="@string/o_name_question"
         android:textColor="@android:color/white"
         android:textSize="30sp" />
 
@@ -34,6 +34,6 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/background"
-        android:text="Weiter"
+        android:text="@string/o_next"
         android:textColor="@android:color/black" />
 </LinearLayout>

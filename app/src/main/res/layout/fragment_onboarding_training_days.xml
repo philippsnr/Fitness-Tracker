@@ -13,7 +13,7 @@
         android:layout_marginTop="100dp"
         android:layout_marginBottom="10dp"
         android:textAlignment="center"
-        android:text="Wie viele Tage pro Woche willst du trainieren?"
+        android:text="@string/o_training_days_question"
         android:textColor="@android:color/white"
         android:textSize="30sp" />
 
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="8dp"
-        android:text="3 days per week"
+        android:text="@string/o_training_days_selection"
         android:textSize="16sp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
@@ -45,7 +45,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/background"
-        android:text="Reise starten!"
+        android:text="@string/o_finish"
         android:textColor="@android:color/black" />
 
 </LinearLayout>
