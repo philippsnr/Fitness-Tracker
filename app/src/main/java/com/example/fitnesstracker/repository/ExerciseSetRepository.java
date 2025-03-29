@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ExerciseSetRepository {
-    private final DatabaseHelper dbHelper;
+    protected DatabaseHelper dbHelper;
 
     /**
      * Konstruktor für das ExerciseSetRepository.

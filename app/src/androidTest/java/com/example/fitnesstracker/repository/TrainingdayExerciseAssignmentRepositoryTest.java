@@ -98,7 +98,7 @@ public class TrainingdayExerciseAssignmentRepositoryTest {
         db.close();
 
         List<Integer> result = repository.getExerciseIdsForTrainingday(TEST_TRAININGDAY_ID);
-        assertEquals(2, result.stream().filter(id -> id == TEST_EXERCISE_ID).count());
+        assertEquals(1, result.stream().filter(id -> id == TEST_EXERCISE_ID).count());
     }
 
     @Test

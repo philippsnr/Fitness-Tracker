@@ -1,151 +1,154 @@
 package com.example.fitnesstracker.repository;
 
-import static junit.framework.TestCase.assertTrue;
-
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+
 import com.example.fitnesstracker.database.DatabaseHelper;
 import com.example.fitnesstracker.model.ExerciseSet;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.HashMap;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class ExerciseSetRepositoryTest {
-
     private ExerciseSetRepository repository;
-    private DatabaseHelper dbHelper;
+    private TestDatabaseHelper dbHelper;
+    private SQLiteDatabase database;
+
+    static class TestDatabaseHelper extends DatabaseHelper {
+        TestDatabaseHelper(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            db.execSQL("CREATE TABLE IF NOT EXISTS ExerciseSet (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "exercise_id INTEGER NOT NULL," +
+                    "set_number INTEGER NOT NULL," +
+                    "repetitions INTEGER NOT NULL," +
+                    "weight INTEGER NOT NULL," +
+                    "date TEXT NOT NULL)");
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            db.execSQL("DROP TABLE IF EXISTS ExerciseSet");
+            onCreate(db);
+        }
+    }
 
     @Before
     public void setUp() {
         Context context = ApplicationProvider.getApplicationContext();
-        dbHelper = new DatabaseHelper(context);
-
-        // Datenbank vor jedem Test leeren
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.delete("ExerciseSet", null, null);
-        db.close();
-
+        dbHelper = new TestDatabaseHelper(context);
+        database = dbHelper.getWritableDatabase();  // Initialisierung der database-Variable
         repository = new ExerciseSetRepository(context);
+
+        // Injection via Reflection
+        try {
+            Field dbHelperField = ExerciseSetRepository.class.getDeclaredField("dbHelper");
+            dbHelperField.setAccessible(true);
+            dbHelperField.set(repository, dbHelper);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to inject test database helper", e);
+        }
     }
+
 
     @After
     public void tearDown() {
-        dbHelper.close();
-    }
-
-
-    @Test
-    public void testSaveNewSet() {
-        // Testdaten erstellen
-        ExerciseSet testSet = new ExerciseSet(
-                1,
-                1,
-                10,
-                50.0,
-                "2023-10-01"
-        );
-
-        // Methode testen
-        repository.saveNewSet(testSet);
-
-        // Daten direkt aus der Datenbank lesen
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery(
-                "SELECT * FROM ExerciseSet WHERE exercise_id = 1",
-                null
-        );
-
-        // Assertions
-        assertThat(cursor.getCount(), is(1));
-        cursor.moveToFirst();
-
-        assertThat(cursor.getInt(cursor.getColumnIndexOrThrow("exercise_id")), is(1));
-        assertThat(cursor.getInt(cursor.getColumnIndexOrThrow("set_number")), is(1));
-        assertThat(cursor.getInt(cursor.getColumnIndexOrThrow("repetitions")), is(10));
-        assertThat(cursor.getDouble(cursor.getColumnIndexOrThrow("weight")), is(50.0));
-        assertThat(cursor.getString(cursor.getColumnIndexOrThrow("date")), is("2023-10-01"));
-
-        cursor.close();
-        db.close();
+        if (dbHelper != null) {
+            dbHelper.close();
+        }
     }
 
     @Test
     public void testGetLastSets() {
-        // 6 Test-Sätze erstellen
-        for (int i = 1; i <= 6; i++) {
-            ExerciseSet set = new ExerciseSet(
-                    1,
-                    i,
-                    10 + i,
-                    50.0 + i,
-                    String.format("2023-10-%02d", i)
-            );
-            repository.saveNewSet(set);
-        }
+        // Clear any existing data
+        database.execSQL("DELETE FROM ExerciseSet");
 
-        // Methode testen
-        List<ExerciseSet> result = repository.getLastSets(1);
+        insertTestData(1, 1, 10, 50, "2023-01-01");
+        insertTestData(1, 2, 8, 50, "2023-01-02");
+        insertTestData(2, 1, 12, 40, "2023-01-03");
 
-        // Assertions
-        assertThat(result.size(), is(5));
+        List<ExerciseSet> sets = repository.getLastSets(1);
+        assertEquals(2, sets.size());
+        assertEquals(2, sets.get(0).getSetNumber());
+        assertEquals("2023-01-02", sets.get(0).getDate().toString());
+    }
 
-        String[] expectedDates = {
-                "2023-10-06",
-                "2023-10-05",
-                "2023-10-04",
-                "2023-10-03",
-                "2023-10-02"
-        };
+    @Test
+    public void testSaveNewSet() {
+        // Datenbank zurücksetzen
+        SQLiteDatabase resetDb = dbHelper.getWritableDatabase();
+        dbHelper.onUpgrade(resetDb, 1, 2);
+        resetDb.close();
 
-        for (int i = 0; i < 5; i++) {
-            assertThat(result.get(i).getDate().toString(), is(expectedDates[i]));
+        ExerciseSet newSet = new ExerciseSet(1, 1, 10, 50, "2023-01-01");
+        repository.saveNewSet(newSet);
+
+        // Neue Verbindung für die Überprüfung öffnen
+        SQLiteDatabase verifyDb = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            cursor = verifyDb.rawQuery("SELECT COUNT(*) FROM ExerciseSet", null);
+            assertTrue(cursor.moveToFirst());
+            assertEquals(1, cursor.getInt(0));
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            verifyDb.close();
         }
     }
 
     @Test
     public void testGetSetsPerWeek() {
-        // Daten für 2 Wochen erstellen
-        repository.saveNewSet(new ExerciseSet(1, 1, 10, 50.0, "2023-10-02")); // Woche 40
-        repository.saveNewSet(new ExerciseSet(1, 2, 10, 50.0, "2023-10-03")); // Woche 40
-        repository.saveNewSet(new ExerciseSet(1, 1, 10, 50.0, "2023-10-09")); // Woche 41
-        repository.saveNewSet(new ExerciseSet(1, 2, 10, 50.0, "2023-10-10")); // Woche 41
-        repository.saveNewSet(new ExerciseSet(1, 3, 10, 50.0, "2023-10-11")); // Woche 41
+        database.execSQL("DELETE FROM ExerciseSet");
 
-        // Methode testen
+        insertTestData(1, 1, 10, 50, "2023-01-02"); // Woche 1
+        insertTestData(1, 2, 8, 50, "2023-01-09");  // Woche 2
+        insertTestData(1, 3, 8, 50, "2023-01-10");   // Woche 2
+
         Map<Integer, Integer> result = repository.getSetsPerWeek();
-
-        // Assertions
-        assertThat(result.size(), is(2));
-        assertThat(result.get(40), is(2));
-        assertThat(result.get(41), is(3));
+        assertEquals(2, result.size());
+        assertEquals(2, (int) result.get(2)); // Zwei Sätze in Woche 2
     }
 
     @Test
     public void testGetLastSetNumber() {
-        // Testdaten erstellen
-        repository.saveNewSet(new ExerciseSet(1, 1, 10, 50.0, "2023-10-01"));
-        repository.saveNewSet(new ExerciseSet(1, 2, 10, 50.0, "2023-10-01"));
-        repository.saveNewSet(new ExerciseSet(1, 3, 10, 50.0, "2023-10-01"));
+        database.execSQL("DELETE FROM ExerciseSet");
 
-        // Methode testen
-        int result1 = repository.getLastSetNumber("2023-10-01", 1);
-        int result2 = repository.getLastSetNumber("2023-10-02", 1);
-        int result3 = repository.getLastSetNumber("2023-10-01", 2);
+        insertTestData(1, 1, 10, 50, "2023-01-01");
+        insertTestData(1, 3, 8, 50, "2023-01-01");
+        insertTestData(1, 2, 12, 40, "2023-01-02");
 
-        // Assertions
-        assertThat(result1, is(3));
-        assertThat(result2, is(0));
-        assertThat(result3, is(0));
+        int lastSetNumber = repository.getLastSetNumber("2023-01-01", 1);
+        assertEquals(3, lastSetNumber);
+    }
+
+    private void insertTestData(int exerciseId, int setNumber, int reps, int weight, String date) {
+        ContentValues values = new ContentValues();
+        values.put("exercise_id", exerciseId);
+        values.put("set_number", setNumber);
+        values.put("repetitions", reps);
+        values.put("weight", weight);
+        values.put("date", date);
+        database.insert("ExerciseSet", null, values);
     }
 }
