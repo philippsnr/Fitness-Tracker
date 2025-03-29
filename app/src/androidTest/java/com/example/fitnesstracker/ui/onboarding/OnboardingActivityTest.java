@@ -61,7 +61,6 @@ public class OnboardingActivityTest {
             onView(allOf(withId(R.id.buttonNext), isCompletelyDisplayed()))
                     .check(matches(isCompletelyDisplayed()));
             enterText(i);
-            Thread.sleep(500);
             onView(allOf(withId(R.id.buttonNext), isCompletelyDisplayed()))
                     .perform(click());
             Thread.sleep(500);// Warte nach jedem Klick
@@ -104,8 +103,6 @@ public class OnboardingActivityTest {
 
 
             case 7:
-                Thread.sleep(5000);
-
                 // Slider: Setze die SeekBar auf einen bestimmten Wert (z.B. 5 Tage)
                 onView(withId(R.id.seekBarTrainingDays))
                         .perform(setSeekBarProgress(5));
