@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:layout_marginBottom="10dp"
-        android:text="Wann hast du Geburtstag?"
+        android:text="@string/o_birthday_question"
         android:textColor="@android:color/white"
         android:textSize="30sp" />
 
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:text="Geburtsdatum auswählen"
+        android:text="@string/o_birthday_selection"
         android:backgroundTint="@color/background"
         android:textColor="@android:color/black"
         android:icon="@drawable/ic_calendar"
@@ -35,7 +35,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/background"
-        android:text="Weiter"
+        android:text="@string/o_next"
         android:textColor="@android:color/black" />
 
 </LinearLayout>

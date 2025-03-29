@@ -36,4 +36,20 @@
     <string name="t_name_day">Trainingstag Name</string>
     <string name="t_name_exercise">Trainingsübung Name</string>
     <string name="t_exercises">Übungen des Trainingtags</string>
+    <string name="o_start">Profil erstellen</string>
+    <string name="o_birthday_question">Wann hast du Geburtstag?</string>
+    <string name="o_birthday_selection">Geburtsdatum auswählen</string>
+    <string name="o_next">Weiter</string>
+    <string name="o_goal_question">Was ist dein Ziel?</string>
+    <string name="o_goal_option_lose">Abnehmen</string>
+    <string name="o_goal_option_maintain">Gewicht halten</string>
+    <string name="o_goal_option_gain">Zunehmen</string>
+    <string name="o_height_question">Wie groß bist du? (in cm)</string>
+    <string name="o_kfa_question">Wie hoch ist dein Körperfettanteil (KFA)</string>
+    <string name="o_kfa_help">KFA Hilfe</string>
+    <string name="o_name_question">Wie ist dein Name?</string>
+    <string name="o_training_days_question">Wie viele Tage pro Woche willst du trainieren?</string>
+    <string name="o_training_days_selection">3 days per week</string>
+    <string name="o_finish">Reise starten!</string>
+    <string name="o_weight_question">Wie viel wiegtst du? (in kg)</string>
 </resources>
