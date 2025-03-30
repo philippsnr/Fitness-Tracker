@@ -5,6 +5,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.example.fitnesstracker.model.OpenFoodFactsResponseModel;
+import com.example.fitnesstracker.model.ProductModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;
@@ -21,7 +22,7 @@ public class CallOpenFoodFactsApi {
     private static final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     public interface Callback {
-        void onSuccess (List<OpenFoodFactsResponseModel.Product> result);
+        void onSuccess (List<ProductModel> result);
         void onFailure (Exception e);
     }
 
@@ -32,7 +33,7 @@ public class CallOpenFoodFactsApi {
      * @param nutritionName Name nach dem gesucht werden soll
      */
     protected static void callOpenFoodFactsApiForNutritionNames(String nutritionName, Callback callback) {
-        String apiUrlToAdd = "search_terms=" + nutritionName + "&search_simple=1&action=process&json=1&fields=product_name,image_url,code";
+        String apiUrlToAdd = "search_terms=" + nutritionName + "&search_simple=1&action=process&json=1&fields=product_name,image_url,nutriments";
         String apiUrl = basicUrl + apiUrlToAdd;
         Log.d("Nutrition", apiUrl);
 
@@ -47,7 +48,7 @@ public class CallOpenFoodFactsApi {
     private static void executeApiCall(String apiUrl, Callback callback) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            List<OpenFoodFactsResponseModel.Product> productList;
+            List<ProductModel> productList;
             try {
                     String jsonResponse = apiCall(apiUrl);
                     Log.d("Nutrition", "API wurde angefragt");
@@ -57,7 +58,7 @@ public class CallOpenFoodFactsApi {
                         productList = extractProductDetailsFromApiResponse(products);
 
                         //nur zum debuggen, muss später raus
-                        for (OpenFoodFactsResponseModel.Product product : productList) {Log.d("Nutrition", "Name: " + product.product_name + "Code: " + product.code + "Bild: " + product.image_url);}
+                        for (ProductModel product : productList) {Log.d("Nutrition", "Name: " + product.getProductName() +  "Bild: " + product.getImageUrl());}
 
                         mainHandler.post(() -> callback.onSuccess(productList));
                     }
@@ -70,13 +71,14 @@ public class CallOpenFoodFactsApi {
 
     /**
      * extrahiert die Informationen aus der API-Antwort, welche benötigt werden
+     *
      * @param apiResponse API-Antwort als Objekt mit allen Informationen
      * @return Liste der Informationen die wirklich benötigt werden
      */
-    private static List<OpenFoodFactsResponseModel.Product> extractProductDetailsFromApiResponse(OpenFoodFactsResponseModel apiResponse) {
-        List<OpenFoodFactsResponseModel.Product> productList = new ArrayList<>();
-        for (OpenFoodFactsResponseModel.Product product : apiResponse.products) {
-            if (!product.product_name.isEmpty() && !product.code.isEmpty()) {
+    private static List<ProductModel> extractProductDetailsFromApiResponse(OpenFoodFactsResponseModel apiResponse) {
+        List<ProductModel> productList = new ArrayList<>();
+        for (ProductModel product : apiResponse.getProducts()) {
+            if (!product.getProductName().isEmpty()) {
                 productList.add(product);
             }
         }
