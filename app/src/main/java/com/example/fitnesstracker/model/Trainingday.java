@@ -1,9 +1,9 @@
 package com.example.fitnesstracker.model;
 
 public class Trainingday {
-    private int id;
+    private final int id;
     private String name;
-    private int trainingplanId;
+    private final int trainingplanId;
 
     public Trainingday(int id, String name, int trainingplanId) {
         this.id = id;

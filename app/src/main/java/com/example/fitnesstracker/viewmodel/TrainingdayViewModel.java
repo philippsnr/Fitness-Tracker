@@ -17,18 +17,27 @@ public class TrainingdayViewModel extends AndroidViewModel {
         repository = new TrainingdayRepository(application);
     }
 
-    // Callback-Interface für asynchrone Operationen
+    /**
+     * Callback-Interface für asynchrone Operationen.
+     */
     public interface OnOperationCompleteListener {
         void onComplete();
         void onError(Exception exception);
     }
 
-    // Callback-Interface für das Laden von Daten
+    /**
+     * Callback-Interface für das Laden von Daten.
+     */
     public interface OnDataLoadedListener {
         void onDataLoaded(List<Trainingday> trainingdays);
     }
 
-    // Lädt Trainingstage für einen bestimmten Plan
+    /**
+     * Lädt alle Trainingstage für einen bestimmten Trainingsplan.
+     *
+     * @param trainingplanId ID des Trainingsplans
+     * @param listener Callback für das geladene Ergebnis
+     */
     public void getTrainingdaysForPlan(int trainingplanId, OnDataLoadedListener listener) {
         executorService.execute(() -> {
             List<Trainingday> trainingdays = repository.getTrainingdaysForPlan(trainingplanId);
@@ -36,7 +45,12 @@ public class TrainingdayViewModel extends AndroidViewModel {
         });
     }
 
-    // Erstellt einen neuen Trainingstag
+    /**
+     * Erstellt einen neuen Trainingstag.
+     *
+     * @param trainingday Das zu erstellende Trainingstag-Objekt
+     * @param listener Callback für den Abschluss oder Fehler
+     */
     public void createTrainingday(Trainingday trainingday, OnOperationCompleteListener listener) {
         executorService.execute(() -> {
             try {
@@ -48,7 +62,12 @@ public class TrainingdayViewModel extends AndroidViewModel {
         });
     }
 
-    // Aktualisiert einen bestehenden Trainingstag
+    /**
+     * Aktualisiert einen bestehenden Trainingstag.
+     *
+     * @param trainingday Das zu aktualisierende Trainingstag-Objekt
+     * @param listener Callback für den Abschluss oder Fehler
+     */
     public void updateTrainingday(Trainingday trainingday, OnOperationCompleteListener listener) {
         executorService.execute(() -> {
             try {
@@ -60,7 +79,12 @@ public class TrainingdayViewModel extends AndroidViewModel {
         });
     }
 
-    // Löscht einen Trainingstag
+    /**
+     * Löscht einen Trainingstag.
+     *
+     * @param trainingday Das zu löschende Trainingstag-Objekt
+     * @param listener Callback für den Abschluss oder Fehler
+     */
     public void deleteTrainingday(Trainingday trainingday, OnOperationCompleteListener listener) {
         executorService.execute(() -> {
             try {

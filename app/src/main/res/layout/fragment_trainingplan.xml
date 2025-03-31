@@ -17,12 +17,6 @@
         android:background="@drawable/fragment_header"
         android:padding="16dp" />
 
-    <!-- ScrollView für den restlichen Content -->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -126,5 +120,4 @@
                     android:layout_weight="1" />
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
 </LinearLayout>

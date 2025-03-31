@@ -98,6 +98,35 @@ public class TrainingdayExerciseAssignmentRepositoryTest {
         db.close();
 
         List<Integer> result = repository.getExerciseIdsForTrainingday(TEST_TRAININGDAY_ID);
-        assertEquals(2, result.stream().filter(id -> id == TEST_EXERCISE_ID).count());
+        assertEquals(1, result.stream().filter(id -> id == TEST_EXERCISE_ID).count());
+    }
+
+    @Test
+    public void testDeleteTrainingdayExerciseAssignment() {
+        // Sicherstellen, dass der Eintrag existiert
+        TrainingdayExerciseAssignment assignment = repository.getTrainingdayExcerciseAssignments(TEST_TRAININGDAY_ID);
+        assertNotNull(assignment);
+
+        // Eintrag löschen
+        repository.deleteTrainingdayExerciseAssignment(assignment.getId());
+
+        // Sicherstellen, dass der Eintrag nicht mehr existiert
+        TrainingdayExerciseAssignment deletedAssignment = repository.getTrainingdayExcerciseAssignments(TEST_TRAININGDAY_ID);
+        assertNull(deletedAssignment);
+    }
+
+    @Test
+    public void testAddTrainingExerciseAssignment() {
+        // Test mit existierender Übung
+        long result = repository.addTrainingExerciseAssignment(TEST_TRAININGDAY_ID, TEST_EXERCISE_ID);
+        assertTrue("Insert sollte erfolgreich sein", result > 0);
+
+        // Test mit nicht existierender Übung
+        long invalidResult = repository.addTrainingExerciseAssignment(TEST_TRAININGDAY_ID, NON_EXISTENT_ID);
+        assertEquals("Insert sollte fehlschlagen", -1, invalidResult);
+
+        // Überprüfung der Datenkonsistenz
+        List<Integer> exercises = repository.getExerciseIdsForTrainingday(TEST_TRAININGDAY_ID);
+        assertTrue("Neue Übung sollte hinzugefügt sein", exercises.contains(TEST_EXERCISE_ID));
     }
 }

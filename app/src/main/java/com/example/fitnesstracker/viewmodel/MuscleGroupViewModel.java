@@ -2,34 +2,41 @@ package com.example.fitnesstracker.viewmodel;
 
 import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
+import com.example.fitnesstracker.model.Exercise;
 import com.example.fitnesstracker.model.MuscleGroup;
+import com.example.fitnesstracker.repository.ExerciseRepository;
 import com.example.fitnesstracker.repository.MuscleGroupRepository;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MuscleGroupViewModel extends AndroidViewModel {
-    private final MuscleGroupRepository repository;
+    private final MuscleGroupRepository muscleGroupRepository;
+    private final ExerciseRepository exerciseRepository;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-    private List<MuscleGroup> muscleGroups;
+
+    public interface OnDataLoadedListener<T> {
+        void onDataLoaded(T data);
+    }
 
     public MuscleGroupViewModel(Application application) {
         super(application);
-        repository = new MuscleGroupRepository(application);
+        muscleGroupRepository = new MuscleGroupRepository(application);
+        exerciseRepository = new ExerciseRepository(application);
     }
 
-    public interface OnDataLoadedListener {
-        void onDataLoaded(List<MuscleGroup> muscleGroups);
-    }
-
-    public void loadMuscleGroups(OnDataLoadedListener listener) {
+    // Korrigierte Methoden mit generischen Parametern
+    public void loadMuscleGroups(OnDataLoadedListener<List<MuscleGroup>> listener) {
         executorService.execute(() -> {
-            muscleGroups = repository.getAllMuscleGroups();
-            listener.onDataLoaded(muscleGroups); // Callback mit geladenen Daten
+            List<MuscleGroup> result = muscleGroupRepository.getAllMuscleGroups();
+            listener.onDataLoaded(result);
         });
     }
 
-    public List<MuscleGroup> getMuscleGroups() {
-        return muscleGroups;
+    public void loadExercisesForMuscleGroup(int muscleGroupId, OnDataLoadedListener<List<Exercise>> listener) {
+        executorService.execute(() -> {
+            List<Exercise> result = exerciseRepository.getExercisesForMuscleGroup(muscleGroupId);
+            listener.onDataLoaded(result);
+        });
     }
 }

@@ -30,16 +30,16 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- RecyclerView für die Übungen -->
+            <!-- RecyclerView für die Sets -->
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewTrainingdayExercises"
+                android:id="@+id/recyclerViewTrainingExerciseSets"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"/>
 
             <!-- Plus-Button als quadratische Karte -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardAddTrainingExercise"
+                android:id="@+id/cardAddSet"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center"
@@ -50,16 +50,14 @@
                 app:cardBackgroundColor="@color/primary">
 
                 <ImageView
-                    android:id="@+id/addNewTrainingExercise"
+                    android:id="@+id/addNewSet"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_gravity="center"
-                    android:contentDescription="@string/t_add_exercise"
+                    android:contentDescription="@string/t_add_set"
                     android:src="@drawable/ic_add"
                     app:tint="@android:color/white"/>
             </androidx.cardview.widget.CardView>
-
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>
