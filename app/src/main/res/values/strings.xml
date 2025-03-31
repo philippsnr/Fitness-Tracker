@@ -20,6 +20,10 @@
     <string name="n_nutrition">Lebensmittel</string>
     <string name="n_search">Suchen</string>
     <string name="n_noConnectionText">Keine Internetverbindung verfügbar</string>
+    <string name="n_searchConnection">Suche Internetverbindung...</string>
+    <string name="n_connectionAvailable">Online</string>
+    <string name="n_connectionNotAvailable">Offline</string>
+    <string name="n_apiFailure">Es gab einen Fehler beim Abrufen der Daten</string>
     <string name="t_activeListHeading"><u>Aktiver Trainingsplan</u></string>
     <string name="t_allTrainingPlansHeading"><u>Alle Trainingspläne</u></string>
     <string name="t_view_plan">Trainingsplan anzeigen</string>

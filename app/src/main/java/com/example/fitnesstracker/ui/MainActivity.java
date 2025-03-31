@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.example.fitnesstracker.R;
-import com.example.fitnesstracker.ui.nutrition.NutritionFragment;
+import com.example.fitnesstracker.ui.nutrition.SearchNutritionFragment;
 import com.example.fitnesstracker.ui.progression.ProgressionFragment;
 import com.example.fitnesstracker.ui.exercise.ExerciseFragment;
 import com.example.fitnesstracker.ui.training.TrainingPlanFragment;
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         if (itemId == R.id.nav_progression) {
             return new ProgressionFragment();
         } else if (itemId == R.id.nav_nutrition) {
-            return new NutritionFragment();
+            return new SearchNutritionFragment();
         } else if (itemId == R.id.nav_training) {
             return new TrainingPlanFragment();
         } else if (itemId == R.id.nav_exercise) {
