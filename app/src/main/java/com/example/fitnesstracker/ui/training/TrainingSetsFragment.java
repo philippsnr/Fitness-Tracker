@@ -138,8 +138,8 @@ public class TrainingSetsFragment extends Fragment {
         builder.setView(dialogView);
         setupDialogButtons(builder, dialogView);
         AlertDialog dialog = builder.create();
-        setupDialogInputValidation(dialog, dialogView);
         dialog.show();
+        setupDialogInputValidation(dialog, dialogView);
     }
 
     /**
