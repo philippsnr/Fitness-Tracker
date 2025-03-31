@@ -48,7 +48,7 @@ public class TrainingPlanFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initUI(view);
         initViewModel();
-        loadTrainingPlans();
+        view.post(() -> loadTrainingPlans());
     }
 
     /**

@@ -12,9 +12,8 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import com.example.fitnesstracker.R;
 
-public class OnboardingNameFragment extends Fragment {
-    private EditText editTextName;
-    private Button buttonNext;
+public class OnboardingStartFragment extends Fragment {
+    private Button buttonStart;
     private OnboardingDataListener dataListener;
 
     @Override
@@ -29,20 +28,11 @@ public class OnboardingNameFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_onboarding_name, container, false);
-
-        editTextName = root.findViewById(R.id.editTextName);
-        buttonNext = root.findViewById(R.id.buttonNext);
-
-        buttonNext.setOnClickListener(v -> {
-            String name = editTextName.getText().toString().trim();
-            if (TextUtils.isEmpty(name)) {
-                Toast.makeText(getContext(), "Bitte gebe deinen Namen ein.", Toast.LENGTH_SHORT).show();
-            } else {
-                dataListener.onDataCollected("name", name);
-            }
+        View root = inflater.inflate(R.layout.fragment_onboarding_start, container, false);
+        buttonStart = root.findViewById(R.id.buttonStart);
+        buttonStart.setOnClickListener(v -> {
+            dataListener.onDataCollected("name", null);
         });
-
         return root;
     }
 }

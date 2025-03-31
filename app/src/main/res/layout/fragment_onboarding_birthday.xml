@@ -12,18 +12,21 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:layout_marginBottom="10dp"
-        android:text="@string/o_height_question"
+        android:text="@string/o_birthday_question"
         android:textColor="@android:color/white"
         android:textSize="30sp" />
 
-    <EditText
-        android:id="@+id/editTextHeight"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonSelectDate"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:backgroundTint="@android:color/white"
-        android:textColor="@android:color/white"/>
+        android:text="@string/o_birthday_selection"
+        android:backgroundTint="@color/background"
+        android:textColor="@android:color/black"
+        android:icon="@drawable/ic_calendar"
+        android:padding="12dp"/>
 
     <Button
         android:id="@+id/buttonNext"
