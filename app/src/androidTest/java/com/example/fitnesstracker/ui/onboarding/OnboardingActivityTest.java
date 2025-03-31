@@ -100,8 +100,6 @@ public class OnboardingActivityTest {
                         .perform(click());
                 onView(withId(R.id.buttonNext))
                         .perform(click());
-
-
             case 7:
                 // Slider: Setze die SeekBar auf einen bestimmten Wert (z.B. 5 Tage)
                 onView(withId(R.id.seekBarTrainingDays))
@@ -132,12 +130,8 @@ public class OnboardingActivityTest {
         };
     }
     public void selectDate() {
-
-
-
         // 3. Klicke auf den OK-Button des DatePickers
         onView(withText("OK")).perform(click());
-
         // 4. Überprüfe, ob das Datum im Button angezeigt wird
         onView(withId(R.id.buttonSelectDate))
                 .check(matches(not(withText("Geburtsdatum auswählen")))); // Sicherstellen, dass das Datum sich geändert hat
