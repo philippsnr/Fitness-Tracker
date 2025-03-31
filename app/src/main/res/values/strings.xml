@@ -20,6 +20,10 @@
     <string name="n_nutrition">Lebensmittel</string>
     <string name="n_search">Suchen</string>
     <string name="n_noConnectionText">Keine Internetverbindung verfügbar</string>
+    <string name="n_searchConnection">Suche Internetverbindung...</string>
+    <string name="n_connectionAvailable">Online</string>
+    <string name="n_connectionNotAvailable">Offline</string>
+    <string name="n_apiFailure">Es gab einen Fehler beim Abrufen der Daten</string>
     <string name="t_activeListHeading"><u>Aktiver Trainingsplan</u></string>
     <string name="t_allTrainingPlansHeading"><u>Alle Trainingspläne</u></string>
     <string name="t_view_plan">Trainingsplan anzeigen</string>
@@ -41,4 +45,20 @@
     <string name="t_weight_placeholder">100 kg</string>
     <string name="t_reps_placeholder">10 reps</string>
     <string name="t_add_set">Satz hinzufügen</string>
+    <string name="o_start">Profil erstellen</string>
+    <string name="o_birthday_question">Wann hast du Geburtstag?</string>
+    <string name="o_birthday_selection">Geburtsdatum auswählen</string>
+    <string name="o_next">Weiter</string>
+    <string name="o_goal_question">Was ist dein Ziel?</string>
+    <string name="o_goal_option_lose">Abnehmen</string>
+    <string name="o_goal_option_maintain">Gewicht halten</string>
+    <string name="o_goal_option_gain">Zunehmen</string>
+    <string name="o_height_question">Wie groß bist du? (in cm)</string>
+    <string name="o_kfa_question">Wie hoch ist dein Körperfettanteil (KFA)</string>
+    <string name="o_kfa_help">KFA Hilfe</string>
+    <string name="o_name_question">Wie ist dein Name?</string>
+    <string name="o_training_days_question">Wie viele Tage pro Woche willst du trainieren?</string>
+    <string name="o_training_days_selection">3 days per week</string>
+    <string name="o_finish">Reise starten!</string>
+    <string name="o_weight_question">Wie viel wiegtst du? (in kg)</string>
 </resources>

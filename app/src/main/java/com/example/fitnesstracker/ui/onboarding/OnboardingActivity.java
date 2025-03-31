@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.model.User;
@@ -14,6 +15,10 @@ import com.example.fitnesstracker.repository.UserInformationRepository;
 import com.example.fitnesstracker.repository.UserRepository;
 import com.example.fitnesstracker.ui.MainActivity;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 public class OnboardingActivity extends AppCompatActivity implements OnboardingDataListener {
 
@@ -24,13 +29,26 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
     private String userName;
     private double weight;
     private int height;
-    private String birthYear;
+    private String birthday;
     private int kfa;
     private String userGoal;
     private int trainingDaysPerWeek;
-
     private UserInformationRepository userInformationRepository;
     private UserRepository userRepository;
+    private final Map<String, Consumer<Object>> dataHandlers = new HashMap<>();
+
+    private static final Map<Integer, Fragment> FRAGMENT_MAP = new HashMap<>();
+    static {
+        FRAGMENT_MAP.put(0, new OnboardingStartFragment());
+        FRAGMENT_MAP.put(1, new OnboardingNameFragment());
+        FRAGMENT_MAP.put(2, new OnboardingWeightFragment());
+        FRAGMENT_MAP.put(3, new OnboardingHeightFragment());
+        FRAGMENT_MAP.put(4, new OnboardingBirthdayFragment());
+        FRAGMENT_MAP.put(5, new OnboardingKfaFragment());
+        FRAGMENT_MAP.put(6, new OnboardingGoalFragment());
+        FRAGMENT_MAP.put(7, new OnboardingTrainingDaysFragment());
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +60,18 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
         viewPager = findViewById(R.id.onboardingViewPager);
         pagerAdapter = new OnboardingPagerAdapter(this);
         viewPager.setAdapter(pagerAdapter);
+
+        initializeDataHandlers();
+    }
+
+    private void initializeDataHandlers() {
+        dataHandlers.put("name", data -> userName = (String) data);
+        dataHandlers.put("weight", data -> weight = (Double) data);
+        dataHandlers.put("height", data -> height = (Integer) data);
+        dataHandlers.put("birthday", data -> birthday = (String) data);
+        dataHandlers.put("kfa", data -> kfa = (Integer) data);
+        dataHandlers.put("goal", data -> userGoal = (String) data);
+        dataHandlers.put("trainingDays", data -> trainingDaysPerWeek = (Integer) data);
     }
 
     @Override
@@ -56,28 +86,9 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
     }
 
     private void saveCollectedData(String key, Object data) {
-        switch (key) {
-            case "name":
-                userName = (String) data;
-                break;
-            case "weight":
-                weight = (Double) data;
-                break;
-            case "height":
-                height = (Integer) data;
-                break;
-            case "birthYear":
-                birthYear = (String) data;
-                break;
-            case "kfa":
-                kfa = (Integer) data;
-                break;
-            case "goal":
-                userGoal = (String) data;
-                break;
-            case "trainingDays":
-                trainingDaysPerWeek = (Integer) data;
-                break;
+        Consumer<Object> handler = dataHandlers.get(key);
+        if (handler != null) {
+            handler.accept(data);
         }
     }
 
@@ -97,7 +108,7 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
 
     private void saveUserData() {
         UserInformation userInfo = new UserInformation(0, 1, new Date(), height, weight, kfa);
-        User user = new User(1, userName, birthYear, userGoal, trainingDaysPerWeek);
+        User user = new User(1, userName, birthday, userGoal, trainingDaysPerWeek);
         userInformationRepository.writeUserInformation(userInfo);
         userRepository.saveUser(user);
 
@@ -126,29 +137,12 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
         @NonNull
         @Override
         public androidx.fragment.app.Fragment createFragment(int position) {
-            switch (position) {
-                case 0:
-                    return new OnboardingNameFragment();
-                case 1:
-                    return new OnboardingWeightFragment();
-                case 2:
-                    return new OnboardingHeightFragment();
-                case 3:
-                    return new OnboardingBirthYearFragment();
-                case 4:
-                    return new OnboardingKfaFragment();
-                case 5:
-                    return new OnboardingGoalFragment();
-                case 6:
-                    return new OnboardingTrainingDaysFragment();
-                default:
-                    return new OnboardingNameFragment(); // Fallback
-            }
+            return Objects.requireNonNull(FRAGMENT_MAP.getOrDefault(position, new OnboardingNameFragment()));
         }
 
         @Override
         public int getItemCount() {
-            return 7; // Anzahl der Fragmente muss mit createFragment() übereinstimmen
+            return 8; // Anzahl der Fragmente muss mit createFragment() übereinstimmen
         }
     }
 }

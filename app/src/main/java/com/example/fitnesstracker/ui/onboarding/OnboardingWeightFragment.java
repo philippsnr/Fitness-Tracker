@@ -30,8 +30,6 @@ public class OnboardingWeightFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_onboarding_weight, container, false);
-        ImageView imageView = root.findViewById(R.id.imageViewPlaceholder);
-        imageView.setImageResource(R.drawable.placeholder_image);
 
         editTextWeight = root.findViewById(R.id.editTextWeight);
         buttonNext = root.findViewById(R.id.buttonNext);
@@ -39,13 +37,13 @@ public class OnboardingWeightFragment extends Fragment {
         buttonNext.setOnClickListener(v -> {
             String weightStr = editTextWeight.getText().toString().trim();
             if (TextUtils.isEmpty(weightStr)) {
-                Toast.makeText(getContext(), "Please enter your weight", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Bitte gebe dein Gewicht ein", Toast.LENGTH_SHORT).show();
             } else {
                 try {
                     double weight = Double.parseDouble(weightStr);
                     dataListener.onDataCollected("weight", weight);
                 } catch (NumberFormatException e) {
-                    Toast.makeText(getContext(), "Invalid weight format", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Ungültige Gewichtseingabe", Toast.LENGTH_SHORT).show();
                 }
             }
         });

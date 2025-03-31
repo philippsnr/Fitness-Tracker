@@ -57,15 +57,24 @@ public class UserInformationRepositoryTest {
         assertEquals(userInfo.getKfa(), retrievedUserInfo.getKfa());
     }
 
-    /** Testet das Abrufen der letzten User-Information. */
+    /**
+     * Testet das Abrufen der letzten Benutzerinformationen.
+     * Es wird geprüft, ob:
+     *   - Beim normalen Fall die neuesten Daten vollständig zurückgegeben werden.
+     *   - Falls der neueste Datensatz optionale Werte (Höhe, KFA) nicht enthält (also 0 ist),
+     *       diese aus dem zuletzt gültigen Datensatz übernommen werden.
+     */
     @Test
     public void testGetLatestUserInformation() {
+        // Schreibe den ersten Datensatz mit gültigen Werten
         UserInformation userInfo1 = new UserInformation(1, 1, "2025-03-12", 180, 75.0, 15);
         userInformationRepository.writeUserInformation(userInfo1);
 
+        // Schreibe den zweiten Datensatz mit aktualisierten Werten
         UserInformation userInfo2 = new UserInformation(2, 1, "2025-03-13", 182, 78.0, 14);
         userInformationRepository.writeUserInformation(userInfo2);
 
+        // Abrufen und prüfen: Der neueste Datensatz (userInfo2) sollte vollständig zurückgegeben werden
         UserInformation latestUserInfo = userInformationRepository.getLatestUserInformation();
         assertNotNull(latestUserInfo);
         assertEquals(userInfo2.getUserId(), latestUserInfo.getUserId());
@@ -73,5 +82,17 @@ public class UserInformationRepositoryTest {
         assertEquals(userInfo2.getHeight(), latestUserInfo.getHeight());
         assertEquals(userInfo2.getWeight(), latestUserInfo.getWeight(), 0.0);
         assertEquals(userInfo2.getKfa(), latestUserInfo.getKfa());
+
+        // Schreibe einen dritten Datensatz, bei dem die Höhe und der KFA nicht angegeben sind (0)
+        UserInformation userInfo3 = new UserInformation(3, 1, "2025-03-14", 0, 80.0, 0);
+        userInformationRepository.writeUserInformation(userInfo3);
+
+        // Abrufen: Da in userInfo3 Höhe und KFA fehlen, sollen diese aus dem zuletzt gültigen Datensatz (userInfo2) übernommen werden.
+        UserInformation latestUserInfoAfterMissing = userInformationRepository.getLatestUserInformation();
+        assertNotNull(latestUserInfoAfterMissing);
+        // Erwartung: Gewicht aus userInfo3, Höhe und KFA aus userInfo2
+        assertEquals(userInfo2.getHeight(), latestUserInfoAfterMissing.getHeight());
+        assertEquals(userInfo2.getKfa(), latestUserInfoAfterMissing.getKfa());
+        assertEquals(userInfo3.getWeight(), latestUserInfoAfterMissing.getWeight(), 0.0);
     }
 }

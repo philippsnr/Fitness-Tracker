@@ -45,7 +45,7 @@ public class OnboardingGoalFragment extends Fragment {
         buttonNext.setOnClickListener(v -> {
             int selectedId = radioGroupGoal.getCheckedRadioButtonId();
             if (selectedId == -1) {
-                Toast.makeText(getContext(), "Please select a goal", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Bitte wähle dein Trainingsziel.", Toast.LENGTH_SHORT).show();
                 return;
             }
 

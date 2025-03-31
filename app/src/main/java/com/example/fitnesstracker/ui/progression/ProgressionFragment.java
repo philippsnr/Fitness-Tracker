@@ -16,7 +16,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.fitnesstracker.R;
-import com.example.fitnesstracker.model.ExerciseSet;
 import com.example.fitnesstracker.model.UserInformation;
 import com.example.fitnesstracker.viewmodel.ExerciseSetViewModel;
 import com.example.fitnesstracker.viewmodel.UserInformationViewModel;
@@ -34,6 +33,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,6 +42,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * Fragment zur Darstellung des Fortschritts, inklusive Gewichtsentwicklung, Trainingsdaten und BMI.
+ * <p>
+ * Dieses Fragment zeigt Diagramme für das Gewicht (und ggf. KFA) sowie Trainingsdaten (Sets pro Woche)
+ * an. Zudem können Benutzer neue Daten hinzufügen und ihr Trainingsziel bearbeiten.
+ * </p>
+ */
 public class ProgressionFragment extends Fragment {
 
     private LineChart weightChart;
@@ -53,9 +60,13 @@ public class ProgressionFragment extends Fragment {
     private TextView bmiTextView;
     private View bmiBorder;
 
-
     /**
-     * Erstellt und initialisiert das Fragment.
+     * Erstellt und initialisiert die View des Fragments.
+     *
+     * @param inflater           Der LayoutInflater zum Aufblasen der View.
+     * @param container          Der Container, in dem die View platziert wird.
+     * @param savedInstanceState Falls vorhanden, der vorherige Zustand des Fragments.
+     * @return Die erstellte View des ProgressionFragments.
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,7 +88,9 @@ public class ProgressionFragment extends Fragment {
     }
 
     /**
-     * Initialisiert die View Variablen.
+     * Initialisiert die UI-Elemente und ViewModel-Instanzen.
+     *
+     * @param view Die Wurzel-View des Fragments.
      */
     private void initializeElements(View view) {
         weightChart = view.findViewById(R.id.weightChart);
@@ -91,7 +104,7 @@ public class ProgressionFragment extends Fragment {
     }
 
     /**
-     * Lädt die gespeicherten Gewichtsdaten und aktualisiert das Diagramm.
+     * Lädt alle gespeicherten Gewichtsdaten aus dem ViewModel und aktualisiert das Gewichtschart.
      */
     private void loadWeightData() {
         userInformationViewModel.getAllUserInformation(dataList -> {
@@ -102,7 +115,9 @@ public class ProgressionFragment extends Fragment {
     }
 
     /**
-     * Aktualisiert das Diagramm mit neuen Daten.
+     * Aktualisiert das Gewichtschart mit den übergebenen Benutzerinformationen.
+     *
+     * @param dataList Eine Liste von {@link UserInformation}-Objekten.
      */
     private void updateWeightChart(List<UserInformation> dataList) {
         if (!isWeightChartUpdateValid(dataList)) return;
@@ -113,18 +128,26 @@ public class ProgressionFragment extends Fragment {
         List<Entry> kfaEntries = new ArrayList<>();
         populateWeightChartEntries(dataList, baseDate, weightEntries, kfaEntries);
 
-        getActivity().runOnUiThread(() -> configureWeightChart(baseDate, weightEntries, kfaEntries));
+        requireActivity().runOnUiThread(() -> configureWeightChart(baseDate, weightEntries, kfaEntries));
     }
 
     /**
-     * Überprüft, ob die Diagrammaktualisierung gültig ist.
+     * Überprüft, ob die Gewichtschart-Aktualisierung durchgeführt werden kann.
+     *
+     * @param dataList Die Liste der Benutzerinformationen.
+     * @return {@code true}, wenn alle Voraussetzungen erfüllt sind, andernfalls {@code false}.
      */
     private boolean isWeightChartUpdateValid(List<UserInformation> dataList) {
         return getContext() != null && weightChart != null && dataList != null && !dataList.isEmpty();
     }
 
     /**
-     * Erstellt die Einträge für das Diagramm.
+     * Erstellt Chart-Einträge für Gewicht und KFA basierend auf den übergebenen Daten.
+     *
+     * @param dataList      Die Liste der Benutzerinformationen.
+     * @param baseDate      Das Basisdatum als Referenzpunkt.
+     * @param weightEntries Die Liste, in die die Gewichtseinträge hinzugefügt werden.
+     * @param kfaEntries    Die Liste, in die die KFA-Einträge (falls vorhanden) hinzugefügt werden.
      */
     private void populateWeightChartEntries(List<UserInformation> dataList, long baseDate, List<Entry> weightEntries, List<Entry> kfaEntries) {
         final float millisInDay = 86400000f;
@@ -138,7 +161,11 @@ public class ProgressionFragment extends Fragment {
     }
 
     /**
-     * Konfiguriert das Diagramm mit den übergebenen Daten.
+     * Konfiguriert das Gewichtschart mit den übergebenen Daten und aktualisiert die Darstellung.
+     *
+     * @param baseDate      Das Basisdatum für die X-Achse.
+     * @param weightEntries Die Einträge für das Gewicht.
+     * @param kfaEntries    Die Einträge für den KFA (Körperfettanteil).
      */
     private void configureWeightChart(long baseDate, List<Entry> weightEntries, List<Entry> kfaEntries) {
         LineDataSet weightDataSet = createWeightDataSet(weightEntries, "Gewicht (kg)", Color.WHITE, YAxis.AxisDependency.LEFT, true);
@@ -156,7 +183,14 @@ public class ProgressionFragment extends Fragment {
     }
 
     /**
-     * Erstellt und konfiguriert einen Datensatz für das Diagramm.
+     * Erstellt und konfiguriert einen Datensatz für das Gewichtschart.
+     *
+     * @param entries Die Einträge, die im Datensatz enthalten sein sollen.
+     * @param label   Die Bezeichnung des Datensatzes.
+     * @param color   Die Farbe für den Datensatz.
+     * @param axis    Die zugehörige Y-Achse.
+     * @param filled  Legt fest, ob der Datensatz gefüllt dargestellt wird.
+     * @return Den konfigurierten {@link LineDataSet}-Datensatz.
      */
     private LineDataSet createWeightDataSet(List<Entry> entries, String label, int color, YAxis.AxisDependency axis, boolean filled) {
         LineDataSet dataSet = new LineDataSet(entries, label);
@@ -176,7 +210,9 @@ public class ProgressionFragment extends Fragment {
     }
 
     /**
-     * Konfiguriert die Achsen des Diagramms.
+     * Konfiguriert die Achsen des Gewichtscharts, einschließlich X-Achsen-Formatierung und Farbgebung.
+     *
+     * @param baseDate Das Basisdatum als Referenz für die X-Achse.
      */
     private void configureWeightChartAxes(long baseDate) {
         weightChart.getAxisLeft().setDrawGridLines(false);
@@ -193,14 +229,14 @@ public class ProgressionFragment extends Fragment {
         });
         weightChart.getXAxis().setGranularity(1f);
 
-        // Achsenfarben
+        // Setzt die Farben für die Achsenbeschriftung
         weightChart.getXAxis().setTextColor(Color.WHITE);
         weightChart.getAxisLeft().setTextColor(Color.WHITE);
         weightChart.getAxisRight().setTextColor(Color.WHITE);
     }
 
     /**
-     * Konfiguriert die Legende des Diagramms.
+     * Konfiguriert die Legende des Gewichtscharts.
      */
     private void configureWeightChartLegend() {
         Legend legend = weightChart.getLegend();
@@ -217,7 +253,7 @@ public class ProgressionFragment extends Fragment {
     }
 
     /**
-     * Lädt die gespeicherten Exercisedaten und aktualisiert das Diagramm.
+     * Lädt die gespeicherten Trainingsdaten (ExerciseSets) und aktualisiert das Balkendiagramm.
      */
     private void loadExerciseData() {
         exerciseSetViewModel.loadSetsPerWeek(setsPerWeek -> {
@@ -228,7 +264,9 @@ public class ProgressionFragment extends Fragment {
     }
 
     /**
-     * Aktualisiert das Balkendiagramm mit den neuen Daten.
+     * Aktualisiert das Balkendiagramm mit den Trainingsdaten.
+     *
+     * @param setsPerWeek Eine Map, in der die Schlüssel die Kalenderwoche und die Werte die Anzahl der Sets darstellen.
      */
     private void updateExerciseChart(Map<Integer, Integer> setsPerWeek) {
         List<BarEntry> barEntries = new ArrayList<>();
@@ -237,11 +275,13 @@ public class ProgressionFragment extends Fragment {
         for (Integer week : weeks) {
             barEntries.add(new BarEntry(week, setsPerWeek.get(week)));
         }
-        getActivity().runOnUiThread(() -> configureExerciseChart(barEntries));
+        requireActivity().runOnUiThread(() -> configureExerciseChart(barEntries));
     }
 
     /**
-     * Konfiguriert das Balkendiagramm mit den übergebenen Daten.
+     * Konfiguriert das Balkendiagramm mit den übergebenen Einträgen.
+     *
+     * @param barEntries Die Balkeneinträge, die angezeigt werden sollen.
      */
     private void configureExerciseChart(List<BarEntry> barEntries) {
         BarDataSet dataSet = createBarDataSet(barEntries);
@@ -253,7 +293,10 @@ public class ProgressionFragment extends Fragment {
     }
 
     /**
-     * Erzeugt das BarDataSet und setzt Farben und Formatierungen.
+     * Erzeugt das {@link BarDataSet} für das Balkendiagramm und wendet Formatierungen an.
+     *
+     * @param barEntries Die Einträge für das Balkendiagramm.
+     * @return Das konfigurierte {@link BarDataSet}.
      */
     private BarDataSet createBarDataSet(List<BarEntry> barEntries) {
         BarDataSet dataSet = new BarDataSet(barEntries, "Sets pro Woche");
@@ -265,19 +308,24 @@ public class ProgressionFragment extends Fragment {
     }
 
     /**
-     * Erstellt einen ValueFormatter, der die Balkenwerte als ganze Zahlen formatiert.
+     * Erstellt einen {@link ValueFormatter}, der die Balkenwerte als ganze Zahlen formatiert.
+     *
+     * @return Den erstellten {@link ValueFormatter}.
      */
     private ValueFormatter createValueFormatter() {
         return new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return String.format("%d", (int) value);
+                return String.format(Locale.getDefault(), "%d", (int) value);
             }
         };
     }
 
     /**
      * Ermittelt die Farben für die Balken basierend auf der Anzahl der Sets.
+     *
+     * @param barEntries Die Liste der Balkeneinträge.
+     * @return Eine Liste von Farben, die den jeweiligen Balken zugeordnet werden.
      */
     private List<Integer> getBarColors(List<BarEntry> barEntries) {
         List<Integer> colors = new ArrayList<>();
@@ -288,7 +336,10 @@ public class ProgressionFragment extends Fragment {
     }
 
     /**
-     * Ermittelt die Farbe für einen Balken basierend auf der Anzahl der Sets.
+     * Bestimmt die Farbe für einen Balken basierend auf der Anzahl der Sets.
+     *
+     * @param count Die Anzahl der Sets.
+     * @return Die Farbe als int-Wert.
      */
     private int getSetColor(int count) {
         int colorResource;
@@ -304,7 +355,6 @@ public class ProgressionFragment extends Fragment {
         return ContextCompat.getColor(requireContext(), colorResource);
     }
 
-
     /**
      * Konfiguriert die Achsen des Balkendiagramms.
      */
@@ -315,14 +365,17 @@ public class ProgressionFragment extends Fragment {
         xAxis.setDrawGridLines(false);
         xAxis.setTextColor(Color.WHITE);
         xAxis.setValueFormatter(new ValueFormatter() {
-            @Override public String getFormattedValue(float value) { return "KW" + ((int) value); }
+            @Override
+            public String getFormattedValue(float value) {
+                return "KW" + ((int) value);
+            }
         });
         exerciseChart.getAxisLeft().setEnabled(false);
         exerciseChart.getAxisRight().setEnabled(false);
     }
 
     /**
-     * Deaktiviert die Legende des Balkendiagramms.
+     * Konfiguriert die Legende des Balkendiagramms und deaktiviert diese.
      */
     private void configureExerciseChartLegend() {
         exerciseChart.getLegend().setEnabled(false);
@@ -349,19 +402,28 @@ public class ProgressionFragment extends Fragment {
     }
 
     /**
-     * Verarbeitet die eingegebenen Nutzerdaten und speichert sie.
+     * Verarbeitet die Eingabe im Dialog zur Dateneingabe und speichert die neuen Daten.
+     *
+     * @param etWeight Das Eingabefeld für das Gewicht.
+     * @param etHeight Das Eingabefeld für die Größe.
+     * @param etKfa    Das Eingabefeld für den KFA.
      */
     private void handleAddDataSubmit(EditText etWeight, EditText etHeight, EditText etKfa) {
         UserInformation newData = convertInputToUserInformation(etWeight, etHeight, etKfa);
         if (newData != null) {
             userInformationViewModel.writeUserInformation(newData);
             loadWeightData(); // Chart aktualisieren
-            loadBMI(); // BMI aktualisieren
+            loadBMI();      // BMI aktualisieren
         }
     }
 
     /**
-     * Konvertiert die eingegebenen Werte aus den EditText-Feldern in ein UserInformation-Objekt.
+     * Konvertiert die Eingabewerte der EditText-Felder in ein {@link UserInformation}-Objekt.
+     *
+     * @param etWeight Das Eingabefeld für das Gewicht.
+     * @param etHeight Das Eingabefeld für die Größe.
+     * @param etKfa    Das Eingabefeld für den KFA.
+     * @return Ein {@link UserInformation}-Objekt mit den eingegebenen Werten oder {@code null}, falls ein Fehler auftritt.
      */
     private UserInformation convertInputToUserInformation(EditText etWeight, EditText etHeight, EditText etKfa) {
         try {
@@ -385,17 +447,14 @@ public class ProgressionFragment extends Fragment {
     }
 
     /**
-     * Lädt das Benutzerziel aus dem ViewModel und zeigt es in der TextView an.
+     * Lädt das aktuelle Trainingsziel aus dem {@link UserViewModel} und zeigt es in der TextView an.
      */
     private void loadUserGoal() {
-        userViewModel.getUserGoal(new UserViewModel.OnGoalLoadedListener() {
-            @Override
-            public void onGoalLoaded(String goal) {
-                if (goal != null) {
-                    txtGoal.setText("Ziel: " + goal);
-                } else {
-                    txtGoal.setText("Ziel: Nicht gesetzt");
-                }
+        userViewModel.getUserGoal(goal -> {
+            if (goal != null) {
+                txtGoal.setText("Ziel: " + goal);
+            } else {
+                txtGoal.setText("Ziel: Nicht gesetzt");
             }
         });
     }
@@ -417,14 +476,18 @@ public class ProgressionFragment extends Fragment {
     }
 
     /**
-     * Erstellt und gibt die View für den Dialog zurück.
+     * Erstellt und gibt die View für den Dialog zur Zielauswahl zurück.
+     *
+     * @return Die Dialog-View.
      */
     private View getDialogView() {
         return getLayoutInflater().inflate(R.layout.progression_dialog_edit_goal, null);
     }
 
     /**
-     * Setzt die aktuelle Auswahl basierend auf dem bestehenden Ziel.
+     * Präselektiert im Zielauswahl-Dialog das aktuell gesetzte Trainingsziel.
+     *
+     * @param radioGroupGoals Die RadioGroup, in der die Ziele ausgewählt werden.
      */
     private void preselectCurrentGoal(RadioGroup radioGroupGoals) {
         String currentGoal = txtGoal.getText().toString();
@@ -439,7 +502,9 @@ public class ProgressionFragment extends Fragment {
     }
 
     /**
-     * Speichert das ausgewählte Ziel und aktualisiert die UI.
+     * Speichert das ausgewählte Trainingsziel und aktualisiert die UI.
+     *
+     * @param radioGroupGoals Die RadioGroup, aus der das Ziel ausgewählt wurde.
      */
     private void saveSelectedGoal(RadioGroup radioGroupGoals) {
         int selectedId = radioGroupGoals.getCheckedRadioButtonId();
@@ -450,7 +515,10 @@ public class ProgressionFragment extends Fragment {
     }
 
     /**
-     * Gibt das Ziel basierend auf der RadioButton-Auswahl zurück.
+     * Bestimmt das Trainingsziel basierend auf der ausgewählten RadioButton-ID.
+     *
+     * @param selectedId Die ID des ausgewählten RadioButtons.
+     * @return Das entsprechende Trainingsziel als String.
      */
     private String getGoalFromSelection(int selectedId) {
         if (selectedId == R.id.rbLoseWeight) {
@@ -464,19 +532,16 @@ public class ProgressionFragment extends Fragment {
     }
 
     /**
-     * Lädt das BMI aus dem ViewModel und zeigt es an.
+     * Lädt den BMI aus dem {@link UserInformationViewModel} und aktualisiert die BMI-UI.
      */
     private void loadBMI() {
-        userInformationViewModel.getBMI(new UserInformationViewModel.OnBMILoadedListener() {
-            @Override
-            public void onBMILoaded(double bmi) {
-                getActivity().runOnUiThread(() -> updateBmiUI(bmi));
-            }
-        });
+        userInformationViewModel.getBMI(bmi -> requireActivity().runOnUiThread(() -> updateBmiUI(bmi)));
     }
 
     /**
-     * Aktualisiert die BMI-UI-Komponenten.
+     * Aktualisiert die UI-Komponenten für die BMI-Anzeige.
+     *
+     * @param bmi Der berechnete BMI-Wert.
      */
     private void updateBmiUI(double bmi) {
         if (getContext() == null || bmiBorder == null) return;
@@ -486,17 +551,23 @@ public class ProgressionFragment extends Fragment {
     }
 
     /**
-     * Formatiert den BMI-Wert auf eine Dezimalstelle.
+     * Formatiert den BMI-Wert als String mit einer Nachkommastelle.
+     *
+     * @param bmi Der BMI-Wert.
+     * @return Der formatierte BMI-Wert als String.
      */
     private String formatBmiValue(double bmi) {
         return String.format(Locale.getDefault(), "%.1f", bmi);
     }
 
     /**
-     * Bestimmt die Farbe basierend auf dem BMI-Wert.
+     * Bestimmt anhand des BMI-Werts die entsprechende Farbe.
+     *
+     * @param bmi Der BMI-Wert.
+     * @return Die entsprechende Farbe als int-Wert.
      */
     private int getBmiColor(double bmi) {
-        int colorResource = R.color.bmi_normal;
+        int colorResource;
 
         if (bmi < 18.5) {
             colorResource = R.color.bmi_underweight;

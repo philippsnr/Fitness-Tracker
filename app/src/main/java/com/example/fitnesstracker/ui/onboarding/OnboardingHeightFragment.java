@@ -30,8 +30,6 @@ public class OnboardingHeightFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_onboarding_height, container, false);
-        ImageView imageView = root.findViewById(R.id.imageViewPlaceholder);
-        imageView.setImageResource(R.drawable.placeholder_image);
 
         editTextHeight = root.findViewById(R.id.editTextHeight);
         buttonNext = root.findViewById(R.id.buttonNext);
@@ -39,13 +37,13 @@ public class OnboardingHeightFragment extends Fragment {
         buttonNext.setOnClickListener(v -> {
             String heightStr = editTextHeight.getText().toString().trim();
             if (TextUtils.isEmpty(heightStr)) {
-                Toast.makeText(getContext(), "Please enter your height", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Bitte geb deine Größe ein.", Toast.LENGTH_SHORT).show();
             } else {
                 try {
                     int height = Integer.parseInt(heightStr);
                     dataListener.onDataCollected("height", height);
                 } catch (NumberFormatException e) {
-                    Toast.makeText(getContext(), "Invalid height format", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Ungültige Größeneingabe", Toast.LENGTH_SHORT).show();
                 }
             }});
         return root;
