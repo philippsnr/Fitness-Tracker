@@ -19,7 +19,7 @@ import java.util.List;
 public class TrainingExerciseAdapter extends RecyclerView.Adapter<TrainingExerciseAdapter.ExerciseViewHolder> {
 
     private List<Exercise> exercises = new ArrayList<>();
-    private OnItemClickListener listener;
+    private final OnItemClickListener listener;
 
     /**
      * Schnittstelle für Klick-Ereignisse.
@@ -70,9 +70,7 @@ public class TrainingExerciseAdapter extends RecyclerView.Adapter<TrainingExerci
      * ViewHolder für eine Übungskarte.
      */
     public static class ExerciseViewHolder extends RecyclerView.ViewHolder {
-        private TextView textViewExerciseName;
-        private ImageView ivDelete;
-        private CardView cardView;
+        private final TextView textViewExerciseName;
 
         /**
          * Konstruktor.
@@ -82,9 +80,9 @@ public class TrainingExerciseAdapter extends RecyclerView.Adapter<TrainingExerci
          */
         public ExerciseViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
-            cardView = (CardView) itemView;
+            CardView cardView = (CardView) itemView;
             textViewExerciseName = itemView.findViewById(R.id.textViewTrainingExerciseName);
-            ivDelete = itemView.findViewById(R.id.ivDeleteExercise);
+            ImageView ivDelete = itemView.findViewById(R.id.ivDeleteExercise);
             cardView.setOnClickListener(v -> {
                 if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION)
                     listener.onCardClick(getAdapterPosition());

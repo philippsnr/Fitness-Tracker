@@ -26,6 +26,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
+/**
+ * Fragment, das die Übungen eines Trainingstags anzeigt und es dem Benutzer ermöglicht, Übungen hinzuzufügen,
+ * zu entfernen und die Details der Übungen zu bearbeiten.
+ * Dieses Fragment lädt die Übungen für den jeweiligen Trainingstag und zeigt sie in einer RecyclerView an.
+ * Es ermöglicht die Anzeige der Übungssätze und das Hinzufügen neuer Übungen zum Trainingstag.
+ * Der Benutzer kann auch Übungen vom Trainingstag entfernen.
+ * Verwendete ViewModels:
+ * - ExerciseViewModel: Verwaltet die Übungen.
+ * - MuscleGroupViewModel: Verwaltet die Muskelgruppen und die Übungen, die ihnen zugeordnet sind.
+ * - TrainingdayExerciseAssignmentViewModel: Verwaltet die Zuordnungen von Übungen zu Trainingstagen.
+ */
 public class TrainingExerciseFragment extends Fragment {
     private static final String TAG = "TrainingExerciseFragment";
     private static final String TRAININGDAY_ID_KEY = "trainingdayId";
@@ -140,7 +152,7 @@ public class TrainingExerciseFragment extends Fragment {
      * Setzt den ClickListener für den FAB (Floating Action Button).
      */
     private void setupFabClickListener() {
-        ImageView fab = getActivity().findViewById(R.id.addNewTrainingExercise);
+        ImageView fab = requireActivity().findViewById(R.id.addNewTrainingExercise);
         fab.setOnClickListener(v -> showAddExerciseDialog());
     }
 
