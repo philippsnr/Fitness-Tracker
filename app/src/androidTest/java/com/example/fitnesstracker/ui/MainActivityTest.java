@@ -17,7 +17,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.ui.exercise.ExerciseFragment;
-import com.example.fitnesstracker.ui.nutrition.NutritionFragment;
+import com.example.fitnesstracker.ui.nutrition.SearchNutritionFragment;
 import com.example.fitnesstracker.ui.onboarding.OnboardingActivity;
 import com.example.fitnesstracker.ui.progression.ProgressionFragment;
 import com.example.fitnesstracker.ui.training.TrainingPlanFragment;
@@ -82,7 +82,7 @@ public class MainActivityTest {
                 bottomNav.setSelectedItemId(R.id.nav_nutrition);
                 activity.getSupportFragmentManager().executePendingTransactions();
                 Fragment currentFragment = activity.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                assertTrue("Expected instance of NutritionFragment", currentFragment instanceof NutritionFragment);
+                assertTrue("Expected instance of NutritionFragment", currentFragment instanceof SearchNutritionFragment);
 
                 bottomNav.setSelectedItemId(R.id.nav_training);
                 activity.getSupportFragmentManager().executePendingTransactions();
