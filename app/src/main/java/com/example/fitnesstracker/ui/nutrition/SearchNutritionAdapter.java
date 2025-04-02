@@ -24,15 +24,33 @@ public class SearchNutritionAdapter extends RecyclerView.Adapter<SearchNutrition
         void onItemClick(ProductModel  product);
     }
 
+    /**
+     * Konstruktor des Adapters
+     * @param productList Liste an Produkten, die dargestellt werden soll
+     * @param listener wartet auf Klick auf Element in Liste
+     */
     public SearchNutritionAdapter(List<ProductModel> productList, OnItemClickListener listener) {
         this.productList = productList;
         this.listener = listener;
     }
 
+    /**
+     * Konstruktor des Listeners
+     * @param listener wartet auf Klick auf Element in Liste
+     */
     public void setOnClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
+
+    /**
+     * Standardfunktion, die ViewHolder generiert
+     * @param parent The ViewGroup into which the new View will be added after it is bound to
+     *               an adapter position.
+     * @param viewType The view type of the new View.
+     *
+     * @return neuer ViewHolder
+     */
     @Override
     @NonNull
     public ProductByNameViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -40,17 +58,32 @@ public class SearchNutritionAdapter extends RecyclerView.Adapter<SearchNutrition
         return new SearchNutritionAdapter.ProductByNameViewHolder(view);
     }
 
+
+    /**
+     * Standardfunktion um ViewHolder einzubinden
+     * @param holder The ViewHolder which should be updated to represent the contents of the
+     *        item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(ProductByNameViewHolder holder, int position) {
         ProductModel product = productList.get(position);
         holder.bind(product, listener);
     }
 
+
+    /**
+     * Standarddunktion von Adapter
+     * @return Größe der Produkliste
+     */
     @Override
     public int getItemCount() {
         return productList.size();
     }
 
+    /**
+     * ViewHolder des Adapters
+     */
     public static class ProductByNameViewHolder extends RecyclerView.ViewHolder {
         TextView textViewProductName;
         ImageView imageViewProductImage;
@@ -60,6 +93,11 @@ public class SearchNutritionAdapter extends RecyclerView.Adapter<SearchNutrition
             imageViewProductImage = itemView.findViewById(R.id.productImage);
         }
 
+        /**
+         * Definiert, was Adapter darstellen soll und bestimmt, was bei Klicken auf Element passiert
+         * @param product Produkt aus Liste
+         * @param listener wartet auf Klick auf Element in Liste
+         */
         public void bind(final ProductModel product, final OnItemClickListener listener) {
             textViewProductName.setText(product.getProductName());
             Glide.with(itemView.getContext())
