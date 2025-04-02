@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 
+import com.example.fitnesstracker.model.TrainingdayExerciseAssignment;
 import com.example.fitnesstracker.repository.TrainingdayExerciseAssignmentRepository;
 
 import java.util.List;
@@ -36,10 +37,10 @@ public class TrainingdayExerciseAssignmentViewModel extends AndroidViewModel {
      * @param trainingdayId Die ID des Trainingstags
      * @param callback Callback, das die Liste der Übungs-IDs empfängt
      */
-    public void getExerciseIdsForTrainingday(int trainingdayId, Consumer<List<Integer>> callback) {
+    public void getAssignmentsForTrainingday(int trainingdayId, Consumer<List<TrainingdayExerciseAssignment>> callback) {
         executorService.execute(() -> {
-            List<Integer> exerciseIds = repository.getExerciseIdsForTrainingday(trainingdayId);
-            callback.accept(exerciseIds);
+            List<TrainingdayExerciseAssignment> assignments = repository.getAssignmentsForTrainingday(trainingdayId);
+            callback.accept(assignments);
         });
     }
 

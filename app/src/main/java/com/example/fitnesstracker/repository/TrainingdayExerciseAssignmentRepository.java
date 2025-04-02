@@ -37,21 +37,24 @@ public class TrainingdayExerciseAssignmentRepository {
      * @param trainingdayId Die ID des Trainingstags.
      * @return Das erste TrainingdayExerciseAssignment oder null, falls keine gefunden wurde.
      */
-    public TrainingdayExerciseAssignment getTrainingdayExcerciseAssignments(int trainingdayId) {
+    public List<TrainingdayExerciseAssignment> getAssignmentsForTrainingday(int trainingdayId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
+        List<TrainingdayExerciseAssignment> assignments = new ArrayList<>();
+
         Cursor cursor = db.rawQuery(
-                "SELECT * FROM TrainingdayExerciseAssignment WHERE trainingday_id = ?",
+                "SELECT id, Exercise_id FROM TrainingdayExerciseAssignment WHERE Trainingday_id = ?",
                 new String[]{String.valueOf(trainingdayId)}
         );
 
-        TrainingdayExerciseAssignment result = null;
-        if (cursor.moveToFirst()) {
-            result = mapCursorToAssignment(cursor);
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+            int exerciseId = cursor.getInt(cursor.getColumnIndexOrThrow("Exercise_id"));
+            assignments.add(new TrainingdayExerciseAssignment(id, trainingdayId, exerciseId));
         }
 
         cursor.close();
         db.close();
-        return result;
+        return assignments;
     }
 
     /**
