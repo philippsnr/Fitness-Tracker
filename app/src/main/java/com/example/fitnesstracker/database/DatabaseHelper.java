@@ -55,12 +55,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Database upgrade logic
     }
 
-    @Override
-    public void onConfigure(SQLiteDatabase db) {
-        super.onConfigure(db);
-        db.setForeignKeyConstraintsEnabled(true);
-    }
-
     /**
      * Copies the database from the assets folder to the app's internal storage if it does not already exist.
      */
