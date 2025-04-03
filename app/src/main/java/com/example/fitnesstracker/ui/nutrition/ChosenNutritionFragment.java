@@ -25,10 +25,28 @@ public class ChosenNutritionFragment extends Fragment {
     private ImageView productImg;
     private ProductModel product;
 
+    /**
+     * initialisiert Fragment
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param safedInstancesState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return die Anzeige des Fragments
+     */
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle safedInstancesState) {
         return inflater.inflate(R.layout.fragment_chosennutrition, container, false);
     }
 
+    /**
+     * wird ausgeführt nachdem UI erstellt wurde und initialisiert Variablen
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         product = extractBundle();
         chosenProductName = view.findViewById(R.id.chosenProductName);
@@ -40,11 +58,10 @@ public class ChosenNutritionFragment extends Fragment {
         showProductInformationOnScreen();
     }
 
-    public void onStart() {
-        super.onStart();
-    }
-
-
+    /**
+     * extrahiert die empfangenen Daten aus dem Bundle in ein Objekt
+     * @return Objekt des Produkts
+     */
     private ProductModel extractBundle() {
         ProductModel productModel = new ProductModel();
         NutrimentsModel nutrimentsModel = new NutrimentsModel();
@@ -60,6 +77,9 @@ public class ChosenNutritionFragment extends Fragment {
         return productModel;
     }
 
+    /**
+     * Stellt Daten des Produkts auf UI dar
+     */
     private void showProductInformationOnScreen() {
         chosenProductName.setText("Produkt-Name: " + product.getProductName());
         productCals.setText("Kalorien: " + product.getNutriments().getEnergyKcal());
