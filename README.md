@@ -65,7 +65,15 @@ Diese App wurde als gemeinsames Softwareprojekt entwickelt, um eine benutzerfreu
 3. **Abhängigkeiten synchronisieren:**
    Android Studio wird automatisch die benötigten Abhängigkeiten herunterladen. Falls nicht, klicke auf Sync Project with Gradle Files.
    
-4. **App starten:**
+4. **Android-Gerät oder Emulator**
+   - Um ein die App auf einem eigenen Gerät zu starten, muss auf diesem zuerst USB-Debugging aktiviert werden. Dafür gehen zu zuerst in die Einstellungen > Telefoninfo > Softwreinformationen.
+   Die Hauptsache ist, dass die Buildnummer angezeigt wird. Nun drücken sie 7x auf die Buildnummer, um die Developer Einstellungen zu aktivieren. Ist das getan können Sie unter Einstellungen i.d.R.
+   ganz unten, die Developer Einstellungen bzw. Entwickleroptionen öffnen. In diesen muss nun der Schieberegler bei USB-Debugging auf "an" gemacht werden. Nun können Sie den nächsten Schritt ausführen.
+   - Über den Emulator geht es wie folgt: Sie gehen in Android Studio rechts auf den Device Manager. Dann auf das Plus also "add new device" und "create virtual device". Nun wählen Sie ein Gerät aus, hier das 
+   Pixel 6. Wählen Sie nun unten rechts "next". In der Liste der APIs wählen Sie nun "UpsideDownCake" mit der API "34" aus. Diese API muss evtl erst runtergeladen werden. Tun Sie dies und wählen Sie dann "next".
+   Geben Sie dem Gerät einen beliebigen Namen und wählen Sie "finish". Das Gerät lässt sich nun im Device Manager starten und nun können Sie den nächsten Schritt ausführen
+   
+5. **App starten:**
    Schließe ein Android-Gerät an oder starte einen Emulator. Klicke auf den "Run"-Button, um die App zu kompilieren und zu starten.
 
 
