@@ -8,10 +8,23 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
+/**
+ * ViewModel-Klasse für die Verwaltung von Trainingstagen.
+ * Diese Klasse bietet Methoden, um Trainingstage für einen bestimmten Trainingsplan zu laden,
+ * einen neuen Trainingstag zu erstellen, bestehende Trainingstage zu aktualisieren oder zu löschen.
+ * Alle Operationen werden asynchron im Hintergrund ausgeführt.
+ */
 public class TrainingdayViewModel extends AndroidViewModel {
     private final TrainingdayRepository repository;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
+
+    /**
+     * Konstruktor für das ViewModel. Initialisiert das Repository.
+     *
+     * @param application Der Anwendungs-Kontext
+     */
     public TrainingdayViewModel(Application application) {
         super(application);
         repository = new TrainingdayRepository(application);

@@ -48,7 +48,7 @@ public class TrainingPlanFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initUI(view);
         initViewModel();
-        view.post(() -> loadTrainingPlans());
+        view.post(this::loadTrainingPlans);
     }
 
     /**
@@ -69,8 +69,6 @@ public class TrainingPlanFragment extends Fragment {
      * @param view Die Root-View des Fragments.
      */
     private void initViews(View view) {
-        TextView tvActivePlan = view.findViewById(R.id.tvActivePlan);
-        RecyclerView rvTrainingPlans = view.findViewById(R.id.rvTrainingPlans);
         ivChangeActivePlan = view.findViewById(R.id.ivChangeActivePlan);
         ivAddNewTrainingPlan = view.findViewById(R.id.addNewTrainingplan);
     }

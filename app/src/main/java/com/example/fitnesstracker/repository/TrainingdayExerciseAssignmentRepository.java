@@ -13,10 +13,20 @@ import com.example.fitnesstracker.model.TrainingdayExerciseAssignment;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Repository-Klasse für die Verwaltung der Zuordnung zwischen Trainingstagen und Übungen.
+ * Diese Klasse bietet Methoden zum Abrufen, Einfügen und Löschen von TrainingdayExerciseAssignments
+ * in der SQLite-Datenbank der Fitness-Tracker-App.
+ */
 public class TrainingdayExerciseAssignmentRepository {
 
     private final DatabaseHelper dbHelper;
 
+    /**
+     * Konstruktor, der die Datenbankhilfe-Klasse initialisiert.
+     *
+     * @param context Der Anwendungskontext
+     */
     public TrainingdayExerciseAssignmentRepository(Context context) {
         this.dbHelper = new DatabaseHelper(context);
     }
@@ -24,31 +34,34 @@ public class TrainingdayExerciseAssignmentRepository {
     /**
      * Gibt die erste TrainingdayExerciseAssignment für die angegebene Trainingday-ID zurück.
      *
-     * @param trainingdayId Die ID des Trainingdays nach dem gesucht werden soll.
-     * @return Die passende TrainingdayExerciseAssignment oder null, falls keine gefunden wurde.
+     * @param trainingdayId Die ID des Trainingstags.
+     * @return Das erste TrainingdayExerciseAssignment oder null, falls keine gefunden wurde.
      */
-    public TrainingdayExerciseAssignment getTrainingdayExcerciseAssignments(int trainingdayId) {
+    public List<TrainingdayExerciseAssignment> getAssignmentsForTrainingday(int trainingdayId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
+        List<TrainingdayExerciseAssignment> assignments = new ArrayList<>();
+
         Cursor cursor = db.rawQuery(
-                "SELECT * FROM TrainingdayExerciseAssignment WHERE trainingday_id = ?",
+                "SELECT id, Exercise_id FROM TrainingdayExerciseAssignment WHERE Trainingday_id = ?",
                 new String[]{String.valueOf(trainingdayId)}
         );
 
-        TrainingdayExerciseAssignment result = null;
-        if (cursor.moveToFirst()) {
-            result = mapCursorToAssignment(cursor);
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+            int exerciseId = cursor.getInt(cursor.getColumnIndexOrThrow("Exercise_id"));
+            assignments.add(new TrainingdayExerciseAssignment(id, trainingdayId, exerciseId));
         }
 
         cursor.close();
         db.close();
-        return result;
+        return assignments;
     }
 
     /**
-     * Liefert alle Exercise-IDs, die mit einem bestimmten Trainingday verknüpft sind.
+     * Liefert alle Exercise-IDs, die mit einem bestimmten Trainingstag verknüpft sind.
      *
-     * @param trainingdayId Die ID des Trainingdays, für das die Übungen abgefragt werden sollen.
-     * @return Liste der Exercise-IDs, die mit dem Trainingday verknüpft sind.
+     * @param trainingdayId Die ID des Trainingstags.
+     * @return Eine Liste von Exercise-IDs, die mit dem Trainingstag verknüpft sind.
      */
     public List<Integer> getExerciseIdsForTrainingday(int trainingdayId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -80,9 +93,9 @@ public class TrainingdayExerciseAssignmentRepository {
     }
 
     /**
-     * Erstellt eine neue Zuordnung zwischen einem Trainingday und einer Übung.
+     * Erstellt eine neue Zuordnung zwischen einem Trainingstag und einer Übung.
      *
-     * @param trainingdayId Die ID des Trainingdays.
+     * @param trainingdayId Die ID des Trainingstags.
      * @param exerciseId    Die ID der Übung.
      * @return Die Zeilen-ID der neu eingefügten Zuordnung oder -1 bei einem Fehler.
      */
@@ -92,7 +105,7 @@ public class TrainingdayExerciseAssignmentRepository {
 
         try {
             validateExerciseExists(db, exerciseId);
-            validateTrainingdayExists(db, trainingdayId); // New validation
+            validateTrainingdayExists(db, trainingdayId);
             long newId = insertAssignment(db, trainingdayId, exerciseId);
             db.setTransactionSuccessful();
             return newId;
@@ -139,7 +152,7 @@ public class TrainingdayExerciseAssignmentRepository {
      * Fügt eine neue Zuordnung in die Datenbank ein.
      *
      * @param db Die Datenbankverbindung.
-     * @param trainingdayId Die ID des Trainingdays.
+     * @param trainingdayId Die ID des Trainingstags.
      * @param exerciseId Die ID der Übung.
      * @return Die ID der neu eingefügten Zeile.
      */
@@ -165,13 +178,12 @@ public class TrainingdayExerciseAssignmentRepository {
         return exists;
     }
 
-
     /**
      * Überprüft, ob ein Trainingstag mit der angegebenen ID existiert.
      *
-     * @param db Die Datenbankverbindung
-     * @param trainingdayId Die ID des zu überprüfenden Trainingstags
-     * @throws RuntimeException Wenn der Trainingstag nicht existiert
+     * @param db Die Datenbankverbindung.
+     * @param trainingdayId Die ID des zu überprüfenden Trainingstags.
+     * @throws RuntimeException Wenn der Trainingstag nicht existiert.
      */
     private void validateTrainingdayExists(SQLiteDatabase db, int trainingdayId) {
         if (!trainingdayExists(db, trainingdayId)) {
@@ -182,9 +194,9 @@ public class TrainingdayExerciseAssignmentRepository {
     /**
      * Prüft die Existenz eines Trainingstags in der Datenbank.
      *
-     * @param db Die Datenbankverbindung
-     * @param trainingdayId Die ID des zu prüfenden Trainingstags
-     * @return true wenn der Trainingstag existiert, false wenn nicht
+     * @param db Die Datenbankverbindung.
+     * @param trainingdayId Die ID des zu prüfenden Trainingstags.
+     * @return true, wenn der Trainingstag existiert, sonst false.
      */
     private boolean trainingdayExists(SQLiteDatabase db, int trainingdayId) {
         Cursor c = db.rawQuery("SELECT 1 FROM Trainingday WHERE id = ?",
@@ -197,7 +209,7 @@ public class TrainingdayExerciseAssignmentRepository {
     /**
      * Gibt die DatabaseHelper-Instanz zurück, die für den Datenbankzugriff verwendet wird.
      *
-     * @return Die DatabaseHelper-Instanz
+     * @return Die DatabaseHelper-Instanz.
      */
     protected DatabaseHelper getDbHelper() {
         return dbHelper;

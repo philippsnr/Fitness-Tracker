@@ -1,11 +1,11 @@
 -- Insert Trainingplans in neuer Reihenfolge
 INSERT INTO Trainingplan (id, name, isActive) VALUES
-(1, 'Full Body (1x pro Woche)', 0),      -- Ehemals Plan 6
-(2, 'Full Body (2x pro Woche)', 0),      -- Ehemals Plan 1
-(3, 'Upper/Lower, Fullbody (3x pro Woche)', 0), -- Ehemals Plan 2
-(4, 'Upper/Lower (4x pro Woche)', 1),    -- Ehemals Plan 3
-(5, 'Push, Pull, Legs, Upper, Lower (5x pro Woche)', 0), -- Ehemals Plan 4
-(6, 'Push, Pull, Legs (6x pro Woche)', 0); -- Ehemals Plan 5
+(1, 'Full Body', 0),
+(2, 'Full Body (2x/W)', 0),
+(3, 'Upper, Lower, Full', 0),
+(4, 'Upper, Lower (4x/W)', 1),
+(5, 'Push, Pull, Legs, Upper, Lower', 0),
+(6, 'Push, Pull, Legs (6x/W)', 0);
 
 -- Insert Trainingdays mit neuen IDs
 INSERT INTO Trainingday (id, name, Trainingplan_id) VALUES

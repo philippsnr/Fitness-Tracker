@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.model.Exercise;
 import com.example.fitnesstracker.model.MuscleGroup;
+import com.example.fitnesstracker.model.TrainingdayExerciseAssignment;
 import com.example.fitnesstracker.viewmodel.ExerciseViewModel;
 import com.example.fitnesstracker.viewmodel.MuscleGroupViewModel;
 import com.example.fitnesstracker.viewmodel.TrainingdayExerciseAssignmentViewModel;
@@ -26,6 +27,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Fragment zur Anzeige und Verwaltung von Übungen eines Trainingstages.
+ * Ermöglicht das Hinzufügen, Anzeigen und Löschen von Übungen.
+ */
 public class TrainingExerciseFragment extends Fragment {
     private static final String TAG = "TrainingExerciseFragment";
     private static final String TRAININGDAY_ID_KEY = "trainingdayId";
@@ -38,14 +43,13 @@ public class TrainingExerciseFragment extends Fragment {
     private ExerciseViewModel exerciseViewModel;
     private TrainingdayExerciseAssignmentViewModel assignmentViewModel;
     private MuscleGroupViewModel muscleGroupViewModel;
-    private final List<Integer> assignmentIds = new ArrayList<>();
+    private final List<TrainingdayExerciseAssignment> assignments = new ArrayList<>();
 
     /**
      * Erstellt eine neue Instanz des Fragments.
-     *
-     * @param trainingdayId   ID des Trainingstags.
-     * @param trainingdayName Name des Trainingstags.
-     * @return Neue Instanz von TrainingExerciseFragment.
+     * @param trainingdayId ID des Trainingstages
+     * @param trainingdayName Name des Trainingstages
+     * @return Neue Instanz des Fragments
      */
     public static TrainingExerciseFragment newInstance(int trainingdayId, String trainingdayName) {
         TrainingExerciseFragment fragment = new TrainingExerciseFragment();
@@ -74,7 +78,7 @@ public class TrainingExerciseFragment extends Fragment {
     }
 
     /**
-     * Initialisiert die benötigten ViewModels.
+     * Initialisiert die ViewModels.
      */
     private void initializeViewModels() {
         exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
@@ -99,9 +103,8 @@ public class TrainingExerciseFragment extends Fragment {
     }
 
     /**
-     * Initialisiert die UI-Elemente.
-     *
-     * @param view Die Root-View des Fragments.
+     * Initialisiert die Views.
+     * @param view Die Root-View des Fragments
      */
     private void initializeViews(View view) {
         ((TextView) view.findViewById(R.id.tvTrainingDayNameHeading)).setText(trainingdayName);
@@ -109,7 +112,7 @@ public class TrainingExerciseFragment extends Fragment {
     }
 
     /**
-     * Konfiguriert den RecyclerView mit Adapter und LayoutManager.
+     * Konfiguriert den RecyclerView.
      */
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -119,8 +122,7 @@ public class TrainingExerciseFragment extends Fragment {
 
     /**
      * Erstellt den Adapter für den RecyclerView.
-     *
-     * @return Der erstellte TrainingExerciseAdapter.
+     * @return Den erstellten Adapter
      */
     private TrainingExerciseAdapter createAdapter() {
         return new TrainingExerciseAdapter(new TrainingExerciseAdapter.OnItemClickListener() {
@@ -137,83 +139,67 @@ public class TrainingExerciseFragment extends Fragment {
     }
 
     /**
-     * Setzt den ClickListener für den FAB (Floating Action Button).
+     * Setzt den Klick-Listener für den FAB (Floating Action Button).
      */
     private void setupFabClickListener() {
-        ImageView fab = getActivity().findViewById(R.id.addNewTrainingExercise);
+        ImageView fab = requireActivity().findViewById(R.id.addNewTrainingExercise);
         fab.setOnClickListener(v -> showAddExerciseDialog());
     }
 
     /**
-     * Zeigt die Sets für die ausgewählte Übung an.
-     *
-     * @param position Position der Übung in der Liste.
+     * Zeigt die Sätze einer Übung an.
+     * @param position Position der Übung in der Liste
      */
     private void showExerciseSets(int position) {
-        if (position < 0 || position >= assignmentIds.size()) return;
+        if (position < 0 || position >= assignments.size()) return;
 
-        int assignmentId = assignmentIds.get(position);
-        loadExerciseNameAndShowFragment(assignmentId);
+        TrainingdayExerciseAssignment assignment = assignments.get(position);
+        loadExerciseNameAndShowFragment(assignment);
     }
 
     /**
-     * Lädt den Übungsnamen und zeigt das TrainingSetsFragment an.
-     *
-     * @param assignmentId ID der Übungszuweisung.
+     * Lädt den Übungsnamen und zeigt das Sets-Fragment an.
+     * @param assignment Die Übungszuordnung
      */
-    private void loadExerciseNameAndShowFragment(int assignmentId) {
+    private void loadExerciseNameAndShowFragment(TrainingdayExerciseAssignment assignment) {
         exerciseViewModel.loadExercisesByIds(
-                Collections.singletonList(assignmentId),
-                exercises -> showTrainingSetsFragment(assignmentId, exercises)
+                Collections.singletonList(assignment.getExerciseId()),
+                exercises -> {
+                    if (!exercises.isEmpty()) {
+                        String exerciseName = exercises.get(0).getName();
+                        TrainingSetsFragment fragment = TrainingSetsFragment.newInstance(
+                                assignment.getId(),
+                                exerciseName
+                        );
+                        requireActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment_container, fragment)
+                                .addToBackStack(null)
+                                .commit();
+                    }
+                }
         );
-    }
-
-    /**
-     * Zeigt das TrainingSetsFragment für die gegebene Übung an.
-     *
-     * @param assignmentId ID der Übungszuweisung.
-     * @param exercises Liste der geladenen Übungen.
-     */
-    private void showTrainingSetsFragment(int assignmentId, List<Exercise> exercises) {
-        if (!exercises.isEmpty()) {
-            String exerciseName = exercises.get(0).getName();
-            TrainingSetsFragment fragment = TrainingSetsFragment.newInstance(assignmentId, exerciseName);
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit();
-        }
     }
 
     /**
      * Entfernt eine Übung vom Trainingstag.
-     *
-     * @param position Position der zu entfernenden Übung.
+     * @param position Position der zu entfernenden Übung
      */
     private void removeTrainingExercise(int position) {
-        if (position >= 0 && position < assignmentIds.size()) {
-            int assignmentId = assignmentIds.get(position);
-            deleteAssignmentAndReload(assignmentId);
+        if (position >= 0 && position < assignments.size()) {
+            int assignmentId = assignments.get(position).getId();
+            Log.d(TAG, "Attempting to delete assignment ID: " + assignmentId);
+
+            assignmentViewModel.deleteTrainingdayExerciseAssignment(assignmentId, () -> {
+                Log.d(TAG, "Successfully deleted assignment ID: " + assignmentId);
+                requireActivity().runOnUiThread(this::loadExercises);
+            });
         }
     }
 
     /**
-     * Löscht die Übungszuweisung und lädt die Liste neu.
-     *
-     * @param assignmentId ID der zu löschenden Zuweisung.
-     */
-    private void deleteAssignmentAndReload(int assignmentId) {
-        assignmentViewModel.deleteTrainingdayExerciseAssignment(
-                assignmentId,
-                () -> requireActivity().runOnUiThread(this::loadExercises)
-        );
-    }
-
-    /**
      * Zeigt einen Bestätigungsdialog zum Löschen einer Übung.
-     *
-     * @param position Position der zu löschenden Übung.
+     * @param position Position der zu löschenden Übung
      */
     private void showRemoveConfirmationDialog(int position) {
         new AlertDialog.Builder(requireContext())
@@ -226,35 +212,37 @@ public class TrainingExerciseFragment extends Fragment {
     }
 
     /**
-     * Lädt die Übungen für den aktuellen Trainingstag.
+     * Lädt die Übungen für den Trainingstag.
      */
     private void loadExercises() {
-        assignmentViewModel.getExerciseIdsForTrainingday(
+        Log.d(TAG, "Loading exercises for trainingday ID: " + trainingdayId);
+        assignmentViewModel.getAssignmentsForTrainingday(
                 trainingdayId,
-                this::handleLoadedExerciseIds
+                this::handleLoadedAssignments
         );
     }
 
     /**
-     * Verarbeitet die geladenen Übungs-IDs.
-     *
-     * @param exerciseIds Liste der geladenen Übungs-IDs.
+     * Verarbeitet die geladenen Übungszuordnungen.
+     * @param newAssignments Liste der geladenen Übungszuordnungen
      */
-    private void handleLoadedExerciseIds(List<Integer> exerciseIds) {
-        assignmentIds.clear();
-        assignmentIds.addAll(exerciseIds);
-        loadExerciseDetails(exerciseIds);
-    }
+    private void handleLoadedAssignments(List<TrainingdayExerciseAssignment> newAssignments) {
+        Log.d(TAG, "Loaded " + newAssignments.size() + " assignments");
 
-    /**
-     * Lädt die Details der Übungen.
-     *
-     * @param exerciseIds Liste der Übungs-IDs.
-     */
-    private void loadExerciseDetails(List<Integer> exerciseIds) {
+        assignments.clear();
+        assignments.addAll(newAssignments);
+
+        List<Integer> exerciseIds = new ArrayList<>();
+        for (TrainingdayExerciseAssignment assignment : newAssignments) {
+            exerciseIds.add(assignment.getExerciseId());
+        }
+
         exerciseViewModel.loadExercisesByIds(exerciseIds, exercises -> {
             if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> adapter.setExercises(exercises));
+                getActivity().runOnUiThread(() -> {
+                    adapter.setExercises(exercises);
+                    adapter.setAssignments(newAssignments);
+                });
             }
         });
     }
@@ -272,9 +260,8 @@ public class TrainingExerciseFragment extends Fragment {
 
     /**
      * Zeigt einen Lade-Dialog an.
-     *
-     * @param builder Der AlertDialog.Builder.
-     * @return Der erstellte AlertDialog.
+     * @param builder Der Dialog-Builder
+     * @return Den erstellten Dialog
      */
     private AlertDialog showLoadingDialog(AlertDialog.Builder builder) {
         View loadingView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_loading, null);
@@ -285,9 +272,8 @@ public class TrainingExerciseFragment extends Fragment {
     }
 
     /**
-     * Lädt die Muskelgruppen und zeigt sie im Dialog an.
-     *
-     * @param loadingDialog Der Lade-Dialog.
+     * Lädt die Muskelgruppen.
+     * @param loadingDialog Der anzuzeigende Lade-Dialog
      */
     private void loadMuscleGroups(AlertDialog loadingDialog) {
         muscleGroupViewModel.loadMuscleGroups(muscleGroups -> requireActivity().runOnUiThread(() -> {
@@ -298,8 +284,7 @@ public class TrainingExerciseFragment extends Fragment {
 
     /**
      * Verarbeitet die geladenen Muskelgruppen.
-     *
-     * @param muscleGroups Liste der geladenen Muskelgruppen.
+     * @param muscleGroups Liste der geladenen Muskelgruppen
      */
     private void handleLoadedMuscleGroups(List<MuscleGroup> muscleGroups) {
         if (muscleGroups == null || muscleGroups.isEmpty()) {
@@ -311,9 +296,8 @@ public class TrainingExerciseFragment extends Fragment {
     }
 
     /**
-     * Zeigt den Dialog zur Auswahl einer Muskelgruppe.
-     *
-     * @param muscleGroups Liste der verfügbaren Muskelgruppen.
+     * Zeigt einen Dialog zur Auswahl einer Muskelgruppe.
+     * @param muscleGroups Liste der verfügbaren Muskelgruppen
      */
     private void showMuscleGroupSelectionDialog(List<MuscleGroup> muscleGroups) {
         String[] muscleGroupNames = createMuscleGroupNamesArray(muscleGroups);
@@ -327,9 +311,8 @@ public class TrainingExerciseFragment extends Fragment {
 
     /**
      * Erstellt ein Array mit Muskelgruppennamen.
-     *
-     * @param muscleGroups Liste der Muskelgruppen.
-     * @return Array mit den Namen der Muskelgruppen.
+     * @param muscleGroups Liste der Muskelgruppen
+     * @return Array mit den Namen der Muskelgruppen
      */
     private String[] createMuscleGroupNamesArray(List<MuscleGroup> muscleGroups) {
         String[] names = new String[muscleGroups.size()];
@@ -340,12 +323,11 @@ public class TrainingExerciseFragment extends Fragment {
     }
 
     /**
-     * Zeigt die Übungen für eine ausgewählte Muskelgruppe an.
-     *
-     * @param muscleGroupId ID der ausgewählten Muskelgruppe.
+     * Zeigt die Übungen für eine ausgewählte Muskelgruppe.
+     * @param muscleGroupId ID der ausgewählten Muskelgruppe
      */
     private void showExercisesForMuscleGroup(int muscleGroupId) {
-        Log.d(TAG, "showExercisesForMuscleGroup() muscleGroupId: " + muscleGroupId);
+        Log.d(TAG, "Loading exercises for muscle group ID: " + muscleGroupId);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Übung auswählen");
@@ -356,9 +338,8 @@ public class TrainingExerciseFragment extends Fragment {
 
     /**
      * Lädt die Übungen für eine Muskelgruppe.
-     *
-     * @param muscleGroupId ID der Muskelgruppe.
-     * @param loadingDialog Der Lade-Dialog.
+     * @param muscleGroupId ID der Muskelgruppe
+     * @param loadingDialog Der anzuzeigende Lade-Dialog
      */
     private void loadExercisesForMuscleGroup(int muscleGroupId, AlertDialog loadingDialog) {
         muscleGroupViewModel.loadExercisesForMuscleGroup(
@@ -372,39 +353,22 @@ public class TrainingExerciseFragment extends Fragment {
 
     /**
      * Verarbeitet die geladenen Übungen.
-     *
-     * @param muscleGroupId ID der Muskelgruppe.
-     * @param exercises Liste der geladenen Übungen.
+     * @param muscleGroupId ID der Muskelgruppe
+     * @param exercises Liste der geladenen Übungen
      */
     private void handleLoadedExercises(int muscleGroupId, List<Exercise> exercises) {
-        Log.d(TAG, "onDataLoaded() exercises count: " + (exercises != null ? exercises.size() : 0));
-
         if (exercises == null || exercises.isEmpty()) {
-            Log.e(TAG, "Keine Übungen gefunden für muscleGroupId: " + muscleGroupId);
+            Log.e(TAG, "No exercises found for muscleGroupId: " + muscleGroupId);
             showErrorDialog("Keine Übungen für diese Muskelgruppe");
             return;
         }
 
-        logLoadedExercises(exercises);
         showExerciseSelectionDialog(new ArrayList<>(exercises));
     }
 
     /**
-     * Loggt die geladenen Übungen.
-     *
-     * @param exercises Liste der Übungen.
-     */
-    private void logLoadedExercises(List<Exercise> exercises) {
-        for (Exercise exercise : exercises) {
-            Log.d(TAG, "Geladene Übung - ID: " + exercise.getId()
-                    + ", Name: " + exercise.getName());
-        }
-    }
-
-    /**
-     * Zeigt den Dialog zur Auswahl einer Übung.
-     *
-     * @param exercises Liste der verfügbaren Übungen.
+     * Zeigt einen Dialog zur Auswahl einer Übung.
+     * @param exercises Liste der verfügbaren Übungen
      */
     private void showExerciseSelectionDialog(List<Exercise> exercises) {
         String[] exerciseNames = createExerciseNamesArray(exercises);
@@ -417,9 +381,8 @@ public class TrainingExerciseFragment extends Fragment {
 
     /**
      * Erstellt ein Array mit Übungsnamen.
-     *
-     * @param exercises Liste der Übungen.
-     * @return Array mit den Namen der Übungen.
+     * @param exercises Liste der Übungen
+     * @return Array mit den Namen der Übungen
      */
     private String[] createExerciseNamesArray(List<Exercise> exercises) {
         String[] names = new String[exercises.size()];
@@ -431,21 +394,13 @@ public class TrainingExerciseFragment extends Fragment {
 
     /**
      * Verarbeitet die Auswahl einer Übung.
-     *
-     * @param which Index der ausgewählten Übung.
-     * @param exercises Liste der Übungen.
+     * @param which Index der ausgewählten Übung
+     * @param exercises Liste der verfügbaren Übungen
      */
     private void handleExerciseSelection(int which, List<Exercise> exercises) {
-        Log.d(TAG, "Ausgewählte Position: " + which);
-
         if (which >= 0 && which < exercises.size()) {
             Exercise selectedExercise = exercises.get(which);
-            Log.d(TAG, "Ausgewählte Übung - ID: " + selectedExercise.getId()
-                    + ", Name: " + selectedExercise.getName());
-
             addExerciseToTrainingDay(selectedExercise.getId());
-        } else {
-            Log.e(TAG, "Ungültige Position: " + which);
         }
     }
 
@@ -455,14 +410,12 @@ public class TrainingExerciseFragment extends Fragment {
         loadExercises();
     }
 
-
     /**
      * Fügt eine Übung zum Trainingstag hinzu.
-     *
-     * @param exerciseId ID der hinzuzufügenden Übung als long.
+     * @param exerciseId ID der hinzuzufügenden Übung
      */
     private void addExerciseToTrainingDay(int exerciseId) {
-        Log.d("FRAGMENT", "Start adding exerciseId: " + exerciseId + " to trainingday: " + trainingdayId);
+        Log.d(TAG, "Adding exercise ID: " + exerciseId + " to trainingday: " + trainingdayId);
 
         assignmentViewModel.addTrainingExerciseAssignment(
                 trainingdayId,
@@ -472,17 +425,16 @@ public class TrainingExerciseFragment extends Fragment {
     }
 
     /**
-     * Verarbeitet das Ergebnis der Zuweisung.
-     *
-     * @param newId ID der neuen Zuweisung (-1 bei Fehler).
+     * Verarbeitet das Ergebnis der Übungszuordnung.
+     * @param newId ID der neuen Zuordnung (-1 bei Fehler)
      */
     private void handleAssignmentResult(int newId) {
         requireActivity().runOnUiThread(() -> {
             if (newId != -1) {
-                Log.d("FRAGMENT", "Success! New assignment ID: "+newId);
+                Log.d(TAG, "Successfully added assignment ID: " + newId);
                 loadExercises();
             } else {
-                Log.e("FRAGMENT", "Failed to add exercise");
+                Log.e(TAG, "Failed to add exercise");
                 showSaveErrorToast();
             }
         });
@@ -497,8 +449,7 @@ public class TrainingExerciseFragment extends Fragment {
 
     /**
      * Zeigt einen Fehlerdialog an.
-     *
-     * @param message Die anzuzeigende Fehlermeldung.
+     * @param message Die anzuzeigende Fehlermeldung
      */
     private void showErrorDialog(String message) {
         new AlertDialog.Builder(requireContext())

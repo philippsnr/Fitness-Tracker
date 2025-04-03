@@ -57,7 +57,6 @@ public class CallOpenFoodFactsApi {
                         Log.d("Nutrition", "Json erfolgreich in Objekt umgewandelt");
                         productList = extractProductDetailsFromApiResponse(products);
 
-                        //nur zum debuggen, muss später raus
                         for (ProductModel product : productList) {Log.d("Nutrition", "Name: " + product.getProductName() +  "Bild: " + product.getImageUrl());}
 
                         mainHandler.post(() -> callback.onSuccess(productList));
@@ -71,7 +70,6 @@ public class CallOpenFoodFactsApi {
 
     /**
      * extrahiert die Informationen aus der API-Antwort, welche benötigt werden
-     *
      * @param apiResponse API-Antwort als Objekt mit allen Informationen
      * @return Liste der Informationen die wirklich benötigt werden
      */

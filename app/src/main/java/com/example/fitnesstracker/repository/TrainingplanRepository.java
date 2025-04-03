@@ -12,6 +12,11 @@ import com.example.fitnesstracker.model.Trainingplan;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Repository-Klasse für den Zugriff auf die Trainingspläne in der SQLite-Datenbank.
+ * Diese Klasse bietet Methoden zum Abrufen, Erstellen, Aktualisieren und Löschen
+ * von Trainingsplänen sowie zur Verwaltung des aktiven Trainingsplans.
+ */
 public class TrainingplanRepository {
     private final DatabaseHelper dbHelper;
 

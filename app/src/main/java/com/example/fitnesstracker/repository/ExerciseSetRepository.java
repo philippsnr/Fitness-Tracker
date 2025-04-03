@@ -12,6 +12,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Repository-Klasse für den Zugriff auf Übungssätze in der SQLite-Datenbank.
+ * Diese Klasse bietet Methoden zum Abrufen der letzten Sätze für eine Übung,
+ * zum Speichern neuer Sätze, zum Ermitteln der Anzahl der Sätze pro Kalenderwoche
+ * sowie zum Abrufen der Nummer des letzten Satzes.
+ */
 public class ExerciseSetRepository {
     protected DatabaseHelper dbHelper;
 
