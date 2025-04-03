@@ -1,8 +1,3 @@
-DELETE FROM User WHERE 1;
-INSERT INTO User (id, name, birth_date, goal, trainingdaysPerWeek)
-VALUES (1, "Max Mustermann", "1990-06-15", "Abnehmen", 4);
-
-DELETE FROM UserInformation WHERE 1;
 INSERT INTO UserInformation (user_id, date, height, weight, KFA)
 VALUES
     (1, "2025-01-01", 180, 90.0, 25),
