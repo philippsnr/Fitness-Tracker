@@ -1,10 +1,9 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/primary"
-    android:padding="16dp"
-    android:gravity="center_horizontal">
+    android:padding="16dp">
 
     <ImageView
         android:id="@+id/imageViewPlaceholder"
@@ -12,17 +11,19 @@
         android:layout_height="wrap_content"
         android:scaleType="fitCenter"
         android:src="@drawable/logo_placeholder"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="150dp"/>
+        app:layout_constraintBottom_toTopOf="@+id/buttonStart"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"/>
 
     <Button
         android:id="@+id/buttonStart"
         android:layout_width="200dp"
         android:layout_height="70dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
         android:backgroundTint="@color/background"
         android:textColor="@android:color/black"
-        android:text="@string/o_start" />
+        android:text="@string/o_start"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
