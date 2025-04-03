@@ -1,5 +1,6 @@
 package com.example.fitnesstracker.ui.exercise;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -51,6 +52,7 @@ public class ExerciseDetailActivity extends AppCompatActivity {
      */
     protected void loadImage(String exercisePictureName, ImageView imageViewExercise) {
         if (exercisePictureName != null && !exercisePictureName.isEmpty()) {
+            @SuppressLint("DiscouragedApi")
             int resId = getResources().getIdentifier(exercisePictureName, "drawable", getPackageName());
             if (resId != 0) {
                 imageViewExercise.setImageResource(resId);

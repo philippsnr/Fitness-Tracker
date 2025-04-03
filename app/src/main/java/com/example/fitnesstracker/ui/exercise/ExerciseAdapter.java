@@ -52,7 +52,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     public void onBindViewHolder(@NonNull ExerciseViewHolder holder, int position) {
         Exercise exercise = exercises.get(position);
         holder.nameTextView.setText(exercise.getName());
-        holder.difficultyTextView.setText("Difficulty: " + exercise.getDifficulty());
+
+        String difficultyText = context.getString(R.string.e_difficulty_label, exercise.getDifficulty());
+        holder.difficultyTextView.setText(difficultyText);
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ExerciseDetailActivity.class);
             intent.putExtra("exerciseName", exercise.getName());
@@ -61,6 +63,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             context.startActivity(intent);
         });
     }
+
 
     /**
      * Returns the total number of exercises in the list.

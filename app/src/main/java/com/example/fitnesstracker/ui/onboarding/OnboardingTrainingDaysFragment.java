@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Button;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.example.fitnesstracker.R;
 
@@ -26,12 +28,12 @@ public class OnboardingTrainingDaysFragment extends Fragment {
      * @param context The context to which the fragment is attached.
      */
     @Override
-    public void onAttach(android.content.Context context) {
+    public void onAttach(@NonNull android.content.Context context) {
         super.onAttach(context);
         if (context instanceof OnboardingDataListener) {
             dataListener = (OnboardingDataListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement OnboardingDataListener");
+            throw new RuntimeException(context + " must implement OnboardingDataListener");
         }
     }
 

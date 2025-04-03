@@ -1,6 +1,4 @@
 package com.example.fitnesstracker.ui.exercise;
-
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,7 +87,7 @@ public class ExerciseFragment extends Fragment {
      */
     private void loadExercisesForMuscleGroup(int muscleGroupId) {
         exerciseViewModel.loadExercisesForMuscleGroup(muscleGroupId, exercises -> {
-            getActivity().runOnUiThread(() -> {
+            requireActivity().runOnUiThread(() -> {
                 exerciseAdapter.setExercises(exercises);
             });
         });

@@ -1,13 +1,11 @@
 package com.example.fitnesstracker.ui.onboarding;
-
-import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.example.fitnesstracker.R;
 import com.google.android.material.button.MaterialButton;
@@ -15,7 +13,6 @@ import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -33,12 +30,12 @@ public class OnboardingBirthdayFragment extends Fragment {
      * @param context The context to which the fragment is attached.
      */
     @Override
-    public void onAttach(android.content.Context context) {
+    public void onAttach(@NonNull android.content.Context context) {
         super.onAttach(context);
         if (context instanceof OnboardingDataListener) {
             dataListener = (OnboardingDataListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement OnboardingDataListener");
+            throw new RuntimeException(context + " must implement OnboardingDataListener");
         }
     }
 

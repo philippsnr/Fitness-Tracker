@@ -2,6 +2,7 @@
     <string name="app_name">Fitness Tracker</string>
     <string name="e_welcomeMuscleMessage"> Wähle eine Muskelgruppe</string>
     <string name="e_waehle_eine_muskelgruppe">Wähle eine Muskelgruppe</string>
+    <string name="e_difficulty_label">Difficulty: %d</string>
     <string name="p_progression_title">Fortschritt</string>
     <string name="p_goal">Ziel :</string>
     <string name="p_edit_goal">Ziel bearbeiten</string>
