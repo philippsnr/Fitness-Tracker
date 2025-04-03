@@ -31,12 +31,10 @@ public class TrainingdayRepositoryTest {
         Context context = ApplicationProvider.getApplicationContext();
         dbHelper = new DatabaseHelper(context);
 
-        // Clean database
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.execSQL("DELETE FROM Trainingday");
         db.execSQL("DELETE FROM Trainingplan");
 
-        // Insert test training plan
         db.execSQL("INSERT INTO Trainingplan(id, name, isActive) VALUES (" + TEST_PLAN_ID + ", 'Test Plan', 0)");
         db.close();
 
@@ -50,11 +48,9 @@ public class TrainingdayRepositoryTest {
 
     @Test
     public void testCreateAndGetTrainingdays() {
-        // Create test training day
         Trainingday newDay = new Trainingday(0, TEST_DAY_NAME, TEST_PLAN_ID);
         repository.createTrainingday(newDay);
 
-        // Retrieve training days
         List<Trainingday> days = repository.getTrainingdaysForPlan(TEST_PLAN_ID);
 
         assertFalse(days.isEmpty());
@@ -64,32 +60,26 @@ public class TrainingdayRepositoryTest {
 
     @Test
     public void testUpdateTrainingday() {
-        // Create and retrieve day
         Trainingday day = new Trainingday(0, "Old Name", TEST_PLAN_ID);
         repository.createTrainingday(day);
         day = repository.getTrainingdaysForPlan(TEST_PLAN_ID).get(0);
 
-        // Update day
         day.setName("New Name");
         repository.updateTrainingday(day);
 
-        // Verify update
         Trainingday updatedDay = repository.getTrainingdaysForPlan(TEST_PLAN_ID).get(0);
         assertEquals("New Name", updatedDay.getName());
     }
 
     @Test
     public void testDeleteTrainingday() {
-        // Create and verify day
         Trainingday day = new Trainingday(0, TEST_DAY_NAME, TEST_PLAN_ID);
         repository.createTrainingday(day);
         assertFalse(repository.getTrainingdaysForPlan(TEST_PLAN_ID).isEmpty());
 
-        // Delete day
         day = repository.getTrainingdaysForPlan(TEST_PLAN_ID).get(0);
         repository.deleteTrainingday(day);
 
-        // Verify deletion
         assertTrue(repository.getTrainingdaysForPlan(TEST_PLAN_ID).isEmpty());
     }
 

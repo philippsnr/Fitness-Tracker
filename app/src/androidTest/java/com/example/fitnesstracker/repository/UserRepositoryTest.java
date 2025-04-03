@@ -19,7 +19,6 @@ public class UserRepositoryTest {
     private DatabaseHelper dbHelper;
     private Context context;
 
-    /** Setzt die Testumgebung auf, indem eine frische Datenbankinstanz erstellt wird. */
     @Before
     public void setUp() {
         context = ApplicationProvider.getApplicationContext();
@@ -31,13 +30,11 @@ public class UserRepositoryTest {
         userRepository = new UserRepository(context);
     }
 
-    /** Schließt die Datenbank nach jedem Test. */
     @After
     public void tearDown() {
         dbHelper.close();
     }
 
-    /** Testet, ob das Benutzerziel erfolgreich gespeichert und abgerufen werden kann. */
     @Test
     public void testUpdateAndGetUserGoal() {
         String expectedGoal = "Abnehmen";
