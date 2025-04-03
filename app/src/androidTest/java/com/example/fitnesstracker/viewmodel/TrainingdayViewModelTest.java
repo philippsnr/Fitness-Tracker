@@ -11,7 +11,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.fitnesstracker.database.DatabaseHelper;
 import com.example.fitnesstracker.model.Trainingday;
-import com.example.fitnesstracker.viewmodel.TrainingdayViewModel;
 
 import org.junit.After;
 import org.junit.Before;
@@ -40,7 +39,6 @@ public class TrainingdayViewModelTest {
     @Before
     public void setUp() {
         context = ApplicationProvider.getApplicationContext();
-        // Lösche und erstelle eine neue Datenbank für jeden Test
         context.deleteDatabase(DatabaseHelper.DATABASE_NAME);
         dbHelper = new DatabaseHelper(context);
         viewModel = new TrainingdayViewModel((Application) context.getApplicationContext());
@@ -53,11 +51,10 @@ public class TrainingdayViewModelTest {
 
     @Test
     public void testCreateAndGetTrainingdays() throws InterruptedException {
-        // Testdaten
+
         int planId = (int) System.currentTimeMillis();
         Trainingday testDay = new Trainingday(0,"Test Tag", planId);
 
-        // Erstelle Trainingstag
         CountDownLatch latch = new CountDownLatch(1);
         viewModel.createTrainingday(testDay, new TrainingdayViewModel.OnOperationCompleteListener() {
             @Override
@@ -72,7 +69,6 @@ public class TrainingdayViewModelTest {
         });
         latch.await(2, TimeUnit.SECONDS);
 
-        // Hole Trainingstage
         CountDownLatch dataLatch = new CountDownLatch(1);
         viewModel.getTrainingdaysForPlan(planId, new TrainingdayViewModel.OnDataLoadedListener() {
             @Override
@@ -89,10 +85,8 @@ public class TrainingdayViewModelTest {
 
     @Test
     public void testUpdateTrainingday() throws InterruptedException {
-        // Vorbereitung
         Trainingday testDay = createTestDay("Vor Update", 1);
 
-        // Update durchführen
         testDay.setName("Nach Update");
         CountDownLatch latch = new CountDownLatch(1);
         viewModel.updateTrainingday(testDay, new TrainingdayViewModel.OnOperationCompleteListener() {
@@ -108,17 +102,15 @@ public class TrainingdayViewModelTest {
         });
         latch.await(2, TimeUnit.SECONDS);
 
-        // Überprüfung
+
         verifyDayName(testDay.getId(), "Nach Update");
     }
 
     @Test
     public void testDeleteTrainingday() throws InterruptedException {
-        // Vorbereitung mit eindeutiger Plan-ID
         int uniquePlanId = (int) System.currentTimeMillis();
         Trainingday testDay = createTestDay("Zu löschend " + System.currentTimeMillis(), uniquePlanId);
 
-        // Löschung durchführen
         CountDownLatch deleteLatch = new CountDownLatch(1);
         viewModel.deleteTrainingday(testDay, new TrainingdayViewModel.OnOperationCompleteListener() {
             @Override
@@ -133,12 +125,11 @@ public class TrainingdayViewModelTest {
         });
         assertTrue(deleteLatch.await(5, TimeUnit.SECONDS));
 
-        // Überprüfung
+
         CountDownLatch verifyLatch = new CountDownLatch(1);
         viewModel.getTrainingdaysForPlan(uniquePlanId, new TrainingdayViewModel.OnDataLoadedListener() {
             @Override
             public void onDataLoaded(List<Trainingday> trainingdays) {
-                // Prüfe spezifisch ob unser Test-Tag gelöscht wurde
                 boolean found = false;
                 for (Trainingday day : trainingdays) {
                     if (day.getId() == testDay.getId()) {
@@ -169,7 +160,6 @@ public class TrainingdayViewModelTest {
         });
         createLatch.await(2, TimeUnit.SECONDS);
 
-        // Hole die generierte ID aus der Datenbank
         List<Trainingday> days = getDaysFromDb(planId);
         return days.get(0);
     }

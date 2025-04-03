@@ -50,14 +50,11 @@ public class TrainingplanViewModelTest {
 
     @Test
     public void testAddAndGetAllTrainingplans() throws InterruptedException {
-        // Arrange
         Trainingplan plan = new Trainingplan("Test Plan", false);
 
-        // Act
         viewModel.addTrainingplan(plan, () -> latch.countDown(), e -> fail());
         latch.await(2, TimeUnit.SECONDS);
 
-        // Assert
         viewModel.loadAllTrainingplans(
                 plans -> {
                     assertEquals(1, plans.size());
@@ -71,17 +68,14 @@ public class TrainingplanViewModelTest {
 
     @Test
     public void testSetAndGetActiveTrainingplan() throws InterruptedException {
-        // Arrange
         Trainingplan plan1 = new Trainingplan("Plan 1", false);
         Trainingplan plan2 = new Trainingplan("Plan 2", false);
         repository.addTrainingplan(plan1);
         repository.addTrainingplan(plan2);
 
-        // Act
         viewModel.setActiveTrainingplan(plan2.getId(), () -> latch.countDown(), e -> fail());
         latch.await(2, TimeUnit.SECONDS);
 
-        // Assert
         viewModel.loadActiveTrainingplan(
                 activePlan -> {
                     assertNotNull(activePlan);
@@ -96,16 +90,14 @@ public class TrainingplanViewModelTest {
 
     @Test
     public void testUpdateTrainingplan() throws InterruptedException {
-        // Arrange
+
         Trainingplan plan = new Trainingplan("Original Name", false);
         repository.addTrainingplan(plan);
         plan.setName("Updated Name");
 
-        // Act
         viewModel.updateTrainingplan(plan, () -> latch.countDown(), e -> fail());
         latch.await(2, TimeUnit.SECONDS);
 
-        // Assert
         viewModel.loadAllTrainingplans(
                 plans -> {
                     assertEquals(1, plans.size());
@@ -119,15 +111,13 @@ public class TrainingplanViewModelTest {
 
     @Test
     public void testDeleteTrainingplan() throws InterruptedException {
-        // Arrange
+
         Trainingplan plan = new Trainingplan("To Delete", false);
         repository.addTrainingplan(plan);
 
-        // Act
         viewModel.deleteTrainingplan(plan, () -> latch.countDown(), e -> fail());
         latch.await(2, TimeUnit.SECONDS);
 
-        // Assert
         viewModel.loadAllTrainingplans(
                 plans -> {
                     assertTrue(plans.isEmpty());
@@ -140,17 +130,14 @@ public class TrainingplanViewModelTest {
 
     @Test
     public void testOnlyOneActivePlan() throws InterruptedException {
-        // Arrange
         Trainingplan plan1 = new Trainingplan("Plan 1", true);
         Trainingplan plan2 = new Trainingplan("Plan 2", false);
         repository.addTrainingplan(plan1);
         repository.addTrainingplan(plan2);
 
-        // Act
         viewModel.setActiveTrainingplan(plan2.getId(), () -> latch.countDown(), e -> fail());
         latch.await(2, TimeUnit.SECONDS);
 
-        // Assert
         viewModel.loadAllTrainingplans(
                 plans -> {
                     for (Trainingplan p : plans) {

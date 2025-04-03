@@ -33,10 +33,8 @@ public class MuscleGroupViewModelTest {
         dbHelper = new DatabaseHelper(application);
         db = dbHelper.getWritableDatabase();
 
-        // Tabelle "MuscleGroup" leeren
         db.execSQL("DELETE FROM MuscleGroup");
 
-        // Testdaten einfügen
         db.execSQL("INSERT INTO MuscleGroup (id, name, picture_path) VALUES (1, 'Brust', 'path_brust')");
     }
 
@@ -53,11 +51,9 @@ public class MuscleGroupViewModelTest {
 
         viewModel.loadMuscleGroups(muscleGroups -> {
             try {
-                // Überprüfen, dass die Liste nicht null und nicht leer ist
                 assertNotNull("Die MuscleGroup-Liste sollte nicht null sein", muscleGroups);
                 assertFalse("Die MuscleGroup-Liste sollte mindestens einen Eintrag enthalten", muscleGroups.isEmpty());
 
-                // Ersten Eintrag überprüfen
                 MuscleGroup muscleGroup = muscleGroups.get(0);
                 assertEquals("Die ID der MuscleGroup stimmt nicht überein", 1, muscleGroup.getId());
                 assertEquals("Der Name der MuscleGroup stimmt nicht überein", "Brust", muscleGroup.getName());

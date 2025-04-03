@@ -24,14 +24,11 @@ public class NutritiondayViewModelTest {
         Application app = ApplicationProvider.getApplicationContext();
         NutritiondayViewModel viewModel = new NutritiondayViewModel(app);
 
-        // Erstelle ein Nutritionday-Objekt mit Testdatum
         String testDate = "01-01-2025";
         Nutritionday nutritionday = new Nutritionday(testDate);
 
-        // Speichern
         viewModel.saveNutritionday(nutritionday);
 
-        // Laden des Objekts (asynchron)
         CountDownLatch latch = new CountDownLatch(1);
         final Nutritionday[] loadedNutritionday = new Nutritionday[1];
         viewModel.loadNutritionday(testDate, new NutritiondayViewModel.Callback<Nutritionday>() {
@@ -42,10 +39,8 @@ public class NutritiondayViewModelTest {
             }
         });
 
-        // Warte maximal 5 Sekunden
         assertTrue("Timed out waiting for Nutritionday load", latch.await(5, TimeUnit.SECONDS));
 
-        // Prüfe, ob das geladene Objekt existiert und das Datum korrekt ist
         assertNotNull("Loaded Nutritionday should not be null", loadedNutritionday[0]);
         assertEquals("Das Datum muss übereinstimmen", testDate, loadedNutritionday[0].getDate());
     }

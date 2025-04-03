@@ -22,16 +22,13 @@ public class ExerciseDetailActivityTest {
 
     @Test
     public void testExerciseDetailDisplay() {
-        // Erstelle ein Intent mit den Testdaten
         Intent intent = new Intent();
         intent.putExtra("exerciseName", "Push-Up");
         intent.putExtra("exerciseInfo", "Eine grundlegende Kraftübung");
         intent.putExtra("exercisePicturePath", "push_up_image");
 
-        // Starte die Aktivität mit dem Intent
         activityRule.launchActivity(intent);
 
-        // Überprüfe, ob die UI-Elemente den korrekten Text anzeigen
         onView(withId(R.id.textViewExerciseDetailName)).check(matches(withText("Push-Up")));
         onView(withId(R.id.textViewExerciseDetailInfo)).check(matches(withText("Eine grundlegende Kraftübung")));
     }

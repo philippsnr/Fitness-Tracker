@@ -25,7 +25,6 @@ public class NutritiondayNutritionAssignmentViewModelTest {
     public void testNutritiondayNutritionAssignmentSaveAndLoad() throws InterruptedException {
         Application app = ApplicationProvider.getApplicationContext();
 
-        // Zuerst: Erstelle einen Nutritionday (Foreign Key)
         NutritiondayViewModel nutritiondayViewModel = new NutritiondayViewModel(app);
         String testDate = "02-02-2025";
         Nutritionday nutritionday = new Nutritionday(testDate);
@@ -43,10 +42,9 @@ public class NutritiondayNutritionAssignmentViewModelTest {
         assertTrue("Timed out waiting for Nutritionday load", latchDay.await(5, TimeUnit.SECONDS));
         assertNotNull("Loaded Nutritionday should not be null", loadedNutritionday[0]);
 
-        // Speichere ein NutritiondayNutritionAssignment
         int nutritiondayId = loadedNutritionday[0].getId();
         NutritiondayNutritionAssignment assignment = new NutritiondayNutritionAssignment(
-                0, // ID wird von der Datenbank vergeben
+                0,
                 nutritiondayId,
                 "12:00",
                 "Chicken Salad",
@@ -58,7 +56,6 @@ public class NutritiondayNutritionAssignmentViewModelTest {
         NutritiondayNutritionAssignmentViewModel assignmentViewModel = new NutritiondayNutritionAssignmentViewModel(app);
         assignmentViewModel.saveNutritiondayNutritionAssignment(assignment);
 
-        // Laden des gespeicherten NutritiondayNutritionAssignment
         CountDownLatch latchAssignment = new CountDownLatch(1);
         final NutritiondayNutritionAssignment[] loadedAssignment = new NutritiondayNutritionAssignment[1];
         assignmentViewModel.loadNutritiondayNutritionAssignment(nutritiondayId, new NutritiondayNutritionAssignmentViewModel.Callback<NutritiondayNutritionAssignment>() {
@@ -70,7 +67,6 @@ public class NutritiondayNutritionAssignmentViewModelTest {
         });
         assertTrue("Timed out waiting for NutritiondayNutritionAssignment load", latchAssignment.await(5, TimeUnit.SECONDS));
 
-        // Überprüfe alle Felder
         assertNotNull("Loaded assignment should not be null", loadedAssignment[0]);
         assertEquals("English Name must match", "Chicken Salad", loadedAssignment[0].getNutritionNameEnglish());
         assertEquals("German Name must match", "Hähnchensalat", loadedAssignment[0].getNutritionNameGerman());

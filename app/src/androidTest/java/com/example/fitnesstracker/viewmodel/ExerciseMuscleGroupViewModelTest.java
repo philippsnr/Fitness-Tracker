@@ -33,10 +33,8 @@ public class ExerciseMuscleGroupViewModelTest {
         dbHelper = new DatabaseHelper(application);
         db = dbHelper.getWritableDatabase();
 
-        // Tabelle "ExerciseMuscleGroupAssignment" leeren
         db.execSQL("DELETE FROM ExerciseMuscleGroupAssignment");
 
-        // Testdaten einfügen
         db.execSQL("INSERT INTO ExerciseMuscleGroupAssignment (Exercise_id, MuscleGroup_id) VALUES (1, 1)");
     }
 
