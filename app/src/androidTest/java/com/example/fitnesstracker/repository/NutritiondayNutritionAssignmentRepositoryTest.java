@@ -27,19 +27,14 @@ public class NutritiondayNutritionAssignmentRepositoryTest {
 
     @Before
     public void setUp() {
-        // Application Context holen
         appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        // DatabaseHelper initialisieren
         dbHelper = new DatabaseHelper(appContext);
-        // Repository initialisieren
         repository = new NutritiondayNutritionAssignmentRepository(appContext);
-        // Säubere die Tabelle vor jedem Test
         clearDatabaseTable();
     }
 
     @After
     public void tearDown() {
-        // Säubere die Tabelle nach jedem Test
         clearDatabaseTable();
     }
 
@@ -55,7 +50,6 @@ public class NutritiondayNutritionAssignmentRepositoryTest {
 
     @Test
     public void testInsertAndRetrieveNutritiondayNutritionAssignment() {
-        // Test-Daten erstellen
         int testNutritiondayId = 80;
         NutritiondayNutritionAssignment testAssignment = new NutritiondayNutritionAssignment(
                 500,
@@ -71,16 +65,12 @@ public class NutritiondayNutritionAssignmentRepositoryTest {
         testAssignment.setNutritionNameGerman("Haferbrei");
         testAssignment.setNutritionPicturePath("/images/oatmeal.png");
 
-        // Datensatz einfügen
         repository.setNutritiondayNutritionAssignment(testAssignment);
 
-        // Datensatz abrufen
         NutritiondayNutritionAssignment retrievedAssignment = repository.getNutritionday(testNutritiondayId);
 
-        // Überprüfen, dass der abgerufene Datensatz nicht null ist
         assertNotNull("Der abgerufene Datensatz sollte nicht null sein", retrievedAssignment);
 
-        // Überprüfen der einzelnen Felder
         assertEquals("Die nutritiondayId sollte übereinstimmen", testNutritiondayId, retrievedAssignment.getNutritiondayId());
         assertEquals("Die Zeit sollte übereinstimmen", "08:00", retrievedAssignment.getTime());
         assertEquals("Der englische Name sollte übereinstimmen", "Oatmeal", retrievedAssignment.getNutritionNameEnglish());
@@ -95,7 +85,6 @@ public class NutritiondayNutritionAssignmentRepositoryTest {
 
     @Test
     public void testRetrieveNonExistentAssignmentReturnsNull() {
-        // Versuche, einen Datensatz mit einer nicht existierenden nutritiondayId abzurufen
         NutritiondayNutritionAssignment assignment = repository.getNutritionday(9999);
         assertNull("Beim Abruf eines nicht existierenden Datensatzes sollte null zurückgegeben werden", assignment);
     }

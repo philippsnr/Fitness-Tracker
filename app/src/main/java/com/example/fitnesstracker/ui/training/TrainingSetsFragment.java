@@ -27,7 +27,17 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+
+/**
+ * Fragment zur Verwaltung und Anzeige von Trainingssätzen für eine bestimmte Übung.
+ * Dieses Fragment ermöglicht das Hinzufügen, Anzeigen und Gruppieren von Trainingssätzen
+ * für eine bestimmte Übung eines Trainingstags. Es enthält eine Liste von Sätzen, die nach
+ * Datum gruppiert angezeigt werden. Benutzer können neue Trainingssätze hinzufügen, die dann
+ * im ViewModel gespeichert werden. Außerdem stellt es eine Möglichkeit zur Validierung und
+ * Eingabe der Satzdetails (Wiederholungen und Gewicht) bereit.
+ */
 public class TrainingSetsFragment extends Fragment {
     private static final String ARG_ASSIGNMENT_ID = "assignment_id";
     private static final String ARG_EXERCISE_NAME = "exercise_name";
@@ -35,11 +45,9 @@ public class TrainingSetsFragment extends Fragment {
     private int assignmentId;
     private String exerciseName;
     private RecyclerView recyclerView;
-    private TextView tvTrainingDayNameHeading;
     private TrainingSetsAdapter adapter;
     private ExerciseSetViewModel setViewModel;
     private CardView cardAddSet;
-    private List<ExerciseSet> allSets = new ArrayList<>();
 
     /**
      * Erzeugt eine neue Instanz des Fragments.
@@ -106,7 +114,7 @@ public class TrainingSetsFragment extends Fragment {
      * @param view Die Root-View des Fragments.
      */
     private void initializeViews(View view) {
-        tvTrainingDayNameHeading = view.findViewById(R.id.tvTrainingDayNameHeading);
+        TextView tvTrainingDayNameHeading = view.findViewById(R.id.tvTrainingDayNameHeading);
         tvTrainingDayNameHeading.setText(exerciseName);
         recyclerView = view.findViewById(R.id.recyclerViewTrainingExerciseSets);
         cardAddSet = view.findViewById(R.id.cardAddSet);
@@ -179,8 +187,8 @@ public class TrainingSetsFragment extends Fragment {
      */
     private void handlePositiveButtonClick(TextInputEditText etReps, TextInputEditText etWeight,
                                            TextInputLayout tilReps, TextInputLayout tilWeight) {
-        String repsStr = etReps.getText().toString().trim();
-        String weightStr = etWeight.getText().toString().trim();
+        String repsStr = Objects.requireNonNull(etReps.getText()).toString().trim();
+        String weightStr = Objects.requireNonNull(etWeight.getText()).toString().trim();
 
         if (validateInput(tilReps, tilWeight, repsStr, weightStr)) {
             try {
@@ -253,8 +261,8 @@ public class TrainingSetsFragment extends Fragment {
      */
     private void validateDialogInput(TextInputEditText etReps, TextInputEditText etWeight,
                                      Button positiveButton) {
-        boolean repsValid = !etReps.getText().toString().trim().isEmpty();
-        boolean weightValid = !etWeight.getText().toString().trim().isEmpty();
+        boolean repsValid = !Objects.requireNonNull(etReps.getText()).toString().trim().isEmpty();
+        boolean weightValid = !Objects.requireNonNull(etWeight.getText()).toString().trim().isEmpty();
         positiveButton.setEnabled(repsValid && weightValid);
     }
 
@@ -360,10 +368,7 @@ public class TrainingSetsFragment extends Fragment {
      * Lädt die letzten Sets für die gegebene Assignment-ID und aktualisiert den Adapter.
      */
     private void loadSets() {
-        setViewModel.loadLastSets(assignmentId, sets -> {
-            allSets = sets;
-            updateAdapterWithGroupedSets(sets);
-        });
+        setViewModel.loadLastSets(assignmentId, this::updateAdapterWithGroupedSets);
     }
 
     /**

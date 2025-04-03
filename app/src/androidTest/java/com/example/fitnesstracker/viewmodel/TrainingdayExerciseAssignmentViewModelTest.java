@@ -9,6 +9,7 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.fitnesstracker.database.DatabaseHelper;
+import com.example.fitnesstracker.model.TrainingdayExerciseAssignment;
 import com.example.fitnesstracker.repository.TrainingdayExerciseAssignmentRepository;
 
 import org.junit.After;
@@ -28,45 +29,13 @@ public class TrainingdayExerciseAssignmentViewModelTest {
     private DatabaseHelper dbHelper;
     private Context context;
 
-    private static class TestableRepository extends TrainingdayExerciseAssignmentRepository {
-        private DatabaseHelper testDbHelper;
-
-        public TestableRepository(Context context) {
-            super(context);
-        }
-
-        public void setTestDbHelper(DatabaseHelper helper) {
-            this.testDbHelper = helper;
-        }
-
-        @Override
-        protected DatabaseHelper getDbHelper() {
-            return testDbHelper != null ? testDbHelper : super.getDbHelper();
-        }
-    }
-
     @Before
     public void setUp() {
         context = ApplicationProvider.getApplicationContext();
-        dbHelper = new DatabaseHelper(context) {
-            @Override
-            public void onConfigure(SQLiteDatabase db) {
-                super.onConfigure(db);
-                db.setForeignKeyConstraintsEnabled(true);
-            }
-        };
+        dbHelper = new DatabaseHelper(context);
 
         resetDatabase();
-
-        TestableRepository testRepo = new TestableRepository(context);
-        testRepo.setTestDbHelper(dbHelper);
-
-        viewModel = new TrainingdayExerciseAssignmentViewModel((Application) context) {
-            @Override
-            protected TrainingdayExerciseAssignmentRepository createRepository(Application application) {
-                return testRepo;
-            }
-        };
+        viewModel = new TrainingdayExerciseAssignmentViewModel((Application) context);
     }
 
     private void resetDatabase() {
@@ -88,25 +57,22 @@ public class TrainingdayExerciseAssignmentViewModelTest {
     }
 
     @Test
-    public void testAddAndGetExerciseAssignment() throws InterruptedException {
+    public void testAddAndGetAssignment() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
         viewModel.addTrainingExerciseAssignment(1, 1, newId -> {
             assertTrue(newId > 0);
-            latch.countDown();
+
+            viewModel.getAssignmentsForTrainingday(1, assignments -> {
+                assertEquals(1, assignments.size());
+                assertEquals(1, assignments.get(0).getExerciseId());
+                latch.countDown();
+            });
         });
         assertTrue(latch.await(2, TimeUnit.SECONDS));
-
-        CountDownLatch getLatch = new CountDownLatch(1);
-        viewModel.getExerciseIdsForTrainingday(1, ids -> {
-            assertEquals(1, ids.size());
-            assertEquals(Integer.valueOf(1), ids.get(0));
-            getLatch.countDown();
-        });
-        assertTrue(getLatch.await(2, TimeUnit.SECONDS));
     }
 
     @Test
-    public void testDeleteExerciseAssignment() throws InterruptedException {
+    public void testDeleteAssignment() throws InterruptedException {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.execSQL("INSERT INTO TrainingdayExerciseAssignment (Trainingday_id, Exercise_id) VALUES (1, 1)");
         Cursor c = db.rawQuery("SELECT id FROM TrainingdayExerciseAssignment", null);
@@ -115,35 +81,30 @@ public class TrainingdayExerciseAssignmentViewModelTest {
         c.close();
         db.close();
 
-        CountDownLatch deleteLatch = new CountDownLatch(1);
-        viewModel.deleteTrainingdayExerciseAssignment(id, () -> deleteLatch.countDown());
-        assertTrue(deleteLatch.await(2, TimeUnit.SECONDS));
-
-        CountDownLatch verifyLatch = new CountDownLatch(1);
-        viewModel.getExerciseIdsForTrainingday(1, ids -> {
-            assertTrue(ids.isEmpty());
-            verifyLatch.countDown();
-        });
-        assertTrue(verifyLatch.await(2, TimeUnit.SECONDS));
-    }
-
-    @Test
-    public void testAddAssignmentWithInvalidTrainingday() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
-        viewModel.addTrainingExerciseAssignment(999, 1, newId -> {
-            assertEquals(-1L, newId.longValue());
-            latch.countDown();
+        viewModel.deleteTrainingdayExerciseAssignment(id, () -> {
+            viewModel.getAssignmentsForTrainingday(1, assignments -> {
+                assertTrue(assignments.isEmpty());
+                latch.countDown();
+            });
         });
         assertTrue(latch.await(2, TimeUnit.SECONDS));
     }
 
     @Test
-    public void testAddAssignmentWithInvalidExercise() throws InterruptedException {
-        CountDownLatch latch = new CountDownLatch(1);
+    public void testInvalidAssignment() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(2);
+
+        viewModel.addTrainingExerciseAssignment(999, 1, newId -> {
+            assertEquals(-1L, newId.longValue());
+            latch.countDown();
+        });
+
         viewModel.addTrainingExerciseAssignment(1, 999, newId -> {
             assertEquals(-1L, newId.longValue());
             latch.countDown();
         });
+
         assertTrue(latch.await(2, TimeUnit.SECONDS));
     }
 }

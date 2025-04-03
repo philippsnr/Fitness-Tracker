@@ -13,6 +13,13 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
+/**
+ * ViewModel-Klasse für die Verwaltung von Übungssätzen.
+ * Diese Klasse bietet Methoden zum Laden der letzten Übungssätze für eine bestimmte Übungszuordnung,
+ * Speichern eines neuen Satzes, Laden der Anzahl der Sätze pro Woche und Ermitteln der letzten Satznummer.
+ * Alle Operationen werden asynchron im Hintergrund ausgeführt.
+ */
 public class ExerciseSetViewModel extends AndroidViewModel {
     private final ExerciseSetRepository repository;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
