@@ -39,10 +39,8 @@ public class ExerciseSetViewModelTest {
         repository = new ExerciseSetRepository(context);
         viewModel = new ExerciseSetViewModel((Application) context);
 
-        // Datenbank vor jedem Test leeren
         clearDatabase();
 
-        // Testdaten mit unterschiedlichen Datumsangaben
         LocalDate today = LocalDate.now();
         ExerciseSet testSet1 = new ExerciseSet(1, 1, 10, 50.0, today.minusDays(1).toString());
         ExerciseSet testSet2 = new ExerciseSet(1, 2, 8, 55.0, today.toString());
@@ -80,7 +78,6 @@ public class ExerciseSetViewModelTest {
         assertNotNull("Daten sollten geladen werden", result[0]);
         assertEquals("Es sollten 2 Sätze vorhanden sein", 2, result[0].size());
 
-        // Überprüfe die Sortierung (neuestes Datum zuerst, dann Set-Nummer)
         assertEquals("Neuester Satz sollte Setnummer 2 haben", 2, result[0].get(0).getSetNumber());
         assertEquals("Älterer Satz sollte Setnummer 1 haben", 1, result[0].get(1).getSetNumber());
     }
@@ -90,8 +87,7 @@ public class ExerciseSetViewModelTest {
         final CountDownLatch latch = new CountDownLatch(1);
         final Map<Integer, Integer>[] result = new Map[1];
 
-        // 1. Testdatum fixieren für konsistente Wochenberechnung
-        LocalDate fixedDate = LocalDate.of(2024, 5, 15); // Mittwoch, KW20
+        LocalDate fixedDate = LocalDate.of(2024, 5, 15);
         ExerciseSet fixedSet1 = new ExerciseSet(3, 1, 10, 50.0, fixedDate.toString());
         ExerciseSet fixedSet2 = new ExerciseSet(3, 2, 8, 55.0, fixedDate.toString());
         ExerciseSet fixedSet3 = new ExerciseSet(4, 1, 12, 30.0, fixedDate.minusWeeks(1).toString());
@@ -110,15 +106,12 @@ public class ExerciseSetViewModelTest {
         assertNotNull(result[0]);
         assertFalse(result[0].isEmpty());
 
-        // 2. Wochennummer aus SQLite-Abfrage simulieren
-        int sqlWeekCurrent = 20; // Entspricht KW20 in SQLite für 2024-05-15
+        int sqlWeekCurrent = 20;
         int sqlWeekPrevious = 19;
 
-        // 3. Überprüfung mit SQL-kompatiblen Wochennummern
         assertTrue("KW20 sollte existieren", result[0].containsKey(sqlWeekCurrent));
         assertTrue("KW19 sollte existieren", result[0].containsKey(sqlWeekPrevious));
 
-        // 4. Überprüfung der Anzahl
         assertEquals("KW20 sollte 2 Sätze haben", 2, (int) result[0].get(sqlWeekCurrent));
         assertEquals("KW19 sollte 1 Satz haben", 1, (int) result[0].get(sqlWeekPrevious));
     }
@@ -140,7 +133,7 @@ public class ExerciseSetViewModelTest {
 
         latch.await(2, TimeUnit.SECONDS);
 
-        assertEquals(2, result[0]); // Weil wir zwei Sätze für Übung 1 heute eingefügt haben
+        assertEquals(2, result[0]);
     }
 
     @Test
@@ -149,7 +142,7 @@ public class ExerciseSetViewModelTest {
 
         viewModel.saveNewSet(newSet);
 
-        // Kurze Pause um den Background-Thread zu erlauben zu arbeiten
+
         Thread.sleep(500);
 
         List<ExerciseSet> sets = repository.getLastSets(3);

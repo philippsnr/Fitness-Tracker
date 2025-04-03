@@ -55,6 +55,7 @@ public class TrainingplanViewModelTest {
 
     @Test
     public void testAddAndGetAllTrainingplans() throws InterruptedException {
+
         CountDownLatch latch = new CountDownLatch(2);
 
         // Arrange
@@ -66,7 +67,6 @@ public class TrainingplanViewModelTest {
                 e -> fail("Add failed: " + e.getMessage())
         );
 
-        // Assert
         viewModel.loadAllTrainingplans(
                 plans -> {
                     assertEquals(1, plans.size());
@@ -81,6 +81,7 @@ public class TrainingplanViewModelTest {
 
     @Test
     public void testSetAndGetActiveTrainingplan() throws InterruptedException {
+
         CountDownLatch latch = new CountDownLatch(2);
 
         // Arrange
@@ -93,7 +94,6 @@ public class TrainingplanViewModelTest {
                 e -> fail("Activation failed: " + e.getMessage())
         );
 
-        // Assert
         viewModel.loadActiveTrainingplan(
                 activePlan -> {
                     assertNotNull(activePlan);
@@ -109,6 +109,7 @@ public class TrainingplanViewModelTest {
 
     @Test
     public void testUpdateTrainingplan() throws InterruptedException {
+
         CountDownLatch latch = new CountDownLatch(2);
 
         // Arrange
@@ -121,7 +122,6 @@ public class TrainingplanViewModelTest {
                 e -> fail("Update failed: " + e.getMessage())
         );
 
-        // Assert
         viewModel.loadAllTrainingplans(
                 plans -> {
                     assertEquals(1, plans.size());
@@ -136,6 +136,7 @@ public class TrainingplanViewModelTest {
 
     @Test
     public void testDeleteTrainingplan() throws InterruptedException {
+
         CountDownLatch latch = new CountDownLatch(2);
 
         // Arrange
@@ -147,7 +148,6 @@ public class TrainingplanViewModelTest {
                 e -> fail("Delete failed: " + e.getMessage())
         );
 
-        // Assert
         viewModel.loadAllTrainingplans(
                 plans -> {
                     assertTrue(plans.isEmpty());
@@ -161,6 +161,7 @@ public class TrainingplanViewModelTest {
 
     @Test
     public void testOnlyOneActivePlan() throws InterruptedException {
+
         CountDownLatch latch = new CountDownLatch(2);
 
         // Arrange

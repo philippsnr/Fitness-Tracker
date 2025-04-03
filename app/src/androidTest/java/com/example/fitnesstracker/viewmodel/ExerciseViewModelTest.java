@@ -33,11 +33,9 @@ public class ExerciseViewModelTest {
         dbHelper = new DatabaseHelper(application);
         db = dbHelper.getWritableDatabase();
 
-        // Tabellen leeren
         db.execSQL("DELETE FROM Exercise");
         db.execSQL("DELETE FROM ExerciseMuscleGroupAssignment");
 
-        // Testdaten einfügen
         db.execSQL("INSERT INTO Exercise (id, name, difficulty, info, picture_path) VALUES (1, 'Squat', 2, 'Testbeschreibung für Squat', 'url_squat')");
         db.execSQL("INSERT INTO ExerciseMuscleGroupAssignment (Exercise_id, MuscleGroup_id) VALUES (1, 1)");
     }
@@ -70,7 +68,6 @@ public class ExerciseViewModelTest {
             }
         });
 
-        // Warten, bis der Callback aufgerufen wird (max. 5 Sekunden)
         boolean awaitSuccess = latch.await(5, TimeUnit.SECONDS);
         assertTrue("Callback wurde nicht innerhalb des Zeitlimits aufgerufen", awaitSuccess);
     }

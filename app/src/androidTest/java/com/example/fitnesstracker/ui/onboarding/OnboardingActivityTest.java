@@ -72,7 +72,6 @@ public class OnboardingActivityTest {
     public void enterText(int page) throws InterruptedException {
         switch(page) {
             case 1:
-
                 onView(withId(R.id.editTextName))
                         .perform(typeText("Test Name"), closeSoftKeyboard());
                 break;
@@ -86,7 +85,6 @@ public class OnboardingActivityTest {
                         .perform(typeText("120"), closeSoftKeyboard());
                 break;
             case 4:
-
                 onView(withId(R.id.buttonSelectDate))
                         .perform(click());
                selectDate();
@@ -131,5 +129,4 @@ public class OnboardingActivityTest {
         onView(withId(R.id.buttonSelectDate))
                 .check(matches(not(withText("Geburtsdatum auswählen")))); // Sicherstellen, dass das Datum sich geändert hat
     }
-
 }
