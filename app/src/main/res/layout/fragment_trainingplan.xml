@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Header -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/t_training_title"
+        android:textAlignment="center"
+        android:textColor="@color/background"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        android:background="@drawable/fragment_header"
+        android:padding="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Aktiver Trainingsplan -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_border_primary"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:padding="16dp">
+
+                <!-- Überschrift "Aktiver Trainingsplan" -->
+                <TextView
+                    android:id="@+id/tvActivePlanHeading"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/t_activeListHeading"
+                    android:textSize="25sp"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:textAlignment="center"/>
+
+                <!-- Aktiver Trainingsplan-Name mit Change-Icon -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp">
+
+                    <TextView
+                        android:id="@+id/tvActivePlan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/t_activeListHeading"
+                        android:textSize="20sp"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold"/>
+
+                    <ImageView
+                        android:id="@+id/ivChangeActivePlan"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:contentDescription="@string/t_edit_plan"
+                        android:src="@drawable/ic_change"
+                        android:layout_marginStart="8dp"
+                        app:tint="@android:color/white"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Alle Trainingspläne -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_border_primary"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp"
+                    android:paddingHorizontal="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/t_allTrainingPlansHeading"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"
+                        android:textAlignment="center"/>
+
+                    <ImageView
+                        android:id="@+id/addNewTrainingplan"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:contentDescription="@string/t_add_plan"
+                        android:src="@drawable/ic_add"
+                        app:tint="@android:color/white"/>
+                </LinearLayout>
+
+
+
+                <!-- RecyclerView für alle Trainingspläne -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvTrainingPlans"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+        </LinearLayout>
+</LinearLayout>

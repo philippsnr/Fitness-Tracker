@@ -54,3 +54,4 @@ pubspec.lock
 ~$*
 
 gradle/libs.versions.toml
+configuration_1_3.dtd
