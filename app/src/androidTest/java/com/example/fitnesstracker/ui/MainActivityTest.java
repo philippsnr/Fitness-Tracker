@@ -44,19 +44,19 @@ public class MainActivityTest {
 
     @After
     public void tearDown() {
-        // SharedPreferences leeren
+
         SharedPreferences prefs = context.getSharedPreferences("onboarding", Context.MODE_PRIVATE);
         prefs.edit().clear().commit();
     }
 
-    @Test // Onboarding ausstehend
+    @Test
     public void testOnboardingLaunched() {
         SharedPreferences prefs = context.getSharedPreferences("onboarding", Context.MODE_PRIVATE);
         prefs.edit().putBoolean("onboarding_complete", false).commit();
 
         Intents.init();
 
-        // MainActivity starten
+
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             intended(hasComponent(OnboardingActivity.class.getName()));
         } finally {
@@ -64,7 +64,7 @@ public class MainActivityTest {
         }
     }
 
-    @Test // Onboarding abgeschlossen
+    @Test
     public void testDefaultFragmentAndBottomNavigationSwitch() {
         SharedPreferences prefs = context.getSharedPreferences("onboarding", Context.MODE_PRIVATE);
         prefs.edit().putBoolean("onboarding_complete", true).commit();
