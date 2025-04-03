@@ -2,21 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:layout_marginBottom="10dp"
+    android:layout_marginTop="10dp"
+    android:padding="16dp"
+    android:background="@drawable/rounded_border_primary"
+    android:gravity="center">
 
     <TextView
         android:id="@+id/textProductName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text=""
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:textColor="@android:color/white"/>
 
     <ImageView
         android:id="@+id/productImage"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:contentDescription="test"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/n_product_image_alt"/>
 </LinearLayout>
