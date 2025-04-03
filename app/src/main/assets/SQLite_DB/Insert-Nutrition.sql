@@ -1,8 +1,8 @@
 -- Testdaten für Nutritionday
 INSERT INTO Nutritionday (date) VALUES
-    ('01-03-2025'),
-    ('02-03-2025'),
-    ('03-03-2025');
+    ('2025-03-01'),
+    ('2025-03-02'),
+    ('2025-03-03');
 
 -- Testdaten für NutritiondayNutritionAssignment
 INSERT INTO NutritiondayNutritionAssignment (nutritionday_id, time, nutrition_name_english, nutrition_name_german, nutrition_mass, nutrition_cals, nutrition_carbs, nutrition_fats, nutrition_proteins, nutrition_picture_path) VALUES
