@@ -20,8 +20,12 @@ import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.model.Trainingday;
 import com.example.fitnesstracker.viewmodel.TrainingdayViewModel;
 import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * Fragment, das eine Liste von Trainingstagen für einen bestimmten Trainingsplan anzeigt.
+ * Es ermöglicht das Anzeigen von Details, das Umbenennen, das Löschen und das Hinzufügen von Trainingstagen.
+ * Es verwendet ein ViewModel, um mit der Repository-Schicht zu kommunizieren und Daten zu laden oder zu ändern.
+ */
 public class TrainingDayFragment extends Fragment {
 
     private static final String ARG_TRAININGPLAN_ID = "trainingplan_id";
@@ -36,7 +40,11 @@ public class TrainingDayFragment extends Fragment {
     private CardView cardAddTrainingday;
 
     /**
-     * Erzeugt eine neue Instanz des Fragments.
+     * Erzeugt eine neue Instanz des Fragments mit den angegebenen Parametern.
+     *
+     * @param trainingplanId Die ID des Trainingsplans.
+     * @param trainingplanName Der Name des Trainingsplans.
+     * @return Eine neue Instanz des TrainingDayFragment.
      */
     public static TrainingDayFragment newInstance(int trainingplanId, String trainingplanName) {
         TrainingDayFragment fragment = new TrainingDayFragment();
@@ -77,14 +85,20 @@ public class TrainingDayFragment extends Fragment {
         cardAddTrainingday.setOnClickListener(v -> showAddTrainingdayDialog());
     }
 
-    /** Initialisiert das RecyclerView mit Adapter und LayoutManager. */
+    /**
+     * Initialisiert das RecyclerView mit Adapter und LayoutManager.
+     */
     private void setupRecyclerView() {
         adapter = new TrainingDayAdapter(new ArrayList<>(), createItemClickListener());
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(adapter);
     }
 
-    /** Erstellt den OnItemClickListener für den Adapter. */
+    /**
+     * Erstellt den OnItemClickListener für den Adapter, um Klickereignisse zu behandeln.
+     *
+     * @return Ein OnItemClickListener-Objekt für die Behandlung von Klicks.
+     */
     private TrainingDayAdapter.OnItemClickListener createItemClickListener() {
         return new TrainingDayAdapter.OnItemClickListener() {
             @Override
@@ -96,7 +110,11 @@ public class TrainingDayFragment extends Fragment {
         };
     }
 
-    /** Öffnet die Detailansicht des ausgewählten Trainingstags. */
+    /**
+     * Öffnet die Detailansicht des ausgewählten Trainingstags.
+     *
+     * @param position Die Position des Trainingstags in der Liste.
+     */
     private void openTrainingdayDetails(int position) {
         Trainingday day = adapter.getItem(position);
         Log.d("TrainingDayFragment", "Clicked: " + day.getName());
@@ -107,7 +125,12 @@ public class TrainingDayFragment extends Fragment {
                 .commit();
     }
 
-    /** Zeigt einen Dialog zum Umbenennen eines Trainingstags. */
+    /**
+     * Zeigt einen Dialog zum Umbenennen eines Trainingstags.
+     *
+     * @param day Der Trainingstag, dessen Name umbenannt werden soll.
+     * @param position Die Position des Trainingstags in der Liste.
+     */
     private void showRenameDialog(Trainingday day, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Trainingstag umbenennen");
@@ -122,7 +145,13 @@ public class TrainingDayFragment extends Fragment {
         builder.show();
     }
 
-    /** Aktualisiert den Namen eines Trainingstags und aktualisiert den Adapter. */
+    /**
+     * Aktualisiert den Namen eines Trainingstags und benachrichtigt den Adapter über die Änderung.
+     *
+     * @param day Der Trainingstag, dessen Name aktualisiert werden soll.
+     * @param newName Der neue Name des Trainingstags.
+     * @param position Die Position des Trainingstags in der Liste.
+     */
     private void updateTrainingdayName(Trainingday day, String newName, int position) {
         day.setName(newName);
         viewModel.updateTrainingday(day, new TrainingdayViewModel.OnOperationCompleteListener() {
@@ -138,7 +167,11 @@ public class TrainingDayFragment extends Fragment {
         });
     }
 
-    /** Zeigt einen Bestätigungsdialog zum Löschen eines Trainingstags an. */
+    /**
+     * Zeigt einen Bestätigungsdialog zum Löschen eines Trainingstags an.
+     *
+     * @param day Der Trainingstag, der gelöscht werden soll.
+     */
     private void showDeleteConfirmationDialog(Trainingday day) {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Löschen bestätigen")
@@ -148,7 +181,11 @@ public class TrainingDayFragment extends Fragment {
                 .show();
     }
 
-    /** Löscht den Trainingstag und lädt die Liste neu. */
+    /**
+     * Löscht den Trainingstag und lädt die Liste neu.
+     *
+     * @param day Der Trainingstag, der gelöscht werden soll.
+     */
     private void deleteTrainingday(Trainingday day) {
         viewModel.deleteTrainingday(day, new TrainingdayViewModel.OnOperationCompleteListener() {
             @Override
@@ -163,13 +200,17 @@ public class TrainingDayFragment extends Fragment {
         });
     }
 
-    /** Lädt die Trainingstage des aktuellen Plans. */
+    /**
+     * Lädt die Trainingstage des aktuellen Trainingsplans und aktualisiert die Liste im Adapter.
+     */
     private void loadTrainingdays() {
         viewModel.getTrainingdaysForPlan(trainingplanId, trainingdays ->
                 requireActivity().runOnUiThread(() -> adapter.updateData(trainingdays)));
     }
 
-    /** Zeigt einen Dialog an, um einen neuen Trainingstag hinzuzufügen. */
+    /**
+     * Zeigt einen Dialog an, um einen neuen Trainingstag hinzuzufügen.
+     */
     private void showAddTrainingdayDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Neuen Trainingstag hinzufügen");
@@ -184,7 +225,11 @@ public class TrainingDayFragment extends Fragment {
         builder.show();
     }
 
-    /** Erstellt einen neuen Trainingstag und lädt die Liste neu. */
+    /**
+     * Erstellt einen neuen Trainingstag und lädt die Liste nach erfolgreichem Hinzufügen neu.
+     *
+     * @param name Der Name des neuen Trainingstags.
+     */
     private void addNewTrainingday(String name) {
         Trainingday newDay = new Trainingday(0, name, trainingplanId);
         viewModel.createTrainingday(newDay, new TrainingdayViewModel.OnOperationCompleteListener() {

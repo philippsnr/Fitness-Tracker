@@ -30,7 +30,6 @@ public class NutritiondayRepositoryTest {
         Context context = ApplicationProvider.getApplicationContext();
         dbHelper = new DatabaseHelper(context);
 
-        // Clean database
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.execSQL("DELETE FROM Nutritionday");
         db.close();
@@ -45,16 +44,12 @@ public class NutritiondayRepositoryTest {
 
     @Test
     public void testCreateAndRetrieveNutritionday() {
-        // Create test object OHNE ID
         Nutritionday newDay = new Nutritionday(TEST_DATE);
 
-        // Save to database
         repository.setNutritionday(newDay);
 
-        // Retrieve from database
         Nutritionday retrievedDay = repository.getNutritionday(TEST_DATE);
 
-        // Verify results
         assertNotNull(retrievedDay);
         assertEquals(TEST_DATE, retrievedDay.getDate());
         assertTrue("ID sollte > 0 sein", retrievedDay.getId() > 0); // Auto-generierte ID

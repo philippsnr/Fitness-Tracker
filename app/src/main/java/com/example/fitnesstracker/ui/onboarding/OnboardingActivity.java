@@ -20,12 +20,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+/**
+ * Activity that manages the onboarding process, collecting user data and navigating to the main activity.
+ */
 public class OnboardingActivity extends AppCompatActivity implements OnboardingDataListener {
 
     private ViewPager2 viewPager;
     private OnboardingPagerAdapter pagerAdapter;
 
-    // Gesammelte Daten
     private String userName;
     private double weight;
     private int height;
@@ -49,21 +51,26 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
         FRAGMENT_MAP.put(7, new OnboardingTrainingDaysFragment());
     }
 
+    /**
+     * Initializes the onboarding activity by setting up the view pager, repositories, and data handlers.
+     *
+     * @param savedInstanceState The previously saved state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
-
         userInformationRepository = new UserInformationRepository(this);
         userRepository = new UserRepository(this);
-
         viewPager = findViewById(R.id.onboardingViewPager);
         pagerAdapter = new OnboardingPagerAdapter(this);
         viewPager.setAdapter(pagerAdapter);
-
         initializeDataHandlers();
     }
 
+    /**
+     * Initializes handlers to process collected onboarding data.
+     */
     private void initializeDataHandlers() {
         dataHandlers.put("name", data -> userName = (String) data);
         dataHandlers.put("weight", data -> weight = (Double) data);
@@ -74,10 +81,15 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
         dataHandlers.put("trainingDays", data -> trainingDaysPerWeek = (Integer) data);
     }
 
+    /**
+     * Callback invoked when onboarding data is collected.
+     *
+     * @param key  The key of the collected data.
+     * @param data The collected data.
+     */
     @Override
     public void onDataCollected(String key, Object data) {
         saveCollectedData(key, data);
-
         if (isLastOnboardingPage()) {
             completeOnboarding();
         } else {
@@ -85,6 +97,12 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
         }
     }
 
+    /**
+     * Saves the collected data using the corresponding handler.
+     *
+     * @param key  The data key.
+     * @param data The data value.
+     */
     private void saveCollectedData(String key, Object data) {
         Consumer<Object> handler = dataHandlers.get(key);
         if (handler != null) {
@@ -92,28 +110,44 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
         }
     }
 
+    /**
+     * Determines if the current page is the last onboarding page.
+     *
+     * @return True if the last page, false otherwise.
+     */
     private boolean isLastOnboardingPage() {
         return viewPager.getCurrentItem() >= pagerAdapter.getItemCount() - 1;
     }
 
+    /**
+     * Moves the view pager to the next page.
+     */
     private void moveToNextPage() {
         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
     }
 
+    /**
+     * Completes the onboarding process by saving user data, marking the process as complete, and navigating to the main activity.
+     */
     private void completeOnboarding() {
         saveUserData();
         saveOnboardingStatus();
         navigateToMainActivity();
     }
 
+    /**
+     * Saves the user and user information data.
+     */
     private void saveUserData() {
         UserInformation userInfo = new UserInformation(0, 1, new Date(), height, weight, kfa);
         User user = new User(1, userName, birthday, userGoal, trainingDaysPerWeek);
         userInformationRepository.writeUserInformation(userInfo);
         userRepository.saveUser(user);
-
     }
 
+    /**
+     * Marks the onboarding process as complete in the shared preferences.
+     */
     private void saveOnboardingStatus() {
         SharedPreferences prefs = getSharedPreferences("onboarding", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -121,28 +155,49 @@ public class OnboardingActivity extends AppCompatActivity implements OnboardingD
         editor.apply();
     }
 
+    /**
+     * Navigates to the MainActivity and finishes the onboarding activity.
+     */
     private void navigateToMainActivity() {
         Intent intent = new Intent(OnboardingActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 
-    // Adapter für ViewPager2
+    /**
+     * PagerAdapter for managing onboarding fragments in the ViewPager2.
+     */
     private static class OnboardingPagerAdapter extends androidx.viewpager2.adapter.FragmentStateAdapter {
 
+        /**
+         * Constructs the pager adapter with the given activity.
+         *
+         * @param fragmentActivity The hosting activity.
+         */
         public OnboardingPagerAdapter(@NonNull AppCompatActivity fragmentActivity) {
             super(fragmentActivity);
         }
 
+        /**
+         * Returns the fragment for the given position.
+         *
+         * @param position The position of the fragment.
+         * @return The corresponding fragment.
+         */
         @NonNull
         @Override
         public androidx.fragment.app.Fragment createFragment(int position) {
             return Objects.requireNonNull(FRAGMENT_MAP.getOrDefault(position, new OnboardingNameFragment()));
         }
 
+        /**
+         * Returns the total number of onboarding fragments.
+         *
+         * @return The count of fragments.
+         */
         @Override
         public int getItemCount() {
-            return 8; // Anzahl der Fragmente muss mit createFragment() übereinstimmen
+            return 8;
         }
     }
 }

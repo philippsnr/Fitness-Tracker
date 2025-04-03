@@ -48,11 +48,9 @@ public class TrainingplanRepositoryTest {
 
     @Test
     public void testAddAndGetAllTrainingplans() {
-        // Create new plan
         Trainingplan plan = new Trainingplan(TEST_PLAN_NAME, false);
         repository.addTrainingplan(plan);
 
-        // Retrieve all plans
         List<Trainingplan> plans = repository.getAllTrainingplans();
 
         assertFalse(plans.isEmpty());
@@ -62,38 +60,31 @@ public class TrainingplanRepositoryTest {
 
     @Test
     public void testUpdateTrainingplanName() {
-        // Add test plan
         Trainingplan plan = new Trainingplan(TEST_PLAN_NAME, false);
         repository.addTrainingplan(plan);
         plan = repository.getAllTrainingplans().get(0);
 
-        // Update name
         plan.setName(UPDATED_NAME);
         repository.updateTrainingplanName(plan);
 
-        // Verify update
         Trainingplan updatedPlan = repository.getAllTrainingplans().get(0);
         assertEquals(UPDATED_NAME, updatedPlan.getName());
     }
 
     @Test
     public void testDeleteTrainingplan() {
-        // Add and verify plan
         Trainingplan plan = new Trainingplan(TEST_PLAN_NAME, false);
         repository.addTrainingplan(plan);
         assertFalse(repository.getAllTrainingplans().isEmpty());
 
-        // Delete plan
         plan = repository.getAllTrainingplans().get(0);
         repository.deleteTrainingplan(plan);
 
-        // Verify deletion
         assertTrue(repository.getAllTrainingplans().isEmpty());
     }
 
     @Test
     public void testSetActiveTrainingPlan() {
-        // Add two plans
         Trainingplan plan1 = new Trainingplan("Plan 1", false);
         Trainingplan plan2 = new Trainingplan("Plan 2", true);
         repository.addTrainingplan(plan1);
@@ -103,15 +94,11 @@ public class TrainingplanRepositoryTest {
         long plan1Id = plans.get(0).getId();
         long plan2Id = plans.get(1).getId();
 
-        // Set first plan as active
         repository.setNewActiveTrainingPlan((int) plan1Id);
-
-        // Check active plan
         Trainingplan activePlan = repository.getActiveTrainingplan();
         assertNotNull(activePlan);
         assertEquals(plan1Id, activePlan.getId());
 
-        // Verify second plan is inactive
         List<Trainingplan> trainingplans = repository.getAllTrainingplans();
         Trainingplan secondPlan = trainingplans.get(1);
         assertNotNull(secondPlan);

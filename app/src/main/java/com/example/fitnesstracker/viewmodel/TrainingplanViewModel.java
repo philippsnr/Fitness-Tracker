@@ -14,10 +14,21 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
+/**
+ * ViewModel-Klasse für die Verwaltung von Trainingsplänen.
+ * Diese Klasse bietet Methoden, um Trainingspläne aus der Datenbank zu laden, einen Trainingsplan als aktiv zu setzen,
+ * neue Trainingspläne hinzuzufügen, bestehende Trainingspläne zu aktualisieren oder zu löschen.
+ * Alle Operationen werden asynchron im Hintergrund ausgeführt.
+ */
 public class TrainingplanViewModel extends AndroidViewModel {
     private final TrainingplanRepository repository;
     private final ExecutorService executorService;
 
+    /**
+     * Konstruktor für das ViewModel. Initialisiert das Repository und den ExecutorService.
+     *
+     * @param application Der Anwendungs-Kontext
+     */
     public TrainingplanViewModel(@NonNull Application application) {
         super(application);
         repository = new TrainingplanRepository(application.getApplicationContext());
@@ -134,18 +145,5 @@ public class TrainingplanViewModel extends AndroidViewModel {
                 onError.accept(e);
             }
         });
-    }
-
-    /**
-     * Wird aufgerufen, wenn das ViewModel zerstört wird. Beendet den ExecutorService.
-     */
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        try {
-            executorService.shutdownNow();
-        } catch (Exception e) {
-            Log.e("TrainingplanViewModel", "Fehler beim Beenden des Executors", e);
-        }
     }
 }

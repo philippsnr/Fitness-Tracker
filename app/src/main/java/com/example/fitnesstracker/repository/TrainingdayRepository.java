@@ -11,6 +11,12 @@ import com.example.fitnesstracker.model.Trainingday;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Repository-Klasse für den Zugriff auf die Trainingstage in der SQLite-Datenbank.
+ * Diese Klasse bietet CRUD-Operationen für Trainingstage und ermöglicht das Abrufen,
+ * Erstellen, Aktualisieren und Löschen von Trainingstagen, die mit einem bestimmten
+ * Trainingsplan verknüpft sind.
+ */
 public class TrainingdayRepository {
     private final DatabaseHelper dbHelper;
 

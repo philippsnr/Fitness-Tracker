@@ -27,7 +27,6 @@ public class TrainingplanViewModelTest {
     private TrainingplanViewModel viewModel;
     private TrainingplanRepository repository;
     private Context context;
-    private final CountDownLatch latch = new CountDownLatch(1);
 
     @Before
     public void setUp() {
@@ -48,12 +47,25 @@ public class TrainingplanViewModelTest {
         db.close();
     }
 
+    private Trainingplan addTestPlanToDb(String name, boolean active) {
+        Trainingplan plan = new Trainingplan(name, active);
+        repository.addTrainingplan(plan);
+        return plan;
+    }
+
     @Test
     public void testAddAndGetAllTrainingplans() throws InterruptedException {
+
+        CountDownLatch latch = new CountDownLatch(2);
+
+        // Arrange
         Trainingplan plan = new Trainingplan("Test Plan", false);
 
-        viewModel.addTrainingplan(plan, () -> latch.countDown(), e -> fail());
-        latch.await(2, TimeUnit.SECONDS);
+        // Act
+        viewModel.addTrainingplan(plan,
+                () -> latch.countDown(),
+                e -> fail("Add failed: " + e.getMessage())
+        );
 
         viewModel.loadAllTrainingplans(
                 plans -> {
@@ -61,20 +73,26 @@ public class TrainingplanViewModelTest {
                     assertEquals("Test Plan", plans.get(0).getName());
                     latch.countDown();
                 },
-                e -> fail()
+                e -> fail("Load failed: " + e.getMessage())
         );
-        latch.await(2, TimeUnit.SECONDS);
+
+        assertTrue(latch.await(2, TimeUnit.SECONDS));
     }
 
     @Test
     public void testSetAndGetActiveTrainingplan() throws InterruptedException {
-        Trainingplan plan1 = new Trainingplan("Plan 1", false);
-        Trainingplan plan2 = new Trainingplan("Plan 2", false);
-        repository.addTrainingplan(plan1);
-        repository.addTrainingplan(plan2);
 
-        viewModel.setActiveTrainingplan(plan2.getId(), () -> latch.countDown(), e -> fail());
-        latch.await(2, TimeUnit.SECONDS);
+        CountDownLatch latch = new CountDownLatch(2);
+
+        // Arrange
+        Trainingplan plan1 = addTestPlanToDb("Plan 1", false);
+        Trainingplan plan2 = addTestPlanToDb("Plan 2", false);
+
+        // Act
+        viewModel.setActiveTrainingplan(plan2.getId(),
+                () -> latch.countDown(),
+                e -> fail("Activation failed: " + e.getMessage())
+        );
 
         viewModel.loadActiveTrainingplan(
                 activePlan -> {
@@ -83,20 +101,26 @@ public class TrainingplanViewModelTest {
                     assertTrue(activePlan.getIsActive());
                     latch.countDown();
                 },
-                e -> fail()
+                e -> fail("Load active failed: " + e.getMessage())
         );
-        latch.await(2, TimeUnit.SECONDS);
+
+        assertTrue(latch.await(2, TimeUnit.SECONDS));
     }
 
     @Test
     public void testUpdateTrainingplan() throws InterruptedException {
 
-        Trainingplan plan = new Trainingplan("Original Name", false);
-        repository.addTrainingplan(plan);
+        CountDownLatch latch = new CountDownLatch(2);
+
+        // Arrange
+        Trainingplan plan = addTestPlanToDb("Original Name", false);
         plan.setName("Updated Name");
 
-        viewModel.updateTrainingplan(plan, () -> latch.countDown(), e -> fail());
-        latch.await(2, TimeUnit.SECONDS);
+        // Act
+        viewModel.updateTrainingplan(plan,
+                () -> latch.countDown(),
+                e -> fail("Update failed: " + e.getMessage())
+        );
 
         viewModel.loadAllTrainingplans(
                 plans -> {
@@ -104,53 +128,69 @@ public class TrainingplanViewModelTest {
                     assertEquals("Updated Name", plans.get(0).getName());
                     latch.countDown();
                 },
-                e -> fail()
+                e -> fail("Load failed: " + e.getMessage())
         );
-        latch.await(2, TimeUnit.SECONDS);
+
+        assertTrue(latch.await(2, TimeUnit.SECONDS));
     }
 
     @Test
     public void testDeleteTrainingplan() throws InterruptedException {
 
-        Trainingplan plan = new Trainingplan("To Delete", false);
-        repository.addTrainingplan(plan);
+        CountDownLatch latch = new CountDownLatch(2);
 
-        viewModel.deleteTrainingplan(plan, () -> latch.countDown(), e -> fail());
-        latch.await(2, TimeUnit.SECONDS);
+        // Arrange
+        Trainingplan plan = addTestPlanToDb("To Delete", false);
+
+        // Act
+        viewModel.deleteTrainingplan(plan,
+                () -> latch.countDown(),
+                e -> fail("Delete failed: " + e.getMessage())
+        );
 
         viewModel.loadAllTrainingplans(
                 plans -> {
                     assertTrue(plans.isEmpty());
                     latch.countDown();
                 },
-                e -> fail()
+                e -> fail("Load failed: " + e.getMessage())
         );
-        latch.await(2, TimeUnit.SECONDS);
+
+        assertTrue(latch.await(2, TimeUnit.SECONDS));
     }
 
     @Test
     public void testOnlyOneActivePlan() throws InterruptedException {
-        Trainingplan plan1 = new Trainingplan("Plan 1", true);
-        Trainingplan plan2 = new Trainingplan("Plan 2", false);
-        repository.addTrainingplan(plan1);
-        repository.addTrainingplan(plan2);
 
-        viewModel.setActiveTrainingplan(plan2.getId(), () -> latch.countDown(), e -> fail());
-        latch.await(2, TimeUnit.SECONDS);
+        CountDownLatch latch = new CountDownLatch(2);
 
-        viewModel.loadAllTrainingplans(
-                plans -> {
-                    for (Trainingplan p : plans) {
-                        if (p.getId() == plan2.getId()) {
-                            assertTrue(p.getIsActive());
-                        } else {
-                            assertFalse(p.getIsActive());
-                        }
-                    }
+        // Arrange
+        Trainingplan plan1 = addTestPlanToDb("Plan 1", true);
+        Trainingplan plan2 = addTestPlanToDb("Plan 2", false);
+
+        // Act
+        viewModel.setActiveTrainingplan(plan2.getId(),
+                () -> {
+                    // Assert after activation
+                    viewModel.loadAllTrainingplans(
+                            plans -> {
+                                assertEquals(2, plans.size());
+                                for (Trainingplan p : plans) {
+                                    if (p.getId() == plan2.getId()) {
+                                        assertTrue("Plan 2 should be active", p.getIsActive());
+                                    } else {
+                                        assertFalse("Plan 1 should be inactive", p.getIsActive());
+                                    }
+                                }
+                                latch.countDown();
+                            },
+                            e -> fail("Load failed: " + e.getMessage())
+                    );
                     latch.countDown();
                 },
-                e -> fail()
+                e -> fail("Activation failed: " + e.getMessage())
         );
-        latch.await(2, TimeUnit.SECONDS);
+
+        assertTrue(latch.await(4, TimeUnit.SECONDS));
     }
 }

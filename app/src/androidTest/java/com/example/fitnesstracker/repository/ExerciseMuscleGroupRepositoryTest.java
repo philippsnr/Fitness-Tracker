@@ -23,10 +23,8 @@ public class ExerciseMuscleGroupRepositoryTest {
         dbHelper = new DatabaseHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        // Tabellen leeren
         db.execSQL("DELETE FROM ExerciseMuscleGroupAssignment");
 
-        // Testdaten einfügen
         db.execSQL("INSERT INTO ExerciseMuscleGroupAssignment (Exercise_id, MuscleGroup_id) " +
                 "VALUES (1, 3), (1, 5), (2, 3)");
 

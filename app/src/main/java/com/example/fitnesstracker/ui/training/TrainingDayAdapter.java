@@ -12,10 +12,16 @@ import com.example.fitnesstracker.R;
 import com.example.fitnesstracker.model.Trainingday;
 import java.util.List;
 
+/**
+ * Adapter-Klasse für die Anzeige von Trainingstagen in einem RecyclerView.
+ * Diese Klasse bindet die Trainingstage an die entsprechenden Views und verarbeitet Klick-Ereignisse wie Anzeigen,
+ * Bearbeiten und Löschen von Trainingstagen.
+ * Sie implementiert die Schnittstelle für Klick-Ereignisse und stellt Methoden zum Aktualisieren der Daten zur Verfügung.
+ */
 public class TrainingDayAdapter extends RecyclerView.Adapter<TrainingDayAdapter.TrainingdayViewHolder> {
 
     private List<Trainingday> trainingdays;
-    private OnItemClickListener listener;
+    private final OnItemClickListener listener;
 
     /**
      * Schnittstelle für Klick-Ereignisse.
@@ -78,9 +84,7 @@ public class TrainingDayAdapter extends RecyclerView.Adapter<TrainingDayAdapter.
      * ViewHolder für einen Trainingstag.
      */
     static class TrainingdayViewHolder extends RecyclerView.ViewHolder {
-        private TextView textViewName;
-        private ImageView ivEdit, ivDelete;
-        private CardView cardView;
+        private final TextView textViewName;
 
         /**
          * Konstruktor für den ViewHolder.
@@ -90,10 +94,10 @@ public class TrainingDayAdapter extends RecyclerView.Adapter<TrainingDayAdapter.
          */
         public TrainingdayViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
-            cardView = (CardView) itemView;
+            CardView cardView = (CardView) itemView;
             textViewName = itemView.findViewById(R.id.textViewTrainingdayName);
-            ivEdit = itemView.findViewById(R.id.ivEditDay);
-            ivDelete = itemView.findViewById(R.id.ivDeleteDay);
+            ImageView ivEdit = itemView.findViewById(R.id.ivEditDay);
+            ImageView ivDelete = itemView.findViewById(R.id.ivDeleteDay);
             cardView.setOnClickListener(v -> {
                 if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION)
                     listener.onViewClick(getAdapterPosition());

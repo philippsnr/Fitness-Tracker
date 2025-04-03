@@ -28,10 +28,8 @@ public class MuscleGroupRepositoryTest {
         dbHelper = new DatabaseHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        // Tabelle leeren
         db.execSQL("DELETE FROM MuscleGroup");
 
-        // Testdaten einfügen
         db.execSQL("INSERT INTO MuscleGroup (id, name, picture_path) VALUES (1, 'Chest', 'path1'), (2, 'Back', 'path2')");
 
         repository = new MuscleGroupRepository(context);

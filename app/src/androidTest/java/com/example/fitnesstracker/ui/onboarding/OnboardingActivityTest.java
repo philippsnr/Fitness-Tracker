@@ -76,6 +76,7 @@ public class OnboardingActivityTest {
                         .perform(typeText("Test Name"), closeSoftKeyboard());
                 break;
             case 2:
+
                 onView(withId(R.id.editTextWeight))
                         .perform(typeText("75"), closeSoftKeyboard());
                 break;
@@ -97,8 +98,6 @@ public class OnboardingActivityTest {
                         .perform(click());
                 onView(withId(R.id.buttonNext))
                         .perform(click());
-
-
             case 7:
 
                 onView(withId(R.id.seekBarTrainingDays))
@@ -115,12 +114,9 @@ public class OnboardingActivityTest {
             public Matcher<View> getConstraints() {
                 return Matchers.allOf(withId(R.id.seekBarTrainingDays), Matchers.instanceOf(SeekBar.class));
             }
-
             @Override
             public void perform(UiController uiController, View view) {
-
             }
-
             @Override
             public String getDescription() {
                 return "Set progress on SeekBar to " + progress;

@@ -56,10 +56,10 @@ public class ExerciseSetRepositoryTest {
     public void setUp() {
         Context context = ApplicationProvider.getApplicationContext();
         dbHelper = new TestDatabaseHelper(context);
-        database = dbHelper.getWritableDatabase();  // Initialisierung der database-Variable
+        database = dbHelper.getWritableDatabase();
         repository = new ExerciseSetRepository(context);
 
-        // Injection via Reflection
+
         try {
             Field dbHelperField = ExerciseSetRepository.class.getDeclaredField("dbHelper");
             dbHelperField.setAccessible(true);
@@ -79,7 +79,7 @@ public class ExerciseSetRepositoryTest {
 
     @Test
     public void testGetLastSets() {
-        // Clear any existing data
+
         database.execSQL("DELETE FROM ExerciseSet");
 
         insertTestData(1, 1, 10, 50, "2023-01-01");
@@ -94,7 +94,7 @@ public class ExerciseSetRepositoryTest {
 
     @Test
     public void testSaveNewSet() {
-        // Datenbank zurücksetzen
+
         SQLiteDatabase resetDb = dbHelper.getWritableDatabase();
         dbHelper.onUpgrade(resetDb, 1, 2);
         resetDb.close();
@@ -102,7 +102,7 @@ public class ExerciseSetRepositoryTest {
         ExerciseSet newSet = new ExerciseSet(1, 1, 10, 50, "2023-01-01");
         repository.saveNewSet(newSet);
 
-        // Neue Verbindung für die Überprüfung öffnen
+
         SQLiteDatabase verifyDb = dbHelper.getReadableDatabase();
         Cursor cursor = null;
         try {

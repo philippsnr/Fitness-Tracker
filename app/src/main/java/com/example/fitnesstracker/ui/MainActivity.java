@@ -16,13 +16,23 @@ import com.example.fitnesstracker.ui.training.TrainingPlanFragment;
 import com.example.fitnesstracker.ui.onboarding.OnboardingActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+/**
+ * Main activity that serves as the entry point and navigation hub of the application.
+ * Handles onboarding flow, bottom navigation, and fragment management.
+ */
 public class MainActivity extends AppCompatActivity {
 
+    /**
+     * Called when the activity is starting. Sets up the UI and checks for onboarding status.
+     *
+     * @param savedInstanceState If non-null, this activity is being re-constructed from a previous saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Check if onboarding should be shown
         if (shouldShowOnboarding()) {
             startOnboarding();
             return;
@@ -30,23 +40,36 @@ public class MainActivity extends AppCompatActivity {
 
         setupBottomNavigation();
 
+        // Load default fragment if this is a fresh launch
         if (savedInstanceState == null) {
             loadFragment(new ProgressionFragment());
         }
     }
 
+    /**
+     * Determines whether the onboarding flow should be displayed.
+     *
+     * @return true if onboarding hasn't been completed, false otherwise
+     */
     private boolean shouldShowOnboarding() {
         SharedPreferences prefs = getSharedPreferences("onboarding", Context.MODE_PRIVATE);
         return !prefs.getBoolean("onboarding_complete", false);
     }
 
+    /**
+     * Starts the onboarding activity and finishes the main activity after a short delay.
+     */
     private void startOnboarding() {
         Intent intent = new Intent(this, OnboardingActivity.class);
         startActivity(intent);
 
+        // Delay finish to allow onboarding activity to start properly
         new android.os.Handler().postDelayed(this::finish, 100);
     }
 
+    /**
+     * Sets up the bottom navigation bar and its click listeners.
+     */
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnItemSelectedListener(item -> {
@@ -58,6 +81,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Maps navigation item IDs to their corresponding fragments.
+     *
+     * @param itemId the ID of the selected navigation item
+     * @return the Fragment corresponding to the selected item, or null if no match found
+     */
     private Fragment getSelectedFragment(int itemId) {
         if (itemId == R.id.nav_progression) {
             return new ProgressionFragment();
@@ -71,6 +100,11 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    /**
+     * Loads the specified fragment into the fragment container.
+     *
+     * @param fragment the Fragment to be displayed
+     */
     private void loadFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

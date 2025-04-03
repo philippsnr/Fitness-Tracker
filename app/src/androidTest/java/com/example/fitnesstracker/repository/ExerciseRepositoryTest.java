@@ -33,12 +33,10 @@ public class ExerciseRepositoryTest {
         Context context = ApplicationProvider.getApplicationContext();
         dbHelper = new DatabaseHelper(context);
 
-        // Clean and prepare database
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.execSQL("DELETE FROM Exercise");
         db.execSQL("DELETE FROM ExerciseMuscleGroupAssignment");
 
-        // Insert test data
         db.execSQL("INSERT INTO Exercise(id, name, difficulty, info, picture_path) VALUES " +
                 "(1, 'Bench Press', 3, 'Chest exercise', 'bench.jpg')," +
                 "(2, 'Squat', 2, 'Leg exercise', 'squat.jpg')," +
