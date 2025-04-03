@@ -61,5 +61,5 @@
     <string name="o_training_days_question">Wie viele Tage pro Woche willst du trainieren?</string>
     <string name="o_training_days_selection">3 days per week</string>
     <string name="o_finish">Reise starten!</string>
-    <string name="o_weight_question">Wie viel wiegtst du? (in kg)</string>
+    <string name="o_weight_question">Wie viel wiegst du? (in kg)</string>
 </resources>
