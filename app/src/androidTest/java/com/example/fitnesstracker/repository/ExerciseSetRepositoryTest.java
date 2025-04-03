@@ -59,6 +59,7 @@ public class ExerciseSetRepositoryTest {
         database = dbHelper.getWritableDatabase();
         repository = new ExerciseSetRepository(context);
 
+
         try {
             Field dbHelperField = ExerciseSetRepository.class.getDeclaredField("dbHelper");
             dbHelperField.setAccessible(true);
@@ -78,6 +79,7 @@ public class ExerciseSetRepositoryTest {
 
     @Test
     public void testGetLastSets() {
+
         database.execSQL("DELETE FROM ExerciseSet");
 
         insertTestData(1, 1, 10, 50, "2023-01-01");
@@ -92,12 +94,14 @@ public class ExerciseSetRepositoryTest {
 
     @Test
     public void testSaveNewSet() {
+
         SQLiteDatabase resetDb = dbHelper.getWritableDatabase();
         dbHelper.onUpgrade(resetDb, 1, 2);
         resetDb.close();
 
         ExerciseSet newSet = new ExerciseSet(1, 1, 10, 50, "2023-01-01");
         repository.saveNewSet(newSet);
+
 
         SQLiteDatabase verifyDb = dbHelper.getReadableDatabase();
         Cursor cursor = null;
@@ -123,7 +127,7 @@ public class ExerciseSetRepositoryTest {
 
         Map<Integer, Integer> result = repository.getSetsPerWeek();
         assertEquals(2, result.size());
-        assertEquals(2, (int) result.get(2));
+        assertEquals(2, (int) result.get(2)); // Zwei Sätze in Woche 2
     }
 
     @Test

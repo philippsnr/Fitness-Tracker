@@ -43,7 +43,7 @@ public class OnboardingKfaFragment extends Fragment {
         if (context instanceof OnboardingDataListener) {
             dataListener = (OnboardingDataListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement OnboardingDataListener");
+            throw new RuntimeException(context + " must implement OnboardingDataListener");
         }
     }
 
@@ -91,7 +91,7 @@ public class OnboardingKfaFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
         TextView title = new TextView(getContext());
-        title.setText("KFA Hilfe");
+        title.setText(R.string.o_kfa_help);
         title.setPadding(20, 20, 20, 20);
         title.setTextSize(20);
         title.setTextColor(Color.WHITE);
