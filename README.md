@@ -72,10 +72,13 @@ Diese App wurde als gemeinsames Softwareprojekt entwickelt, um eine benutzerfreu
    - Über den Emulator geht es wie folgt: Sie gehen in Android Studio rechts auf den Device Manager. Dann auf das Plus also "add new device" und "create virtual device". Nun wählen Sie ein Gerät aus, hier das 
    Pixel 6. Wählen Sie nun unten rechts "next". In der Liste der APIs wählen Sie nun "UpsideDownCake" mit der API "34" aus. Diese API muss evtl erst runtergeladen werden. Tun Sie dies und wählen Sie dann "next".
    Geben Sie dem Gerät einen beliebigen Namen und wählen Sie "finish". Das Gerät lässt sich nun im Device Manager starten und nun können Sie den nächsten Schritt ausführen
-   
-5. **App starten:**
-   Schließe ein Android-Gerät an oder starte einen Emulator. Klicke auf den "Run"-Button, um die App zu kompilieren und zu starten.
 
+5. **Checkstyle:** Bei checkstyle haben Sie zwei Optionen:
+   - Sie löschen die Checkstyle.xml und configuration_1_3.dtd bzw. den ganzen config Ordner (Fitness-Tracker/config/) 
+   - Sie installieren in Android Studio das Checkstyle Plugin. Und zwar über rechts oben das Zahnrad > Plugins. Dann nach Checkstyle suche und installieren. Ist das getan in die Settings > Tools > Checkstyle gehen. Hier dann auf das "Plus", um eine neue Checkstyle-Config hinzuzufügen. Bei Path wählen sie die checkstyle.xml im config ordner also (Fitness-Tracker/config/checkstyle/checkstyle.xml). Wenn Sie nun next wählen, kann es sein, dass ein Fehler kommt. Gehen Sie in der Nachricht relativ weit nach unten. Da müsste dann stehen, dass er die configuration_1_3.dtd nicht findet. Nun müssen Sie die configuration_1_3.dtd aus dem config-Ordner in den Ordner kopieren wo Android Studio es versucht zu finden. (Eine andere Lösung haben wir leider nicht mehr gefunden)
+   Wiederholen Sie nun das Hinzufügen einer neuen Checktyle-Config in den Settings. Ist diese hinzugefügt haben Sie links unten ein Stift bzw. Marker als Option. Das ist Checkstyle. Hier können Sie dann bei Rules ihre neue Config auswählen und dann links auf das Ordner-Icon gehen, um das ganze Projekt zu scannen.
+6. **App starten:**
+   Schließe ein Android-Gerät an oder starte einen Emulator. Klicke auf den "Run"-Button, um die App zu kompilieren und zu starten.
 
 ---
 
